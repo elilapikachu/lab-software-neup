@@ -1,0 +1,106 @@
+<!-- Mensajes fuera del form, flotando arriba -->
+<div class="mensaje-toast mensaje-toast--error" *ngIf="errorMensaje">
+    {{ errorMensaje }}
+</div>
+<div class="mensaje-toast mensaje-toast--exito" *ngIf="exitoMensaje">
+    {{ exitoMensaje }}
+</div>
+
+<div class="container_registro">
+    <div class="lado_imagen"></div>
+
+    <div class="from__box">
+        <div class="button__box">
+            <div class="slider-pill" [class.slider-pill--registro]="isRegister()"></div>
+
+            <button type="button" class="toggle-btn" [class.toggle-btn--active]="isLogin()" (click)="setMode('login')">
+                Iniciar Sesión
+            </button>
+
+            <button type="button" class="toggle-btn" [class.toggle-btn--active]="isRegister()"
+                (click)="setMode('register')">
+                Registro
+            </button>
+        </div>
+
+        <form class="grupos" [class.grupos--visible]="isLogin()" [class.grupos--oculto]="isRegister()"
+            [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
+
+            <div class="field-wrap">
+                <input type="text" class="inputs" placeholder="Usuario" formControlName="usuario"
+                    [class.inputs--error]="lUsuario?.invalid && lUsuario?.touched" />
+                <span class="error-text" *ngIf="lUsuario?.invalid && lUsuario?.touched">
+                    <span *ngIf="lUsuario?.errors?.['required']">El usuario es obligatorio</span>
+                    <span *ngIf="lUsuario?.errors?.['minlength']">Mínimo 3 caracteres</span>
+                </span>
+            </div>
+
+            <div class="field-wrap">
+                <input type="password" class="inputs" placeholder="Contraseña" formControlName="password"
+                    [class.inputs--error]="lPassword?.invalid && lPassword?.touched" />
+                <span class="error-text" *ngIf="lPassword?.invalid && lPassword?.touched">
+                    <span *ngIf="lPassword?.errors?.['required']">La contraseña es obligatoria</span>
+                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
+                </span>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" class="checkbox" id="recordatorio" />
+                <label class="spanRegistro" for="recordatorio">Recordar Contraseña</label>
+            </div>
+
+            <button type="submit" class="submit-btn" [disabled]="cargando">
+                {{ cargando ? 'Cargando...' : 'Acceder' }}
+            </button>
+        </form>
+
+        <form class="grupos" [class.grupos--visible]="isRegister()" [class.grupos--oculto]="isLogin()"
+            [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+
+            <div class="field-wrap">
+                <input type="text" class="inputs" placeholder="Usuario" formControlName="usuario"
+                    [class.inputs--error]="rUsuario?.invalid && rUsuario?.touched" />
+                <span class="error-text" *ngIf="rUsuario?.invalid && rUsuario?.touched">
+                    <span *ngIf="rUsuario?.errors?.['required']">El usuario es obligatorio</span>
+                    <span *ngIf="rUsuario?.errors?.['minlength']">Mínimo 3 caracteres</span>
+                </span>
+            </div>
+
+            <div class="field-wrap">
+                <input type="email" class="inputs" placeholder="Email" formControlName="email"
+                    [class.inputs--error]="rEmail?.invalid && rEmail?.touched" />
+                <span class="error-text" *ngIf="rEmail?.invalid && rEmail?.touched">
+                    <span *ngIf="rEmail?.errors?.['required']">El email es obligatorio</span>
+                    <span *ngIf="rEmail?.errors?.['email']">Ingresa un email válido</span>
+                </span>
+            </div>
+
+            <div class="field-wrap">
+                <input type="password" class="inputs" placeholder="Contraseña" formControlName="password"
+                    [class.inputs--error]="rPassword?.invalid && rPassword?.touched" />
+                <span class="error-text" *ngIf="rPassword?.invalid && rPassword?.touched">
+                    <span *ngIf="rPassword?.errors?.['required']">La contraseña es obligatoria</span>
+                    <span *ngIf="rPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
+                </span>
+            </div>
+
+            <div class="checkbox-row">
+                <input type="checkbox" class="checkbox" id="terminos" formControlName="terminos" />
+                <label class="spanRegistro" for="terminos">Acepto los términos y condiciones</label>
+            </div>
+            <span class="error-text" *ngIf="rTerminos?.invalid && rTerminos?.touched">
+                Debes aceptar los términos
+            </span>
+
+            <button type="submit" class="submit-btn" [disabled]="cargando">
+                {{ cargando ? 'Registrando...' : 'Registrarse' }}
+            </button>
+        </form>
+    </div>
+
+    <div class="volverPaginaPrincipal">
+        <button class="submit-btn btn_regresar_pagina_principal">
+            <a routerLink="/">Volver a la página principal</a>
+        </button>
+    </div>
+</div>

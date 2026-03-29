@@ -1,0 +1,102 @@
+@use '../../../styles/fondos/predeterminado.scss' as *;
+@use '../../../styles/cards/general-cards.scss' as *;
+
+.hero-recetas-card {
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.hero-recetas-card .hero-card-img-plato {
+    width: 420px;
+    height: 420px;
+}
+
+.franja-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bordeCards);
+    color: var(--botonesSecciones);
+    border: 1px solid var(--bordeCards);
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-family: var(--letra);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.cards-grid-extras {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    opacity: 0;
+    transition: max-height .5s cubic-bezier(.22, 1, .36, 1),
+        opacity .4s ease,
+        margin-top .3s ease;
+}
+
+.cards-grid-extras.visible {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 16px;
+}
+
+
+.item-card-detalle {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s cubic-bezier(.22, 1, .36, 1),
+        padding .3s ease;
+    padding: 0 16px;
+    background: var(--blanco);
+    border-top: 0px solid var(--bordeCards);
+}
+
+.item-card.expandida .item-card-detalle {
+    max-height: 300px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--bordeCards);
+}
+
+.item-card-tiempo {
+    font-family: var(--letra);
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--botonesSecciones);
+    margin-bottom: 10px;
+}
+
+.item-card-ingredientes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.item-card-ingredientes li {
+    background: var(--bordeCards);
+    color: var(--navFooder);
+    border-radius: 50px;
+    padding: 3px 12px;
+    font-family: var(--letra);
+    font-size: .78rem;
+    font-weight: 600;
+}
+
+/* Suaviza el hover cuando la card está expandida */
+.item-card.expandida {
+    box-shadow: 0 8px 28px var(--sombra);
+}
+
+/* Botón cerrar — mismo estilo pero más tenue */
+.item-card.expandida .btn-card-ver {
+    background: var(--botonesSecciones);
+}

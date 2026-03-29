@@ -1,0 +1,8 @@
+@use '../../../styles/fondos/predeterminado.scss' as *;
+@use '../../../styles/cards/general-cards.scss' as *;
+
+.btn-ghost-index:hover {
+    border-color: var(--botonesSecciones);
+    color: var(--botonesSecciones);
+}
+

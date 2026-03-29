@@ -1,0 +1,646 @@
+@use '../../../styles/fondos/predeterminado.scss' as *;
+@use '../../../styles/cards/general-cards.scss' as *;
+
+// ─── ANIMATIONS ───────────────────────────────────────────────────────────────
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(.9) translateY(12px); }
+  70%  { transform: scale(1.03) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes accordionOpen {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── HERO ─────────────────────────────────────────────────────────────────────
+.dietas-hero {
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 28px;
+
+  .hero-card-inner { animation: slideInLeft .7s cubic-bezier(.22,1,.36,1) both; }
+
+  &__stats {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    animation: fadeUp .8s .2s cubic-bezier(.22,1,.36,1) both;
+  }
+}
+
+.stat-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--transparenteDos);
+  border: 1px solid var(--bordeCards);
+  border-radius: 14px;
+  padding: 14px 22px;
+  box-shadow: 0 4px 16px var(--sombra);
+  min-width: 90px;
+  transition: transform .2s, box-shadow .2s;
+  cursor: default;
+
+  &:hover { transform: translateY(-4px); box-shadow: 0 8px 24px var(--sombra); }
+
+  &__num {
+    font-family: var(--letra-titulo);
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--botonesSecciones);
+    line-height: 1;
+  }
+  &__label {
+    font-family: var(--letra);
+    font-size: .75rem;
+    color: var(--textoSuave);
+    margin-top: 4px;
+  }
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+.tabs-wrapper {
+  display: flex;
+  gap: 0;
+  background: var(--transparenteDos);
+  border: 1px solid var(--bordeCards);
+  border-radius: 16px;
+  padding: 5px;
+  width: fit-content;
+  box-shadow: 0 4px 20px var(--sombra);
+  margin-bottom: 4px;
+  animation: fadeUp .5s cubic-bezier(.22,1,.36,1) both;
+}
+
+.tab-btn {
+  padding: 11px 26px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  font-family: var(--letra);
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--textoSuave);
+  cursor: pointer;
+  transition: all .22s ease;
+  white-space: nowrap;
+
+  &:hover:not(&--active) { color: var(--botonesSecciones); }
+
+  &--active {
+    background: var(--botonesSecciones);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--bordeCards);
+  }
+}
+
+// ─── TAB CONTENT ──────────────────────────────────────────────────────────────
+.tab-content { animation: fadeUp .4s cubic-bezier(.22,1,.36,1) both; }
+
+// ─── INFO PERSONALIZADA ───────────────────────────────────────────────────────
+.info-personalizada {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  min-height: auto !important;
+  gap: 32px;
+
+  &__inner {
+    display: flex;
+    gap: 48px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  &__texto { flex: 1; min-width: 280px; }
+
+  &__pasos {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+    min-width: 260px;
+  }
+}
+
+.paso {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  animation: fadeUp .5s cubic-bezier(.22,1,.36,1) both;
+
+  &:nth-child(1) { animation-delay: .1s; }
+  &:nth-child(2) { animation-delay: .2s; }
+  &:nth-child(3) { animation-delay: .3s; }
+
+  &__num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    background: var(--botonesSecciones);
+    color: #fff;
+    font-family: var(--letra-titulo);
+    font-size: .95rem;
+    font-weight: 700;
+  }
+
+  &__titulo {
+    font-family: var(--letra-titulo);
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--textoOscuro);
+    margin: 0 0 3px;
+  }
+
+  &__desc {
+    font-family: var(--letra);
+    font-size: .84rem;
+    color: var(--textoSuave);
+    margin: 0;
+  }
+}
+
+// ─── FILTROS ──────────────────────────────────────────────────────────────────
+.filtros-card {
+  flex-direction: column;
+  align-items: flex-start !important;
+  min-height: auto !important;
+  padding: 40px 48px !important;
+}
+
+.filtros {
+  &__header { margin-bottom: 20px; }
+  &__titulo { margin-bottom: 4px; }
+  &__chips { display: flex; gap: 10px; flex-wrap: wrap; }
+}
+
+.filtro-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 20px;
+  border-radius: 50px;
+  border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  font-family: var(--letra);
+  font-size: .87rem;
+  font-weight: 600;
+  color: var(--textoSuave);
+  cursor: pointer;
+  transition: all .22s ease;
+
+  &:hover { border-color: var(--botonesSecciones); color: var(--botonesSecciones); transform: translateY(-2px); }
+
+  &--active {
+    background: var(--botonesSecciones);
+    border-color: var(--botonesSecciones);
+    color: #fff !important;
+    box-shadow: 0 4px 16px var(--bordeCards);
+    transform: translateY(-2px);
+  }
+}
+
+// ─── RECETAS ──────────────────────────────────────────────────────────────────
+.recetas-section {
+  flex-direction: column;
+  align-items: flex-start !important;
+  min-height: auto !important;
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+}
+
+.recetas-count {
+  font-family: var(--letra);
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+  background: var(--bordeCards);
+  border-radius: 50px;
+  padding: 4px 14px;
+}
+
+.recetas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2,1fr); }
+  @media (max-width: 580px) { grid-template-columns: 1fr; }
+}
+
+.receta-card {
+  border-radius: 18px;
+  border: 1px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  box-shadow: 0 4px 20px var(--sombra);
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+  animation: popIn .5s cubic-bezier(.22,1,.36,1) both;
+
+  @for $i from 1 through 9 { &:nth-child(#{$i}) { animation-delay: #{$i * 0.07}s; } }
+
+  &:hover { transform: translateY(-6px); box-shadow: 0 12px 36px var(--sombra); }
+  &--expanded { border-color: var(--botonesSecciones); }
+
+  &__img-wrap { position: relative; height: 155px; overflow: hidden; }
+
+  &__img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+    background-color: var(--bordeCards);
+  }
+  &:hover &__img { transform: scale(1.06); }
+
+  &__badge {
+    position: absolute; top: 10px; left: 10px;
+    background: rgba(0,0,0,.5); color: #fff;
+    font-family: var(--letra); font-size: .72rem; font-weight: 700;
+    border-radius: 50px; padding: 4px 10px; backdrop-filter: blur(4px);
+  }
+  &__kcal {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--botonesSecciones); color: #fff;
+    font-family: var(--letra); font-size: .72rem; font-weight: 700;
+    border-radius: 50px; padding: 4px 10px;
+  }
+  &__body { padding: 16px; display: flex; flex-direction: column; gap: 9px; }
+  &__nombre { font-family: var(--letra-titulo); font-size: .98rem; font-weight: 700; color: var(--textoOscuro); margin: 0; }
+  &__desc { font-family: var(--letra); font-size: .82rem; color: var(--textoSuave); margin: 0; line-height: 1.55; }
+  &__macros { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  &__detalle {
+    background: var(--bordeCards); border-radius: 10px; padding: 12px 14px 8px;
+    animation: accordionOpen .3s ease both;
+  }
+  &__ingredientes-titulo, &__prep-titulo, &__nivel {
+    font-family: var(--letra); font-size: .82rem; color: var(--textoOscuro); margin-bottom: 5px;
+  }
+  &__ingredientes-lista {
+    padding-left: 16px; margin-bottom: 8px;
+    li { font-family: var(--letra); font-size: .79rem; color: var(--textoSuave); margin-bottom: 3px; }
+  }
+
+  &__btn {
+    align-self: flex-start;
+    background: transparent;
+    border: 1.5px solid var(--botonesSecciones);
+    color: var(--botonesSecciones);
+    border-radius: 50px;
+    padding: 7px 18px;
+    font-family: var(--letra); font-size: .8rem; font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, color .2s, transform .15s;
+    margin-top: 2px;
+
+    &:hover { background: var(--botonesSecciones); color: #fff; transform: translateY(-1px); }
+  }
+}
+
+// ─── MACRO PILLS ──────────────────────────────────────────────────────────────
+.macro-pill {
+  display: flex; flex-direction: column; align-items: center;
+  border-radius: 10px; padding: 6px 12px; min-width: 54px;
+
+  &__val { font-family: var(--letra-titulo); font-size: .88rem; font-weight: 700; line-height: 1; }
+  &__lbl { font-family: var(--letra); font-size: .63rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
+
+  &--p { background: rgba(239,68,68,.1); .macro-pill__val { color: #ef4444; } .macro-pill__lbl { color: #ef4444; opacity: .7; } }
+  &--c { background: rgba(245,158,11,.1); .macro-pill__val { color: #f59e0b; } .macro-pill__lbl { color: #f59e0b; opacity: .7; } }
+  &--g { background: rgba(16,185,129,.1); .macro-pill__val { color: #10b981; } .macro-pill__lbl { color: #10b981; opacity: .7; } }
+}
+
+// ─── VER MÁS ──────────────────────────────────────────────────────────────────
+.recetas-section__vermas { display: flex; justify-content: center; margin-top: 28px; }
+
+.btn-vermas {
+  padding: 12px 36px; border-radius: 50px;
+  border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  font-family: var(--letra); font-size: .93rem; font-weight: 700;
+  color: var(--botonesSecciones); cursor: pointer;
+  transition: all .22s ease;
+  box-shadow: 0 4px 16px var(--sombra);
+  min-width: 200px;
+
+  &:hover { background: var(--botonesSecciones); color: #fff; border-color: var(--botonesSecciones); transform: translateY(-2px); }
+
+  &--loading {
+    pointer-events: none; opacity: .7;
+    &::before {
+      content: ''; display: inline-block;
+      width: 14px; height: 14px;
+      border: 2px solid currentColor; border-top-color: transparent;
+      border-radius: 50%; animation: spin .7s linear infinite;
+      margin-right: 8px; vertical-align: middle;
+    }
+  }
+}
+
+// ─── PLANES OBJETIVO ──────────────────────────────────────────────────────────
+.planes-section {
+  flex-direction: column; align-items: flex-start !important; min-height: auto !important;
+  &__header { margin-bottom: 28px; }
+}
+
+.planes-grid {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; width: 100%;
+  @media (max-width: 1024px) { grid-template-columns: repeat(2,1fr); }
+  @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+.plan-card {
+  border-radius: 18px; border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos); padding: 26px 20px;
+  box-shadow: 0 4px 20px var(--sombra);
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative; overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+  animation: popIn .6s cubic-bezier(.22,1,.36,1) both;
+
+  &:nth-child(1) { animation-delay: .1s; }
+  &:nth-child(2) { animation-delay: .2s; }
+  &:nth-child(3) { animation-delay: .3s; }
+  &:nth-child(4) { animation-delay: .4s; }
+
+  &:hover { transform: translateY(-8px); box-shadow: 0 16px 40px var(--sombra); }
+
+  &--featured { border-color: var(--botonesSecciones); box-shadow: 0 8px 32px var(--bordeCards); }
+
+  &__badge-featured {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--botonesSecciones); color: #fff;
+    font-family: var(--letra); font-size: .68rem; font-weight: 700;
+    border-radius: 50px; padding: 3px 10px;
+  }
+  &__icon { font-size: 2rem; line-height: 1; }
+  &__nombre { font-family: var(--letra-titulo); font-size: 1.05rem; font-weight: 700; color: var(--textoOscuro); margin: 0; }
+  &__desc { font-family: var(--letra); font-size: .83rem; color: var(--textoSuave); line-height: 1.6; margin: 0; flex: 1; }
+  &__features {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 5px;
+    li { font-family: var(--letra); font-size: .79rem; color: var(--textoSuave); padding-left: 16px; position: relative;
+      &::before { content: '✓'; position: absolute; left: 0; color: var(--botonesSecciones); font-weight: 700; } }
+  }
+  &__btn {
+    align-self: stretch;
+    background: transparent; border: 1.5px solid var(--botonesSecciones); color: var(--botonesSecciones);
+    border-radius: 50px; padding: 9px 0;
+    font-family: var(--letra); font-size: .85rem; font-weight: 700;
+    cursor: pointer; transition: background .2s, color .2s, transform .15s;
+    text-align: center; margin-top: 4px;
+    &:hover { background: var(--botonesSecciones); color: #fff; transform: translateY(-1px); }
+  }
+  &--featured &__btn { background: var(--botonesSecciones); color: #fff;
+    &:hover { background: var(--botonesHover); border-color: var(--botonesHover); }
+  }
+}
+
+// ─── DIETAS FAMOSAS (ACORDEÓN) ────────────────────────────────────────────────
+.famosos-section {
+  flex-direction: column; align-items: flex-start !important; min-height: auto !important;
+  &__header { margin-bottom: 28px; }
+}
+
+.famosos-grid {
+  display: flex; flex-direction: column; gap: 12px; width: 100%;
+}
+
+.famosa-card {
+  border-radius: 16px;
+  border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  overflow: hidden;
+  transition: border-color .22s, box-shadow .22s;
+  animation: fadeUp .5s cubic-bezier(.22,1,.36,1) both;
+
+  @for $i from 1 through 6 { &:nth-child(#{$i}) { animation-delay: #{$i * 0.08}s; } }
+
+  &--expanded { border-color: var(--botonesSecciones); box-shadow: 0 8px 28px var(--sombra); }
+
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px; cursor: pointer;
+    transition: background .15s;
+    gap: 12px;
+    &:hover { background: rgba(0,0,0,.02); }
+  }
+
+  &__left { display: flex; align-items: center; gap: 14px; }
+
+  &__emoji { font-size: 2rem; line-height: 1; }
+
+  &__nombre {
+    font-family: var(--letra-titulo); font-size: 1.05rem; font-weight: 700;
+    color: var(--textoOscuro); margin: 0 0 2px;
+  }
+  &__tagline { font-family: var(--letra); font-size: .82rem; color: var(--textoSuave); margin: 0; }
+
+  &__right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+  &__nivel {
+    font-family: var(--letra); font-size: .75rem; font-weight: 700;
+    border-radius: 50px; padding: 4px 12px;
+  }
+
+  &__chevron {
+    font-size: .8rem; color: var(--textoSuave);
+    transition: transform .2s;
+  }
+
+  &__body {
+    padding: 0 22px 22px;
+    animation: accordionOpen .3s ease both;
+  }
+
+  &__desc {
+    font-family: var(--letra); font-size: .88rem; color: var(--textoSuave);
+    line-height: 1.7; margin: 0 0 16px;
+  }
+
+  &__info-row {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px;
+    @media (max-width: 700px) { grid-template-columns: 1fr; }
+  }
+
+  &__macros { display: flex; gap: 10px; flex-wrap: wrap; }
+}
+
+// Nivel badges
+.nivel-facil   { background: rgba(16,185,129,.12); color: #10b981; }
+.nivel-media   { background: rgba(245,158,11,.12);  color: #f59e0b; }
+.nivel-dificil { background: rgba(239,68,68,.12);   color: #ef4444; }
+
+.famosa-info-chip {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--bordeCards); border-radius: 12px; padding: 12px 14px;
+
+  &--red { background: rgba(239,68,68,.07); }
+  &--blue { background: rgba(59,130,246,.07); }
+
+  &__icon { font-size: 1.1rem; line-height: 1; margin-top: 2px; flex-shrink: 0; }
+  &__titulo { font-family: var(--letra); font-size: .75rem; font-weight: 700; color: var(--textoOscuro); margin: 0 0 3px; text-transform: uppercase; letter-spacing: .04em; }
+  &__texto { font-family: var(--letra); font-size: .8rem; color: var(--textoSuave); margin: 0; line-height: 1.5; }
+}
+
+// ─── PLANES DEL EQUIPO ────────────────────────────────────────────────────────
+.equipo-planes-section {
+  flex-direction: column; align-items: flex-start !important; min-height: auto !important;
+  &__header { margin-bottom: 28px; }
+}
+
+.equipo-planes__header { margin-bottom: 28px; }
+
+.equipo-planes-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; width: 100%;
+  @media (max-width: 860px) { grid-template-columns: 1fr; }
+}
+
+.equipo-plan-card {
+  border-radius: 18px; border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos); padding: 26px 22px;
+  box-shadow: 0 4px 20px var(--sombra);
+  display: flex; flex-direction: column; gap: 10px;
+  transition: transform .25s, box-shadow .25s, border-color .22s;
+  animation: popIn .5s cubic-bezier(.22,1,.36,1) both;
+
+  &:nth-child(1) { animation-delay: .1s; }
+  &:nth-child(2) { animation-delay: .2s; }
+  &:nth-child(3) { animation-delay: .3s; }
+
+  &:hover { transform: translateY(-6px); box-shadow: 0 12px 32px var(--sombra); }
+
+  &--selected { border-color: var(--botonesSecciones); box-shadow: 0 8px 28px var(--bordeCards); }
+
+  &__top { display: flex; align-items: center; justify-content: space-between; }
+
+  &__emoji { font-size: 2.2rem; }
+
+  &__autora {
+    font-family: var(--letra); font-size: .75rem; font-weight: 600;
+    color: var(--botonesSecciones); background: var(--bordeCards);
+    border-radius: 50px; padding: 3px 12px;
+  }
+
+  &__nombre { font-family: var(--letra-titulo); font-size: 1.08rem; font-weight: 700; color: var(--textoOscuro); margin: 0; }
+  &__desc { font-family: var(--letra); font-size: .84rem; color: var(--textoSuave); line-height: 1.6; margin: 0; flex: 1; }
+
+  &__tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  &__btn {
+    align-self: stretch; margin-top: 4px;
+    background: transparent; border: 1.5px solid var(--botonesSecciones); color: var(--botonesSecciones);
+    border-radius: 50px; padding: 10px 0;
+    font-family: var(--letra); font-size: .85rem; font-weight: 700;
+    cursor: pointer; transition: all .2s; text-align: center;
+    &:hover { background: var(--botonesSecciones); color: #fff; transform: translateY(-1px); }
+  }
+}
+
+.equipo-tag {
+  font-family: var(--letra); font-size: .72rem; font-weight: 600;
+  background: var(--bordeCards); color: var(--textoSuave);
+  border-radius: 50px; padding: 3px 10px;
+  border: 1px solid var(--bordeCards);
+}
+
+// ─── MENÚ SEMANAL ─────────────────────────────────────────────────────────────
+.menu-semanal-section {
+  flex-direction: column; align-items: flex-start !important; min-height: auto !important;
+  animation: fadeUp .4s cubic-bezier(.22,1,.36,1) both;
+}
+
+.menu-semanal__header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; margin-bottom: 28px; width: 100%; flex-wrap: wrap;
+}
+
+.menu-semanal__cerrar {
+  background: var(--bordeCards); border: 1px solid var(--bordeCards);
+  border-radius: 50px; padding: 8px 18px;
+  font-family: var(--letra); font-size: .82rem; font-weight: 600; color: var(--textoSuave);
+  cursor: pointer; transition: all .2s; flex-shrink: 0;
+  &:hover { background: #fee2e2; color: #ef4444; border-color: #fca5a5; }
+}
+
+.menu-dias-grid {
+  display: grid; grid-template-columns: repeat(7,1fr); gap: 10px; width: 100%;
+  @media (max-width: 1100px) { grid-template-columns: repeat(4,1fr); }
+  @media (max-width: 700px)  { grid-template-columns: repeat(2,1fr); }
+  @media (max-width: 420px)  { grid-template-columns: 1fr; }
+}
+
+.menu-dia-card {
+  border-radius: 14px; border: 1px solid var(--bordeCards);
+  background: var(--transparenteDos); overflow: hidden;
+  box-shadow: 0 4px 14px var(--sombra);
+  animation: popIn .4s cubic-bezier(.22,1,.36,1) both;
+
+  @for $i from 1 through 7 { &:nth-child(#{$i}) { animation-delay: #{$i * 0.06}s; } }
+
+  &__header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--botonesSecciones);
+  }
+
+  &__dia {
+    font-family: var(--letra-titulo); font-size: .85rem; font-weight: 700; color: #fff;
+  }
+  &__kcal {
+    font-family: var(--letra); font-size: .7rem; font-weight: 600;
+    color: rgba(255,255,255,.8);
+  }
+
+  &__comidas { padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+}
+
+.comida-item {
+  border-radius: 8px; padding: 7px 9px;
+  display: flex; flex-direction: column; gap: 2px;
+
+  &__label {
+    font-family: var(--letra); font-size: .65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .05em;
+    opacity: .7;
+  }
+  &__texto { font-family: var(--letra); font-size: .75rem; line-height: 1.4; }
+
+  &--desayuno { background: rgba(245,158,11,.1); .comida-item__label { color: #f59e0b; } }
+  &--almuerzo { background: rgba(16,185,129,.1);  .comida-item__label { color: #10b981; } }
+  &--merienda { background: rgba(139,92,246,.1);  .comida-item__label { color: #8b5cf6; } }
+  &--cena     { background: rgba(59,130,246,.1);  .comida-item__label { color: #3b82f6; } }
+}
+
+// ─── RESPONSIVE ───────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .filtros-card { padding: 28px 20px !important; }
+  .tabs-wrapper { width: 100%; justify-content: center; }
+  .tab-btn { flex: 1; text-align: center; font-size: .82rem; padding: 10px 12px; }
+  .info-personalizada__inner { flex-direction: column; gap: 24px; }
+  .famosa-card__info-row { grid-template-columns: 1fr; }
+  .stat-chip { min-width: 76px; padding: 10px 16px; }
+}
