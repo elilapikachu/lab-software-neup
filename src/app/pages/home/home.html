@@ -1,0 +1,112 @@
+<app-navbar></app-navbar>
+<main class="mainIndex w-100">
+  <div class="page-wrapper-index">
+    <section class="hero-card">
+      <div class="hero-card-inner">
+        <div class="hero-tag">
+          <span class="hero-tag-dot"></span>
+          Alimentación saludable
+        </div>
+        <h1 class="hero-title">Come bien,<br><span>vive mejor</span></h1>
+        <p class="hero-subtitle">Descubre dietas y recetas diseñadas para cuidarte desde adentro.</p>
+        <div class="hero-btns">
+          <a routerLink="/recipes" class="btn-naranja">Ver recetas</a>
+          <a routerLink="/diet" class="btn-ghost-index">Ver dietas</a>
+        </div>
+      </div>
+      <img src="assets/img/index/imgHeroPrincipal.png" alt="Plato saludable" class="hero-card-img-plato">
+    </section>
+
+    <section class="franja-card" id="secDietas">
+      <div class="franja-header">
+        <div>
+          <h2 class="franja-titulo">Dietas</h2>
+          <p class="franja-sub">Conoce algunas de nuestras dietas</p>
+        </div>
+        <a routerLink="/diet" class="btn-ver-todo">Ver todas →</a>
+      </div>
+      <div class="cards-grid" id="gridDietas">
+        <div class="item-card">
+          <img src="/assets/img/comidas/platoComida.jpeg" alt="comida" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">Comida</p>
+            <a routerLink="/diet" class="btn-card-ver">Ver más</a>
+          </div>
+        </div>
+        <div class="item-card">
+          <img src="/assets/img/comidas/platoComida.jpeg" alt="comida" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">Comida</p>
+            <a routerLink="/diet" class="btn-card-ver">Ver más</a>
+          </div>
+        </div>
+        <div class="item-card">
+          <img src="/assets/img/comidas/platoComida.jpeg" alt="comida" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">Comida</p>
+            <a routerLink="/diet" class="btn-card-ver">Ver más</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="franja-card franja-card--alt" id="secRecetas">
+      <div class="franja-header">
+        <div>
+          <h2 class="franja-titulo">Recetas</h2>
+          <p class="franja-sub">Conoce algunas de nuestras recetas</p>
+        </div>
+        <a routerLink="/recipes" class="btn-ver-todo">Ver todas →</a>
+      </div>
+      <div class="cards-grid" id="gridRecetas">
+        <div class="item-card">
+          <img src="/assets/img/comidas/platoComida.jpeg" alt="comida" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">Comida</p>
+            <a routerLink="/recipes" class="btn-card-ver">Ver más</a>
+          </div>
+        </div>
+        <div class="item-card">
+          <img src="/assets/img/comidas/platoComida.jpeg" alt="comida" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">Comida</p>
+            <a routerLink="/recipes" class="btn-card-ver">Ver más</a>
+          </div>
+        </div>
+        <div class="item-card">
+          <img src="/assets/img/comidas/platoComida.jpeg" alt="comida" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">Comida</p>
+            <a routerLink="/recipes" class="btn-card-ver">Ver más</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="franja-card" id="secAbout">
+      <div class="franja-header">
+        <div>
+          <h2 class="franja-titulo">Sobre nosotros</h2>
+          <p class="franja-sub">Conoce más sobre este proyecto</p>
+        </div>
+      </div>
+      <div class="about-grid">
+        <div class="about-card">
+          <span class="about-icon">🌱</span>
+          <h5>Deseos por cumplir</h5>
+          <p>Queremos acercar la alimentación saludable a cada persona, ofreciendo herramientas accesibles para mejorar
+            la
+            calidad de vida.</p>
+        </div>
+        <div class="about-card">
+          <span class="about-icon">🎯</span>
+          <h5>¿Qué buscamos?</h5>
+          <p>Crear una comunidad donde las personas encuentren inspiración y recetas prácticas para adoptar hábitos más
+            saludables.</p>
+        </div>
+      </div>
+    </section>
+
+  </div> 
+</main>
+<app-footer></app-footer>

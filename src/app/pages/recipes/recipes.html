@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+<main class="mainIndex">
+    <div class="page-wrapper-index">
+        <section class="hero-card hero-recetas-card">
+            <div class="hero-card-inner">
+                <div class="hero-tag">
+                    <span class="hero-tag-dot"></span>
+                    Cocina saludable
+                </div>
+                <h1 class="hero-title">
+                    Comer sano no tiene<br>que ser <span>aburrido</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Olvida las dietas rígidas y los platos sin sabor. Nuestras recetas son
+                    <strong>divertidas, coloridas y deliciosas</strong> — porque cuidarte
+                    también puede ser un placer.
+                </p>
+                <div class="hero-btns">
+                    <a href="#desayunos" class="btn-naranja">Explorar recetas</a>
+                    <a routerLink="/diet" class="btn-ghost-index">Ver dietas</a>
+                </div>
+            </div>
+            <img src="/assets/img/comidas/bowlRecetas.png" alt="Plato saludable" class="hero-card-img-plato">
+        </section>
+
+        <section class="franja-card" id="desayunos">
+            <div class="franja-header">
+                <div>
+                    <div class="franja-badge">🌅 Desayunos</div>
+                    <h2 class="franja-titulo">Empieza el día con energía</h2>
+                    <p class="franja-sub">Recetas rápidas y nutritivas para arrancar con todo</p>
+                </div>
+                <a href="#" class="btn-ver-todo">Ver todas →</a>
+            </div>
+            <div class="cards-grid" id="gridDesayunos"></div>
+        </section>
+
+        <section class="franja-card franja-card--alt" id="almuerzos">
+            <div class="franja-header">
+                <div>
+                    <div class="franja-badge">☀️ Almuerzos</div>
+                    <h2 class="franja-titulo">El plato fuerte del día</h2>
+                    <p class="franja-sub">Comidas completas que te dan la energía que necesitas</p>
+                </div>
+                <a href="#" class="btn-ver-todo">Ver todas →</a>
+            </div>
+            <div class="cards-grid" id="gridAlmuerzos"></div>
+        </section>
+
+        <section class="franja-card" id="cenas">
+            <div class="franja-header">
+                <div>
+                    <div class="franja-badge">🌙 Cenas</div>
+                    <h2 class="franja-titulo">Termina el día ligero</h2>
+                    <p class="franja-sub">Recetas suaves y reconfortantes para cerrar la jornada</p>
+                </div>
+                <a href="#" class="btn-ver-todo">Ver todas →</a>
+            </div>
+            <div class="cards-grid" id="gridCenas"></div>
+        </section>
+    </div>
+
+</main>
+<app-footer></app-footer>
