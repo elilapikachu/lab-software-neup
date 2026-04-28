@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Navbar } from '../navbar/navbar';
-import { Footer } from '../footer/footer';
+import { Navbar } from '../../layout/navbar/navbar';
+import { Footer } from '../../layout/footer/footer';
 import { CommonModule, NgClass } from '@angular/common';
 
 interface Ingrediente {

@@ -1,11 +1,3 @@
-<!-- Mensajes fuera del form, flotando arriba -->
-<div class="mensaje-toast mensaje-toast--error" *ngIf="errorMensaje">
-    {{ errorMensaje }}
-</div>
-<div class="mensaje-toast mensaje-toast--exito" *ngIf="exitoMensaje">
-    {{ exitoMensaje }}
-</div>
-
 <div class="container_registro">
     <div class="lado_imagen"></div>
 
@@ -80,14 +72,6 @@
                     <span *ngIf="rPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
                 </span>
             </div>
-
-            <div class="checkbox-row">
-                <input type="checkbox" class="checkbox" id="terminos" formControlName="terminos" />
-                <label class="spanRegistro" for="terminos">Acepto los términos y condiciones</label>
-            </div>
-            <span class="error-text" *ngIf="rTerminos?.invalid && rTerminos?.touched">
-                Debes aceptar los términos
-            </span>
 
             <button type="submit" class="submit-btn" [disabled]="cargando">
                 {{ cargando ? 'Registrando...' : 'Registrarse' }}

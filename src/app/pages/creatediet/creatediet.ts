@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Navbar } from '../navbar/navbar';
-import { Footer } from '../footer/footer';
+import { Navbar } from '../../layout/navbar/navbar';
+import { Footer } from '../../layout/footer/footer';
 
 import { Tag } from '../../models/secundary/tag';
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { Navbar } from '../navbar/navbar';
-import { Footer } from '../footer/footer';
+import { Navbar } from '../../layout/navbar/navbar';
+import { Footer } from '../../layout/footer/footer';
 import { CommonModule } from '@angular/common';
 
 interface PlanSemanal {

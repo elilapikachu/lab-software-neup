@@ -40,7 +40,6 @@ export class LoginAndRegister {
       usuario:  ['', [Validators.required, Validators.minLength(3)]],
       email:    ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      terminos: [false, Validators.requiredTrue]
     });
   }
 

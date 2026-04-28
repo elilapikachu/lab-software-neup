@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import { Navbar } from '../navbar/navbar';
-import { Footer } from '../footer/footer';
+import { Navbar } from '../../layout/navbar/navbar';
+import { Footer } from '../../layout/footer/footer';
 
 interface Ingrediente {
   nombre_ingrediente: string;
