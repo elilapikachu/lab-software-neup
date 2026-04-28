@@ -2,4 +2,7 @@
 *.log
 /.vscode/
 /.idea/
+
+# Node js
 node_modules/
+.angular/
