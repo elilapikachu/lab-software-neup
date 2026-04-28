@@ -154,15 +154,6 @@
                     <option>4–5</option>
                 </select>
 
-                <label class="field-label">Consumo de comida rápida</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.comidaRapida">
-                    <option value="">Selecciona frecuencia</option>
-                    <option>Nunca</option>
-                    <option>1 vez por semana</option>
-                    <option>2–3 veces por semana</option>
-                    <option>Más de 3 veces</option>
-                </select>
-
                 <div class="d-flex gap-3">
                     <button class="btn-outline-green botonesDeGuardado" style="flex:1" (click)="switchTab('sec1')">
                         ← Anterior
@@ -175,7 +166,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div class="toast-neup" [class.show]="toastVisible">
         <span>{{ toastMensaje }}</span>
     </div>

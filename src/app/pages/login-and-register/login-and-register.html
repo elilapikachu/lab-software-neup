@@ -1,3 +1,5 @@
+<app-alert></app-alert>
+
 <div class="container_registro">
     <div class="lado_imagen"></div>
 
@@ -23,7 +25,7 @@
                     [class.inputs--error]="lUsuario?.invalid && lUsuario?.touched" />
                 <span class="error-text" *ngIf="lUsuario?.invalid && lUsuario?.touched">
                     <span *ngIf="lUsuario?.errors?.['required']">El usuario es obligatorio</span>
-                    <span *ngIf="lUsuario?.errors?.['minlength']">Mínimo 3 caracteres</span>
+                 <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{ lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
                 </span>
             </div>
 
@@ -32,7 +34,8 @@
                     [class.inputs--error]="lPassword?.invalid && lPassword?.touched" />
                 <span class="error-text" *ngIf="lPassword?.invalid && lPassword?.touched">
                     <span *ngIf="lPassword?.errors?.['required']">La contraseña es obligatoria</span>
-                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
+                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{
+                        lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
                 </span>
             </div>
 
@@ -78,10 +81,10 @@
             </button>
         </form>
     </div>
+</div>
 
-    <div class="volverPaginaPrincipal">
-        <button class="submit-btn btn_regresar_pagina_principal">
-            <a routerLink="/">Volver a la página principal</a>
-        </button>
-    </div>
+<div class="volverPaginaPrincipal">
+    <button class="submit-btn btn_regresar_pagina_principal">
+        <a routerLink="/">Volver a la página principal</a>
+    </button>
 </div>
