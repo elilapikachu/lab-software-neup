@@ -1,0 +1,394 @@
+<app-navbar></app-navbar>
+<main class="recipe mainIndex">
+    <div class="page-wrapper-index">
+        <section class="formulario__section hero-card">
+
+            <!-- ── HEADER ── -->
+            <div class="formulario__header">
+                <div class="hero-tag">
+                    <span class="hero-tag-dot"></span>
+                    Creador de recetas
+                </div>
+                <h1 class="hero-title">Crea tu <span>receta</span> perfecta 🍳</h1>
+                <p class="hero-subtitle">Añade ingredientes, datos nutricionales y compártela con la comunidad.</p>
+
+                <!-- Stepper -->
+                <div class="stepper">
+                    <div class="stepper__item" [class.stepper__item--active]="pasoActual >= 1"
+                        [class.stepper__item--done]="pasoActual > 1">
+                        <div class="stepper__circle">{{ pasoActual > 1 ? '✓' : '1' }}</div>
+                        <span class="stepper__label">Información</span>
+                    </div>
+                    <div class="stepper__line" [class.stepper__line--done]="pasoActual > 1"></div>
+
+                    <div class="stepper__item" [class.stepper__item--active]="pasoActual >= 2"
+                        [class.stepper__item--done]="pasoActual > 2">
+                        <div class="stepper__circle">{{ pasoActual > 2 ? '✓' : '2' }}</div>
+                        <span class="stepper__label">Ingredientes</span>
+                    </div>
+                    <div class="stepper__line" [class.stepper__line--done]="pasoActual > 2"></div>
+
+                    <div class="stepper__item" [class.stepper__item--active]="pasoActual >= 3">
+                        <div class="stepper__circle">3</div>
+                        <span class="stepper__label">Nutrición y tags</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════
+           PASO 1 — INFORMACIÓN BÁSICA
+      ══════════════════════════════ -->
+            @if (pasoActual === 1) {
+            <div class="paso-content">
+                <div class="paso-content__titulo">
+                    <span class="paso-content__num">01</span>
+                    <div>
+                        <h2 class="formulario__tittle-h1 hero-title">Información <span>básica</span></h2>
+                        <p class="hero-subtitle">Ponle nombre y contexto a tu receta</p>
+                    </div>
+                </div>
+
+                <div class="form-fields">
+
+                    <!-- Nombre -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            🍽️ Nombre de la receta
+                            <span class="field-required">*</span>
+                        </label>
+                        <div class="field-input-wrap">
+                            <input type="text" class="field-input" [(ngModel)]="receta.nombre_receta"
+                                placeholder="Ej: Agua de pollo casera…" maxlength="60">
+                            <span class="field-counter">{{ receta.nombre_receta.length }}/60</span>
+                        </div>
+                    </div>
+
+                    <!-- Tiempo de preparación -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            ⏱️ Tiempo de preparación (minutos)
+                            <span class="field-required">*</span>
+                        </label>
+                        <div class="field-input-wrap tiempo-wrap">
+                            <input type="number" class="field-input" [(ngModel)]="receta.tiempo_preparacion"
+                                placeholder="20" min="1" max="600">
+                            <span class="tiempo-unidad">min</span>
+                        </div>
+                    </div>
+
+                    <!-- Visibilidad -->
+                    <div class="field-group">
+                        <label class="field-label">👁️ Visibilidad</label>
+                        <div class="visibilidad-opts">
+                            <label class="vis-opt" [class.vis-opt--active]="receta.visibilidad === 'publica'">
+                                <input type="radio" name="visibilidad" value="publica" [(ngModel)]="receta.visibilidad">
+                                <span class="vis-opt__icon">🌍</span>
+                                <div>
+                                    <p class="vis-opt__titulo">Pública</p>
+                                    <p class="vis-opt__desc">Toda la comunidad puede verla</p>
+                                </div>
+                            </label>
+                            <label class="vis-opt" [class.vis-opt--active]="receta.visibilidad === 'privada'">
+                                <input type="radio" name="visibilidad" value="privada" [(ngModel)]="receta.visibilidad">
+                                <span class="vis-opt__icon">🔒</span>
+                                <div>
+                                    <p class="vis-opt__titulo">Privada</p>
+                                    <p class="vis-opt__desc">Solo visible para ti</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            }
+
+            <!-- ══════════════════════════════
+           PASO 2 — INGREDIENTES
+      ══════════════════════════════ -->
+            @if (pasoActual === 2) {
+            <div class="paso-content">
+                <div class="paso-content__titulo">
+                    <span class="paso-content__num">02</span>
+                    <div>
+                        <h2 class="formulario__tittle-h1 hero-title">Lista de <span>ingredientes</span></h2>
+                        <p class="hero-subtitle">Agrega todos los ingredientes que lleva tu receta</p>
+                    </div>
+                </div>
+
+                <!-- Formulario nuevo ingrediente -->
+                <div class="ing-form">
+                    <div class="ing-form__titulo">
+                        <span class="ing-form__icon">➕</span>
+                        <p>Agregar ingrediente</p>
+                    </div>
+                    <div class="ing-form__row">
+                        <div class="field-group ing-field">
+                            <label class="field-label">Nombre <span class="field-required">*</span></label>
+                            <div class="field-input-wrap">
+                                <input type="text" class="field-input" [(ngModel)]="nuevoIng.nombre_ingrediente"
+                                    placeholder="Ej: Tomate">
+                            </div>
+                        </div>
+                        <div class="field-group ing-field ing-field--sm">
+                            <label class="field-label">Cantidad <span class="field-required">*</span></label>
+                            <div class="field-input-wrap">
+                                <input type="number" class="field-input" [(ngModel)]="nuevoIng.cantidad" placeholder="2"
+                                    min="0" step="0.1">
+                            </div>
+                        </div>
+                        <div class="field-group ing-field">
+                            <label class="field-label">Tipo</label>
+                            <div class="field-input-wrap">
+                                <select class="field-select" [(ngModel)]="nuevoIng.tipo_ingrediente">
+                                    <option value="">Selecciona…</option>
+                                    @for (tipo of tiposIngrediente; track tipo.value) {
+                                    <option [value]="tipo.value">{{ tipo.emoji }} {{ tipo.label }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <button class="ing-add-btn" (click)="agregarIngrediente()"
+                            [disabled]="!nuevoIng.nombre_ingrediente || !nuevoIng.cantidad">
+                            Agregar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lista de ingredientes agregados -->
+                @if (receta.ingredientes.length > 0) {
+                <div class="ing-lista">
+                    <div class="ing-lista__header">
+                        <p class="ing-lista__titulo">Ingredientes añadidos</p>
+                        <span class="ing-lista__count">{{ receta.ingredientes.length }} ingrediente{{
+                            receta.ingredientes.length !== 1 ? 's' : '' }}</span>
+                    </div>
+
+                    <div class="ing-lista__items">
+                        @for (ing of receta.ingredientes; track $index) {
+                        <div class="ing-item" [class.ing-item--editing]="editandoIdx === $index">
+                            <div class="ing-item__tipo-dot" [ngClass]="'dot-' + (ing.tipo_ingrediente || 'otro')"></div>
+                            <div class="ing-item__info">
+                                <span class="ing-item__nombre">{{ ing.nombre_ingrediente }}</span>
+                                <span class="ing-item__detalle">{{ ing.cantidad }} — {{
+                                    getTipoLabel(ing.tipo_ingrediente) }}</span>
+                            </div>
+                            <div class="ing-item__acciones">
+                                <button class="ing-item__btn ing-item__btn--edit" (click)="editarIngrediente($index)"
+                                    title="Editar">✏️</button>
+                                <button class="ing-item__btn ing-item__btn--del" (click)="eliminarIngrediente($index)"
+                                    title="Eliminar">🗑️</button>
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
+                } @else {
+                <div class="ing-empty">
+                    <span>🥄</span>
+                    <p>Aún no has añadido ingredientes.<br>Completa el formulario de arriba.</p>
+                </div>
+                }
+
+            </div>
+            }
+
+            <!-- ══════════════════════════════
+           PASO 3 — NUTRICIÓN Y TAGS
+      ══════════════════════════════ -->
+            @if (pasoActual === 3) {
+            <div class="paso-content">
+                <div class="paso-content__titulo">
+                    <span class="paso-content__num">03</span>
+                    <div>
+                        <h2 class="formulario__tittle-h1 hero-title">Nutrición <span>&</span> Tags</h2>
+                        <p class="hero-subtitle">Completa los datos nutricionales y clasifica tu receta</p>
+                    </div>
+                </div>
+
+                <!-- Datos nutricionales -->
+                <div class="nutricion-section">
+                    <p class="nutricion-section__titulo">📊 Información nutricional <span
+                            class="nutricion-section__hint">(por porción)</span></p>
+
+                    <div class="nutricion-grid">
+
+                        <div class="nutricion-card nutricion-card--kcal">
+                            <span class="nutricion-card__emoji">🔥</span>
+                            <div class="field-group">
+                                <label class="field-label">Calorías (kcal)</label>
+                                <div class="field-input-wrap">
+                                    <input type="number" class="field-input" [(ngModel)]="receta.nutricion.kcal"
+                                        placeholder="0" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nutricion-card nutricion-card--proteinas">
+                            <span class="nutricion-card__emoji">💪</span>
+                            <div class="field-group">
+                                <label class="field-label">Proteínas (g)</label>
+                                <div class="field-input-wrap">
+                                    <input type="number" class="field-input" [(ngModel)]="receta.nutricion.proteinas"
+                                        placeholder="0" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nutricion-card nutricion-card--carbs">
+                            <span class="nutricion-card__emoji">🌾</span>
+                            <div class="field-group">
+                                <label class="field-label">Carbohidratos (g)</label>
+                                <div class="field-input-wrap">
+                                    <input type="number" class="field-input"
+                                        [(ngModel)]="receta.nutricion.carbohidratos" placeholder="0" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="nutricion-card nutricion-card--fibra">
+                            <span class="nutricion-card__emoji">🥦</span>
+                            <div class="field-group">
+                                <label class="field-label">Fibra (g)</label>
+                                <div class="field-input-wrap">
+                                    <input type="number" class="field-input" [(ngModel)]="receta.nutricion.fibra"
+                                        placeholder="0" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Preview de macros -->
+                    @if (totalMacros > 0) {
+                    <div class="macros-preview">
+                        <p class="macros-preview__label">Distribución de macros</p>
+                        <div class="macros-bar">
+                            <div class="macros-bar__seg macros-bar__seg--p" [style.width.%]="getPct('proteinas')"
+                                title="Proteínas"></div>
+                            <div class="macros-bar__seg macros-bar__seg--c" [style.width.%]="getPct('carbohidratos')"
+                                title="Carbohidratos"></div>
+                            <div class="macros-bar__seg macros-bar__seg--f" [style.width.%]="getPct('fibra')"
+                                title="Fibra"></div>
+                        </div>
+                        <div class="macros-legend">
+                            <span class="macro-leg macro-leg--p">💪 Proteínas {{ getPct('proteinas') | number:'1.0-0'
+                                }}%</span>
+                            <span class="macro-leg macro-leg--c">🌾 Carbs {{ getPct('carbohidratos') | number:'1.0-0'
+                                }}%</span>
+                            <span class="macro-leg macro-leg--f">🥦 Fibra {{ getPct('fibra') | number:'1.0-0' }}%</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <!-- Tags -->
+                <div class="tags-section">
+                    <p class="tags-section__titulo">🏷️ Tags de la receta</p>
+                    <p class="tags-section__sub">Selecciona las categorías que mejor describen tu receta</p>
+
+                    <div class="tags-grid">
+                        @for (tag of tagsDisponibles; track tag.id) {
+                        <label class="tag-card" [class.tag-card--active]="tag.selected">
+                            <input type="checkbox" [checked]="tag.selected" (change)="toggleTag(tag)">
+                            <span class="tag-card__emoji">{{ tag.emoji }}</span>
+                            <span class="tag-card__label">{{ tag.label }}</span>
+                            @if (tag.selected) {
+                            <span class="tag-card__check">✓</span>
+                            }
+                        </label>
+                        }
+                    </div>
+
+                    <div class="tags-seleccionados">
+                        <span class="tags-seleccionados__label">Seleccionados:</span>
+                        <div class="tags-seleccionados__chips">
+                            @for (tag of tagsSeleccionados; track tag.id) {
+                            <span class="tag-chip">{{ tag.emoji }} {{ tag.label }}</span>
+                            }
+                            @if (tagsSeleccionados.length === 0) {
+                            <span class="tag-chip tag-chip--empty">Ninguno aún</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumen final antes de crear -->
+                <div class="resumen-final">
+                    <p class="resumen-final__titulo">✅ Resumen de tu receta</p>
+                    <div class="resumen-final__grid">
+                        <div class="resumen-item">
+                            <span class="resumen-item__label">Nombre</span>
+                            <span class="resumen-item__valor">{{ receta.nombre_receta || '—' }}</span>
+                        </div>
+                        <div class="resumen-item">
+                            <span class="resumen-item__label">Tiempo</span>
+                            <span class="resumen-item__valor">{{ receta.tiempo_preparacion || '—' }} min</span>
+                        </div>
+                        <div class="resumen-item">
+                            <span class="resumen-item__label">Ingredientes</span>
+                            <span class="resumen-item__valor">{{ receta.ingredientes.length }}</span>
+                        </div>
+                        <div class="resumen-item">
+                            <span class="resumen-item__label">Calorías</span>
+                            <span class="resumen-item__valor">{{ receta.nutricion.kcal }} kcal</span>
+                        </div>
+                        <div class="resumen-item">
+                            <span class="resumen-item__label">Visibilidad</span>
+                            <span class="resumen-item__valor">{{ receta.visibilidad === 'publica' ? '🌍 Pública' : '🔒
+                                Privada' }}</span>
+                        </div>
+                        <div class="resumen-item">
+                            <span class="resumen-item__label">Tags</span>
+                            <span class="resumen-item__valor">{{ tagsSeleccionados.length > 0 ? tagsSeleccionados.length
+                                + ' tag(s)' : '—' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            }
+
+            <!-- ── NAVEGACIÓN ── -->
+            <div class="formulario__nav">
+                <button class="nav-btn nav-btn--back" (click)="pasoAnterior()" [disabled]="pasoActual === 1">
+                    ← Anterior
+                </button>
+                <div class="nav-pasos">
+                    @for (p of [1,2,3]; track p) {
+                    <span class="nav-dot" [class.nav-dot--active]="pasoActual === p" (click)="pasoActual = p"></span>
+                    }
+                </div>
+                @if (pasoActual < 3) { <button class="nav-btn nav-btn--next" (click)="pasoSiguiente()">
+                    Siguiente →
+                    </button>
+                    } @else {
+                    <button class="nav-btn nav-btn--submit" (click)="crearReceta()">
+                        Crear Receta ✓
+                    </button>
+                    }
+            </div>
+
+        </section>
+    </div>
+
+    <!-- ── MODAL REGRESAR ── -->
+    <div class="modal fade" id="modalRegresarReceta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modal-custom">
+                <div class="modal-custom__header">
+                    <span class="modal-custom__icon">⚠️</span>
+                    <h2 class="modal-custom__titulo">¿Salir sin guardar?</h2>
+                    <p class="modal-custom__sub">Perderás los datos de tu receta.</p>
+                </div>
+                <div class="modal-custom__footer">
+                    <button class="modal-btn modal-btn--cancel" data-bs-dismiss="modal">Seguir editando</button>
+                    <button class="modal-btn modal-btn--confirm" data-bs-dismiss="modal" (click)="onReturn()">Sí,
+                        salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+<app-footer></app-footer>

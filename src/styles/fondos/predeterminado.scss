@@ -1,0 +1,14 @@
+.mainIndex {
+    background-image: url('/assets/img/fondos/fondo-general.png');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+.page-wrapper-index {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+}

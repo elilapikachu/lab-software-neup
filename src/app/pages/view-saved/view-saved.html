@@ -1,0 +1,141 @@
+<app-navbar></app-navbar>
+<main class="mainIndex">
+    <div class="page-wrapper-index">
+        <!-- HEADER -->
+        <section class="mi-contenido-header">
+            <div class="header-content">
+                <h1 class="header-titulo">Mi Contenido Personalizado</h1>
+                <p class="header-subtitulo">Gestiona tus recetas y dietas guardadas y creadas</p>
+            </div>
+        </section>
+
+        <!-- TABS -->
+        <div class="tabs-container">
+            <button class="tab-btn" [class.tab-active]="activeTab === 'recetas'" (click)="cambiarTab('recetas')">
+                📖 Mis Recetas
+            </button>
+            <button class="tab-btn" [class.tab-active]="activeTab === 'dietas'" (click)="cambiarTab('dietas')">
+                🍽 Mis Dietas
+            </button>
+        </div>
+
+        <!-- SECCIÓN RECETAS -->
+            <div *ngIf="activeTab === 'recetas'" class="tab-content franja-card">
+                <!-- FILTROS -->
+                <div class="filtros-section">
+                    <div class="filtros-group">
+                        <button class="filter-btn" [class.filter-active]="filterRecetas === 'todos'"
+                            (click)="cambiarFilterRecetas('todos')">
+                            Todos
+                        </button>
+                        <button class="filter-btn" [class.filter-active]="filterRecetas === 'personalizadas'"
+                            (click)="cambiarFilterRecetas('personalizadas')">
+                            Mis Creaciones
+                        </button>
+                        <button class="filter-btn" [class.filter-active]="filterRecetas === 'guardadas'"
+                            (click)="cambiarFilterRecetas('guardadas')">
+                            Guardadas
+                        </button>
+                    </div>
+                    <button (click)="crearReceta()" class="btn-naranja">
+                        ➕ Nueva Receta
+                    </button>
+                </div>
+            </div>
+
+        <!-- RECETAS GRID -->
+        <div class="contenido-grid franja-card" *ngIf="getRecetasFiltradasRecetas().length > 0">
+            <div *ngFor="let receta of getRecetasFiltradasRecetas()" class="contenido-card">
+                <div class="contenido-card-img">
+                    <img src="/assets/img/comidas/bowlRecetas.png" [alt]="receta.nombre_receta" class="card-img">
+                    <div class="card-badge"
+                        [class]="receta.es_personalizada ? 'badge-personalizada' : 'badge-guardada'">
+                        {{ receta.es_personalizada ? '👤 Creada por ti' : '⭐ Guardada' }}
+                    </div>
+                </div>
+                <div class="contenido-card-body">
+                    <h3 class="card-titulo">{{ receta.nombre_receta }}</h3>
+                    <div class="card-info">
+                        <span class="info-item">⏱ {{ receta.tiempo_preparacion }} min</span>
+                        <span class="info-item">🔥 {{ receta.nutricion.kcal }} kcal</span>
+                    </div>
+                    <div class="card-tags">
+                        <span *ngFor="let tag of receta.tags" class="tag">{{ tag }}</span>
+                    </div>
+                </div>
+                <div class="contenido-card-actions">
+                    <button (click)="editarReceta(receta)" class="btn-accion btn-editar">✏️ Editar</button>
+                    <button (click)="eliminarReceta(receta._id.$oid)" class="btn-accion btn-eliminar">🗑️
+                        Eliminar</button>
+                    <a routerLink="/viewrecipe" class="btn-accion btn-ver">👁️ Ver</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTADO VACÍO -->
+        <div class="empty-state" *ngIf="getRecetasFiltradasRecetas().length === 0">
+            <div class="empty-icon">📋</div>
+            <h3 class="empty-titulo">No hay recetas</h3>
+            <p class="empty-texto">Comienza creando tu primera receta personalizada</p>
+            <button (click)="crearReceta()" class="btn-naranja">➕ Crear Receta</button>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DIETAS -->
+    <div *ngIf="activeTab === 'dietas'" class="tab-content">
+        <!-- FILTROS -->
+        <div class="filtros-section">
+            <div class="filtros-group">
+                <button class="filter-btn" [class.filter-active]="filterDietas === 'todos'"
+                    (click)="cambiarFilterDietas('todos')">
+                    Todos
+                </button>
+                <button class="filter-btn" [class.filter-active]="filterDietas === 'personalizadas'"
+                    (click)="cambiarFilterDietas('personalizadas')">
+                    Mis Creaciones
+                </button>
+                <button class="filter-btn" [class.filter-active]="filterDietas === 'guardadas'"
+                    (click)="cambiarFilterDietas('guardadas')">
+                    Guardadas
+                </button>
+            </div>
+            <button (click)="crearDieta()" class="btn-naranja">
+                ➕ Nueva Dieta
+            </button>
+        </div>
+
+        <!-- DIETAS GRID -->
+        <div class="contenido-grid" *ngIf="getDietasFiltradasDietas().length > 0">
+            <div *ngFor="let dieta of getDietasFiltradasDietas()" class="contenido-card">
+                <div class="contenido-card-img">
+                    <img src="/assets/img/comidas/plato-proteina.png" [alt]="dieta.nombre_dieta" class="card-img">
+                    <div class="card-badge" [class]="dieta.es_personalizada ? 'badge-personalizada' : 'badge-guardada'">
+                        {{ dieta.es_personalizada ? '👤 Creada por ti' : '⭐ Guardada' }}
+                    </div>
+                </div>
+                <div class="contenido-card-body">
+                    <h3 class="card-titulo">{{ dieta.nombre_dieta }}</h3>
+                    <p class="card-descripcion">{{ dieta.descripcion }}</p>
+                    <div class="card-metas">
+                        <span *ngFor="let meta of dieta.metas" class="meta">{{ meta }}</span>
+                    </div>
+                </div>
+                <div class="contenido-card-actions">
+                    <button (click)="editarDieta(dieta)" class="btn-accion btn-editar">✏️ Editar</button>
+                    <button (click)="eliminarDieta(dieta._id.$oid)" class="btn-accion btn-eliminar">🗑️
+                        Eliminar</button>
+                    <a routerLink="/viewdiet" class="btn-accion btn-ver">👁️ Ver</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTADO VACÍO -->
+        <div class="empty-state" *ngIf="getDietasFiltradasDietas().length === 0">
+            <div class="empty-icon">🍽</div>
+            <h3 class="empty-titulo">No hay dietas</h3>
+            <p class="empty-texto">Comienza creando tu primera dieta personalizada</p>
+            <button (click)="crearDieta()" class="btn-naranja">➕ Crear Dieta</button>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

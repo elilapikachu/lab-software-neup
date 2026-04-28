@@ -1,0 +1,396 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FORM — Estilos reutilizables para formularios con pasos (stepper)
+// Uso: @use '../../../styles/form/form.scss' as *;  (ajusta la ruta)
+//
+// Clases disponibles:
+//   Contenedor  → .formulario__section, .formulario__header
+//   Stepper     → .stepper, .stepper__item, .stepper__circle,
+//                 .stepper__label, .stepper__line
+//                 Modificadores: --active, --done
+//   Pasos       → .paso-content, .paso-content__titulo, .paso-content__num
+//   Campos      → .form-fields, .field-group, .field-label, .field-required
+//                 .field-input-wrap, .field-input, .field-textarea,
+//                 .field-counter, .field-select
+//   Visibilidad → .visibilidad-opts, .vis-opt  (--active)
+//   Navegación  → .formulario__nav, .nav-pasos, .nav-dot (--active)
+//                 .nav-btn  (--back, --next, --submit)
+//   Modal       → .modal-custom, .modal-btn  (--cancel, --confirm)
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes _form-fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes _form-slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes _form-popIn {
+  0%   { opacity: 0; transform: scale(.92); }
+  70%  { transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+// ─── SECCIÓN PRINCIPAL ────────────────────────────────────────────────────────
+.formulario__section {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  min-height: auto !important;
+  gap: 0;
+  padding: 52px clamp(24px, 5vw, 72px) !important;
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+
+  @media (max-width: 768px) { padding: 28px 20px !important; }
+}
+
+// ─── HEADER ───────────────────────────────────────────────────────────────────
+.formulario__header {
+  margin-bottom: 40px;
+  animation: _form-fadeUp .6s cubic-bezier(.22, 1, .36, 1) both;
+
+  .hero-title    { margin-bottom: 8px; }
+  .hero-subtitle { margin-bottom: 28px; }
+}
+
+// ─── STEPPER ──────────────────────────────────────────────────────────────────
+.stepper {
+  display: flex;
+  align-items: center;
+  max-width: 480px;
+}
+
+.stepper__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.stepper__circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--letra-titulo);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--textoSuave);
+  transition: all .3s ease;
+}
+
+.stepper__item--active .stepper__circle {
+  border-color: var(--botonesSecciones);
+  background: var(--botonesSecciones);
+  color: #fff;
+  box-shadow: 0 4px 14px var(--bordeCards);
+}
+
+.stepper__item--done .stepper__circle {
+  border-color: var(--botonesSecciones);
+  background: transparent;
+  color: var(--botonesSecciones);
+}
+
+.stepper__label {
+  font-family: var(--letra);
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--textoSuave);
+  white-space: nowrap;
+}
+
+.stepper__item--active .stepper__label { color: var(--botonesSecciones); }
+
+.stepper__line {
+  flex: 1;
+  height: 2px;
+  background: var(--bordeCards);
+  margin: 0 8px 20px;
+  transition: background .3s ease;
+}
+
+.stepper__line--done { background: var(--botonesSecciones); }
+
+// ─── PASO CONTENT ─────────────────────────────────────────────────────────────
+.paso-content {
+  animation: _form-fadeUp .4s cubic-bezier(.22, 1, .36, 1) both;
+  margin-bottom: 36px;
+
+  &__titulo {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  &__num {
+    font-family: var(--letra-titulo);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--botonesSecciones);
+    opacity: .15;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+}
+
+.formulario__tittle-h1 { margin-bottom: 4px; }
+
+// ─── CAMPOS ───────────────────────────────────────────────────────────────────
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: _form-slideIn .4s cubic-bezier(.22, 1, .36, 1) both;
+
+  @for $i from 1 through 8 { &:nth-child(#{$i}) { animation-delay: #{$i * 0.06}s; } }
+}
+
+.field-label {
+  font-family: var(--letra);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+}
+
+.field-required { color: #ef4444; margin-left: 3px; }
+
+.field-input-wrap { position: relative; }
+
+.field-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--bordeCards);
+  border-radius: 0;
+  padding: 10px 48px 10px 4px;
+  font-family: var(--letra);
+  font-size: .95rem;
+  color: var(--textoOscuro);
+  transition: border-color .22s;
+  outline: none;
+
+  &::placeholder { color: var(--textoSuave); opacity: .5; }
+  &:focus        { border-bottom-color: var(--botonesSecciones); }
+}
+
+.field-textarea {
+  border: 1.5px solid var(--bordeCards);
+  border-radius: 12px;
+  padding: 12px 48px 12px 14px;
+  resize: none;
+  line-height: 1.6;
+
+  &:focus {
+    border-color: var(--botonesSecciones);
+    box-shadow: 0 0 0 3px rgba(80, 180, 80, .1);
+  }
+}
+
+// Select nativo estilizado
+.field-select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--bordeCards);
+  border-radius: 0;
+  padding: 10px 32px 10px 4px;
+  font-family: var(--letra);
+  font-size: .93rem;
+  color: var(--textoOscuro);
+  transition: border-color .22s;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+
+  &:focus { border-bottom-color: var(--botonesSecciones); }
+
+  option { background: white; color: var(--textoOscuro); }
+}
+
+.field-counter {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-family: var(--letra);
+  font-size: .72rem;
+  color: var(--textoSuave);
+  opacity: .6;
+  pointer-events: none;
+}
+
+// ─── VISIBILIDAD ──────────────────────────────────────────────────────────────
+.visibilidad-opts {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.vis-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  cursor: pointer;
+  transition: border-color .22s, background .22s, box-shadow .22s;
+  flex: 1;
+  min-width: 180px;
+  user-select: none;
+
+  input[type="radio"] { display: none; }
+
+  &:hover { border-color: var(--botonesSecciones); }
+
+  &--active {
+    border-color: var(--botonesSecciones);
+    background: rgba(80, 180, 80, .06);
+    box-shadow: 0 4px 16px var(--bordeCards);
+  }
+
+  &__icon  { font-size: 1.6rem; flex-shrink: 0; }
+
+  &__titulo {
+    font-family: var(--letra-titulo);
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--textoOscuro);
+    margin: 0 0 2px;
+  }
+
+  &__desc {
+    font-family: var(--letra);
+    font-size: .78rem;
+    color: var(--textoSuave);
+    margin: 0;
+  }
+}
+
+// ─── NAVEGACIÓN ENTRE PASOS ───────────────────────────────────────────────────
+.formulario__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 28px;
+  border-top: 1px solid var(--bordeCards);
+  margin-top: 8px;
+}
+
+.nav-pasos { display: flex; gap: 8px; align-items: center; }
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bordeCards);
+  cursor: pointer;
+  transition: background .2s, width .2s, border-radius .2s;
+
+  &--active { background: var(--botonesSecciones); width: 22px; border-radius: 4px; }
+}
+
+.nav-btn {
+  padding: 10px 28px;
+  border-radius: 50px;
+  font-family: var(--letra);
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+
+  &--back {
+    background: transparent;
+    border: 1.5px solid var(--bordeCards);
+    color: var(--textoSuave);
+    &:hover:not(:disabled) { border-color: var(--textoSuave); color: var(--textoOscuro); }
+    &:disabled             { opacity: .35; cursor: not-allowed; }
+  }
+
+  &--next {
+    background: var(--botonesSecciones);
+    border: 1.5px solid var(--botonesSecciones);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--bordeCards);
+    &:hover { background: var(--botonesHover); border-color: var(--botonesHover); transform: translateY(-1px); }
+  }
+
+  &--submit {
+    background: linear-gradient(135deg, var(--botonesSecciones), var(--botonesHover));
+    border: none;
+    color: #fff;
+    box-shadow: 0 4px 18px var(--bordeCards);
+    &:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--sombra); }
+  }
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+.modal-custom {
+  border-radius: 20px !important;
+  border: 1px solid var(--bordeCards);
+  overflow: hidden;
+
+  &__header { padding: 28px 28px 20px; text-align: center; }
+  &__icon   { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+
+  &__titulo {
+    font-family: var(--letra-titulo);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--textoOscuro);
+    margin: 0 0 6px;
+  }
+
+  &__sub    { font-family: var(--letra); font-size: .88rem; color: var(--textoSuave); margin: 0; }
+  &__footer { display: flex; gap: 10px; padding: 0 28px 28px; }
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 11px 0;
+  border-radius: 50px;
+  font-family: var(--letra);
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .2s;
+
+  &--cancel {
+    background: transparent;
+    border: 1.5px solid var(--bordeCards);
+    color: var(--textoSuave);
+    &:hover { border-color: var(--textoSuave); }
+  }
+
+  &--confirm {
+    background: #ef4444;
+    border: 1.5px solid #ef4444;
+    color: #fff;
+    &:hover { background: #dc2626; border-color: #dc2626; transform: translateY(-1px); }
+  }
+}
+
+// ─── RESPONSIVE COMUNES ───────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .visibilidad-opts { flex-direction: column; }
+  .stepper__label   { display: none; }
+  .nav-btn          { padding: 10px 18px; font-size: .82rem; }
+}

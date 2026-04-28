@@ -1,0 +1,297 @@
+<app-navbar></app-navbar>
+<main class="diet mainIndex">
+    <div class="page-wrapper-index">
+        <section class="formulario__section hero-card">
+            <div class="formulario__header ">
+                <div class="hero-tag">
+                    <span class="hero-tag-dot"></span>
+                    Creador de dietas
+                </div>
+                <h1 class="hero-title">Crea tu <span>dieta personalizada</span> 🥗</h1>
+                <p class="hero-subtitle">Diseña un plan único que se ajuste a tus metas, gustos y estilo de vida.</p>
+
+                <div class="stepper d-flex w-100 justify-content-center">
+                    <div class="stepper__item" [class.stepper__item--active]="pasoActual >= 1"
+                        [class.stepper__item--done]="pasoActual > 1">
+                        <div class="stepper__circle">{{ pasoActual > 1 ? '✓' : '1' }}</div>
+                        <span class="stepper__label">Información</span>
+                    </div>
+                    <div class="stepper__line" [class.stepper__line--done]="pasoActual > 1"></div>
+                    <div class="stepper__item" [class.stepper__item--active]="pasoActual >= 2"
+                        [class.stepper__item--done]="pasoActual > 2">
+                        <div class="stepper__circle">{{ pasoActual > 2 ? '✓' : '2' }}</div>
+                        <span class="stepper__label">Metas</span>
+                    </div>
+                    <div class="stepper__line" [class.stepper__line--done]="pasoActual > 2"></div>
+                    <div class="stepper__item" [class.stepper__item--active]="pasoActual >= 3">
+                        <div class="stepper__circle">3</div>
+                        <span class="stepper__label">Plan semanal</span>
+                    </div>
+                </div>
+            </div>
+            @if (pasoActual === 1) {
+            <div class="paso-content">
+                <div class="paso-content__titulo">
+                    <span class="paso-content__num">01</span>
+                    <div>
+                        <h2 class="formulario__tittle-h1 hero-title">Información <span>básica</span></h2>
+                        <p class="hero-subtitle">Ponle nombre e identidad a tu dieta</p>
+                    </div>
+                </div>
+
+                <div class="form-fields">
+
+                    <!-- Nombre -->
+                    <div class="field-group">
+                        <label class="field-label">
+                             Nombre de tu dieta
+                            <span class="field-required">*</span>
+                        </label>
+                        <div class="field-input-wrap">
+                            <input type="text" class="field-input" [(ngModel)]="nombreDieta"
+                                placeholder="Ej: Plan verde de verano…" maxlength="60">
+                            <span class="field-counter">{{ nombreDieta.length }}/60</span>
+                        </div>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="field-group">
+                        <label class="field-label">
+                            Descripción
+                        </label>
+                        <div class="field-input-wrap">
+                            <textarea class="field-input field-textarea" [(ngModel)]="descripcion"
+                                placeholder="¿De qué trata tu dieta? ¿A quién está dirigida?" rows="3"
+                                maxlength="200"></textarea>
+                            <span class="field-counter">{{ descripcion.length }}/200</span>
+                        </div>
+                    </div>
+
+                    <!-- Visibilidad -->
+                    <div class="field-group">
+                        <label class="field-label">👁️ Visibilidad</label>
+                        <div class="visibilidad-opts">
+                            <label class="vis-opt" [class.vis-opt--active]="visibilidad === 'publica'">
+                                <input type="radio" name="visibilidad" value="publica" [(ngModel)]="visibilidad">
+                                <span class="vis-opt__icon">🌍</span>
+                                <div>
+                                    <p class="vis-opt__titulo">Pública</p>
+                                    <p class="vis-opt__desc">Visible para toda la comunidad</p>
+                                </div>
+                            </label>
+                            <label class="vis-opt" [class.vis-opt--active]="visibilidad === 'privada'">
+                                <input type="radio" name="visibilidad" value="privada" [(ngModel)]="visibilidad">
+                                <span class="vis-opt__icon">🔒</span>
+                                <div>
+                                    <p class="vis-opt__titulo">Privada</p>
+                                    <p class="vis-opt__desc">Solo tú puedes verla</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            }
+            @if (pasoActual === 2) {
+            <div class="paso-content">
+                <div class="paso-content__titulo">
+                    <span class="paso-content__num">02</span>
+                    <div>
+                        <h2 class="formulario__tittle-h1 hero-title">Tus <span>metas</span></h2>
+                        <p class="hero-subtitle">Selecciona una o más metas para tu dieta</p>
+                    </div>
+                </div>
+
+                <div class="tags-grid">
+                    @for (tag of tags; track tag.id) {
+                    <label class="tag-card" [class.tag-card--active]="tag.selected">
+                        <input type="checkbox" [checked]="tag.selected" (change)="toggleTag(tag)">
+                        <span class="tag-card__label">{{ tag.label }}</span>
+                        @if (tag.selected) {
+                        <span class="tag-card__check">✓</span>
+                        }
+                    </label>
+                    }
+                </div>
+            </div>
+            }
+            @if (pasoActual === 3) {
+            <div class="paso-content paso-content--wide">
+                <div class="paso-content__titulo">
+                    <span class="paso-content__num">03</span>
+                    <div>
+                        <h2 class="formulario__tittle-h1 hero-title">Plan <span>semanal</span></h2>
+                        <p class="hero-subtitle">Activa los días y agrega recetas a cada uno</p>
+                    </div>
+                </div>
+
+                <!-- Selector de días -->
+                <div class="dias-selector">
+                    @for (dia of dias; track dia.key) {
+                    <button class="dia-btn" [class.dia-btn--active]="dia.activo"
+                        [class.dia-btn--selected]="diaSeleccionado === dia.key && dia.activo" (click)="toggleDia(dia)">
+                        <span class="dia-btn__short">{{ dia.short }}</span>
+                        <span class="dia-btn__full">{{ dia.label }}</span>
+                        @if (getRecetasDia(dia.key).length > 0) {
+                        <span class="dia-btn__badge">{{ getRecetasDia(dia.key).length }}</span>
+                        }
+                    </button>
+                    }
+                </div>
+
+                <!-- Panel de recetas del día seleccionado -->
+                @if (diaSeleccionado && isDiaActivo(diaSeleccionado)) {
+                <div class="dia-panel">
+                    <div class="dia-panel__header">
+                        <h3 class="dia-panel__titulo">
+                            📅 {{ getDiaLabel(diaSeleccionado) }}
+                            <span class="dia-panel__count">{{ getRecetasDia(diaSeleccionado).length }} recetas</span>
+                        </h3>
+                        <p class="dia-panel__sub">Busca y agrega recetas para este día</p>
+                    </div>
+
+                    <!-- Buscador -->
+                    <div class="receta-buscador">
+                        <div class="receta-buscador__input-wrap">
+                            <span class="receta-buscador__icon">🔍</span>
+                            <input type="text" class="receta-buscador__input" [(ngModel)]="busquedaReceta"
+                                placeholder="Buscar receta… ej: pollo, avena, ensalada" (input)="onBuscar()">
+                            @if (busquedaReceta) {
+                            <button class="receta-buscador__clear"
+                                (click)="busquedaReceta = ''; filtroCategoria = 'todas'">✕</button>
+                            }
+                        </div>
+                        <!-- Filtros de categoría -->
+                        <div class="receta-buscador__filtros">
+                            @for (cat of categorias; track cat.key) {
+                            <button class="cat-chip" [class.cat-chip--active]="filtroCategoria === cat.key"
+                                (click)="filtroCategoria = cat.key">
+                                {{ cat.emoji }} {{ cat.label }}
+                            </button>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Carrusel de recetas disponibles -->
+                    <div class="carrusel-wrap">
+                        <button class="carrusel-nav carrusel-nav--prev" (click)="prevSlide()"
+                            [disabled]="carruselOffset === 0">‹</button>
+
+                        <div class="carrusel-viewport">
+                            <div class="carrusel-track"
+                                [style.transform]="'translateX(-' + carruselOffset * carruselCardWidth + 'px)'">
+                                @for (receta of recetasFiltradas; track receta.id) {
+                                <div class="carrusel-card"
+                                    [class.carrusel-card--agregada]="isRecetaEnDia(diaSeleccionado, receta.id)">
+                                    <div class="carrusel-card__img-wrap">
+                                        <img [src]="receta.img" [alt]="receta.nombre" class="carrusel-card__img"
+                                            loading="lazy">
+                                        <span class="carrusel-card__cat">{{ receta.categoriaEmoji }} {{
+                                            receta.categoriaLabel }}</span>
+                                        <span class="carrusel-card__kcal">{{ receta.kcal }} kcal</span>
+                                    </div>
+                                    <div class="carrusel-card__body">
+                                        <h4 class="carrusel-card__nombre">{{ receta.nombre }}</h4>
+                                        <div class="carrusel-card__macros">
+                                            <span class="cmacro cmacro--p">{{ receta.proteina }}g P</span>
+                                            <span class="cmacro cmacro--c">{{ receta.carbs }}g C</span>
+                                            <span class="cmacro cmacro--g">{{ receta.grasas }}g G</span>
+                                        </div>
+                                        <button class="carrusel-card__btn"
+                                            [class.carrusel-card__btn--remove]="isRecetaEnDia(diaSeleccionado, receta.id)"
+                                            (click)="toggleRecetaEnDia(diaSeleccionado, receta)">
+                                            {{ isRecetaEnDia(diaSeleccionado, receta.id) ? '✓ Agregada' : '+ Agregar' }}
+                                        </button>
+                                    </div>
+                                </div>
+                                }
+
+                                @if (recetasFiltradas.length === 0) {
+                                <div class="carrusel-empty">
+                                    <span>😕</span>
+                                    <p>No encontramos recetas con ese filtro</p>
+                                    <button class="carrusel-empty__btn"
+                                        (click)="busquedaReceta = ''; filtroCategoria = 'todas'">Limpiar filtro</button>
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <button class="carrusel-nav carrusel-nav--next" (click)="nextSlide()"
+                            [disabled]="!puedeAvanzar()">›</button>
+                    </div>
+
+                    <!-- Recetas seleccionadas para este día -->
+                    @if (getRecetasDia(diaSeleccionado).length > 0) {
+                    <div class="dia-recetas-sel">
+                        <p class="dia-recetas-sel__titulo">Recetas del día:</p>
+                        <div class="dia-recetas-sel__lista">
+                            @for (rec of getRecetasDia(diaSeleccionado); track rec.id) {
+                            <div class="sel-chip">
+                                <span class="sel-chip__emoji">{{ rec.categoriaEmoji }}</span>
+                                <span class="sel-chip__nombre">{{ rec.nombre }}</span>
+                                <span class="sel-chip__kcal">{{ rec.kcal }} kcal</span>
+                                <button class="sel-chip__remove"
+                                    (click)="toggleRecetaEnDia(diaSeleccionado, rec)">✕</button>
+                            </div>
+                            }
+                        </div>
+                        <div class="dia-total">
+                            <span>Total del día:</span>
+                            <strong>{{ getTotalKcalDia(diaSeleccionado) }} kcal</strong>
+                        </div>
+                    </div>
+                    }
+                </div>
+                } @else if (!diaSeleccionado || !isDiaActivo(diaSeleccionado)) {
+                <div class="dias-hint">
+                    <span>👆</span>
+                    <p>Activa un día tocándolo para agregar recetas</p>
+                </div>
+                }
+
+                <!-- Resumen semanal -->
+                @if (diasActivos.length > 0) {
+                <div class="resumen-semanal">
+                    <p class="resumen-semanal__titulo">📊 Resumen semanal</p>
+                    <div class="resumen-dias">
+                        @for (dia of diasActivos; track dia.key) {
+                        <div class="resumen-dia" [class.resumen-dia--active]="diaSeleccionado === dia.key"
+                            (click)="selectDia(dia.key)">
+                            <span class="resumen-dia__nombre">{{ dia.short }}</span>
+                            <span class="resumen-dia__num">{{ getRecetasDia(dia.key).length }} rec.</span>
+                            <span class="resumen-dia__kcal">{{ getTotalKcalDia(dia.key) }} kcal</span>
+                        </div>
+                        }
+                    </div>
+                </div>
+                }
+
+            </div>
+            }
+
+            <!-- ── NAVEGACIÓN ── -->
+            <div class="formulario__nav">
+                <button class="nav-btn nav-btn--back" (click)="pasoAnterior()" [disabled]="pasoActual === 1">
+                    ← Anterior
+                </button>
+                <div class="nav-pasos">
+                    @for (p of [1,2,3]; track p) {
+                    <span class="nav-dot" [class.nav-dot--active]="pasoActual === p" (click)="pasoActual = p"></span>
+                    }
+                </div>
+                @if (pasoActual < 3) { <button class="nav-btn nav-btn--next" (click)="pasoSiguiente()">
+                    Siguiente →
+                    </button>
+                    } @else {
+                    <button class="nav-btn nav-btn--submit" (click)="crearDieta()">
+                        Crear Dieta
+                    </button>
+                    }
+            </div>
+
+        </section>
+    </div>
+</main>
+<app-footer></app-footer>
