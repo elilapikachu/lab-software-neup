@@ -1,5 +1,5 @@
-#Archivos generados por el ID
 .DS_Store
 *.log
 /.vscode/
 /.idea/
+node_modules/

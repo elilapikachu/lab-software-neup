@@ -55,8 +55,6 @@ export class LoginAndRegister {
   get rUsuario()  { return this.registerForm.get('usuario');  }
   get rEmail()    { return this.registerForm.get('email');    }
   get rPassword() { return this.registerForm.get('password'); }
-  get rTerminos() { return this.registerForm.get('terminos'); }
-
   private limpiarMensajes(): void {
     this.errorMensaje = '';
     this.exitoMensaje = '';
@@ -74,7 +72,6 @@ export class LoginAndRegister {
     setTimeout(() => this.exitoMensaje = '', 3500);
   }
 
-  // ── Login ────────────────────────────────────────────────
   onLoginSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -105,7 +102,6 @@ export class LoginAndRegister {
     });
   }
 
-  // ── Registro ─────────────────────────────────────────────
   onRegisterSubmit(): void {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
@@ -115,7 +111,7 @@ export class LoginAndRegister {
     this.cargando = true;
     this.limpiarMensajes();
 
-    const { terminos, ...datosRegistro } = this.registerForm.value;
+    const {...datosRegistro } = this.registerForm.value;
 
     this.authService.registro(datosRegistro).subscribe({
       next: (response) => {

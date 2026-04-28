@@ -1,0 +1,142 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// TAGS — Estilos reutilizables para selección de tags/metas
+// Uso: @use '../../../styles/tags/tags.scss' as *;  (ajusta la ruta)
+//
+// Clases disponibles:
+//   .tags-grid            → grid de tarjetas seleccionables
+//   .tag-card             → tarjeta individual label
+//   .tag-card--active     → estado seleccionado
+//   .tags-seleccionados   → fila de resumen de tags activos
+//   .tag-chip             → pill de tag seleccionada
+//   .tag-chip--empty      → estado vacío
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes _tag-popIn {
+  0%   { opacity: 0; transform: scale(.92); }
+  70%  { transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+// ── Grid contenedor ──────────────────────────────────────────────────────────
+.tags-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+
+  @media (max-width: 860px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 480px) { grid-template-columns: 1fr; }
+}
+
+// ── Tarjeta de tag ───────────────────────────────────────────────────────────
+.tag-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1.5px solid var(--bordeCards);
+  background: var(--transparenteDos);
+  cursor: pointer;
+  transition: border-color .22s ease, transform .22s ease, box-shadow .22s ease;
+  position: relative;
+  animation: _tag-popIn .4s cubic-bezier(.22, 1, .36, 1) both;
+  user-select: none;
+
+  // Escalonado de entrada (hasta 12 items)
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) { animation-delay: #{$i * 0.05}s; }
+  }
+
+  // Ocultar el checkbox nativo — el label es el control visual
+  input[type="checkbox"] { display: none; }
+
+  &:hover {
+    border-color: var(--botonesSecciones);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px var(--sombra);
+  }
+
+  &--active {
+    border-color: var(--botonesSecciones);
+    background: rgba(80, 180, 80, .08);
+    box-shadow: 0 4px 14px var(--bordeCards);
+  }
+
+  // Emoji
+  &__emoji {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  // Texto
+  &__label {
+    font-family: var(--letra);
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--textoOscuro);
+    flex: 1;
+  }
+
+  // Check badge (visible cuando --active)
+  &__check {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    background: var(--botonesSecciones);
+    color: #fff;
+    border-radius: 50%;
+    font-size: .65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+  }
+}
+
+// ── Fila de tags seleccionados ────────────────────────────────────────────────
+.tags-seleccionados {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  &__label {
+    font-family: var(--letra);
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--textoSuave);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  &__chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+// ── Chip de tag seleccionada ──────────────────────────────────────────────────
+.tag-chip {
+  font-family: var(--letra);
+  font-size: .8rem;
+  font-weight: 600;
+  background: var(--bordeCards);
+  color: var(--botonesSecciones);
+  border-radius: 50px;
+  padding: 4px 12px;
+  border: 1px solid var(--botonesSecciones);
+  animation: _tag-popIn .3s ease both;
+  white-space: nowrap;
+
+  &--empty {
+    color: var(--textoSuave);
+    border-color: var(--bordeCards);
+    font-style: italic;
+  }
+}

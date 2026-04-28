@@ -1,0 +1,330 @@
+@use '../../../styles/fondos/predeterminado.scss' as *;
+@use '../../../styles/cards/general-cards.scss' as *;
+
+.detail-breadcrumb {
+  margin-bottom: 32px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.breadcrumb-link {
+  font-family: var(--letra);
+  font-size: 0.95rem;
+  color: var(--botonesSecciones);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity var(--transition-speed);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* HERO DETALLE RECETA */
+.receta-detalle-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 48px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+  background: var(--transparenteDos);
+  border: 1px solid var(--bordeCards);
+  border-radius: 22px;
+  padding: 40px;
+  box-shadow: 0 10px 40px var(--sombra);
+}
+
+.receta-detalle-imagen {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.receta-hero-img {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 30px var(--sombra));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.receta-badge-hero {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bordeCards);
+  color: var(--botonesSecciones);
+  border: 1px solid var(--bordeCards);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-family: var(--letra);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  backdrop-filter: blur(10px);
+}
+
+.receta-detalle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.receta-titulo {
+  font-family: var(--letra-titulo);
+  font-size: var(--tittle-size);
+  font-weight: 700;
+  color: var(--textoOscuro);
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* STATS */
+.receta-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--bordeCards);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-icon {
+  font-size: 1.8rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-family: var(--letra);
+  font-size: 0.85rem;
+  color: var(--textoSuave);
+  margin: 0;
+}
+
+.stat-valor {
+  font-family: var(--letra-titulo);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+  margin: 0;
+}
+
+/* ACCIONES */
+.receta-acciones {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* CONTENIDO DETALLADO */
+.receta-contenido {
+  margin-bottom: 48px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+  animation-delay: 0.1s;
+}
+
+.contenido-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.receta-seccion {
+  background: var(--transparenteDos);
+  border: 1px solid var(--bordeCards);
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 6px 24px var(--sombra);
+}
+
+.seccion-titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+/* INGREDIENTES */
+.ingredientes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ingrediente-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--blanco);
+  border-radius: 12px;
+  border: 1px solid var(--bordeCards);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px var(--sombra);
+  }
+}
+
+.ingrediente-tipo-badge {
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-family: var(--letra);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: center;
+
+  &.tipo-fruta {
+    background: #FFE5D9;
+    color: #D64A38;
+  }
+
+  &.tipo-proteina {
+    background: #D9E5FF;
+    color: #3864D6;
+  }
+
+  &.tipo-liquido {
+    background: #D9F5FF;
+    color: #38ACCC;
+  }
+
+  &.tipo-verdura {
+    background: #D9FFE5;
+    color: #38CC66;
+  }
+
+  &.tipo-grano {
+    background: #FFE5D9;
+    color: #CC9638;
+  }
+}
+
+.ingrediente-detalle {
+  flex: 1;
+}
+
+.ingrediente-nombre {
+  font-family: var(--letra-titulo);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--textoOscuro);
+  margin: 0;
+}
+
+.ingrediente-cantidad {
+  font-family: var(--letra);
+  font-size: 0.82rem;
+  color: var(--textoSuave);
+  margin: 2px 0 0;
+}
+
+/* NUTRICIÓN */
+.nutricion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.nutricion-card {
+  background: linear-gradient(135deg, rgba(242, 94, 7, 0.1) 0%, rgba(242, 94, 7, 0.05) 100%);
+  border: 1px solid var(--bordeCards);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.nutricion-label {
+  font-family: var(--letra);
+  font-size: 0.82rem;
+  color: var(--textoSuave);
+  margin: 0 0 8px;
+}
+
+.nutricion-valor {
+  font-family: var(--letra-titulo);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+  margin: 0;
+}
+
+.nutricion-unidad {
+  font-family: var(--letra);
+  font-size: 0.78rem;
+  color: var(--textoSuave);
+  margin: 4px 0 0;
+}
+
+/* SUGERENCIAS */
+.sugerencias-section {
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+  animation-delay: 0.2s;
+}
+
+@media (max-width: 768px) {
+  .receta-detalle-hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .contenido-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .receta-titulo {
+    font-size: 2rem;
+  }
+
+  .nutricion-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .receta-stats {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+}
