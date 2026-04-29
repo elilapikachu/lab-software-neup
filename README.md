@@ -1,59 +1,124 @@
 # FrontendNeup
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.1.
+Frontend para Neup desarrollado con [Angular CLI](https://github.com/angular/angular-cli) versión 21.2.1.
 
-## Development server
+## Requisitos Previos
 
-To start a local development server, run:
+Antes de comenzar, asegúrate de tener instalado lo siguiente:
+
+- **Node.js** (versión 18 o superior) - [Descargar](https://nodejs.org/)
+- **npm** (incluido con Node.js) o **yarn** como gestor de paquetes
+
+Verifica que están instalados correctamente:
+
+```bash
+node --version
+npm --version
+```
+
+## Instalación desde Cero
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/elilapikachu/lab-software-neup.git
+cd lab-software-neup
+```
+
+### 2. Instalar Dependencias
+
+Instala todas las dependencias del proyecto:
+
+```bash
+npm install
+```
+
+O si prefieres usar yarn:
+
+```bash
+yarn install
+```
+
+## Ejecutar el Proyecto
+
+### Servidor de Desarrollo
+
+Para iniciar el servidor de desarrollo local:
+
+```bash
+npm start
+```
+
+O con Angular CLI:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Una vez que el servidor esté corriendo, abre tu navegador y ve a:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+http://localhost:4200/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+La aplicación se recargará automáticamente cada vez que modifiques los archivos de código fuente.
+
+## Construir para Producción
+
+Para compilar el proyecto para producción:
 
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
-
-To build the project run:
+O con Angular CLI:
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los artefactos compilados se almacenarán en el directorio `dist/`. Por defecto, el build de producción optimiza la aplicación para rendimiento y velocidad.
 
-## Running unit tests
+## Generación de Componentes
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Angular CLI incluye potentes herramientas de generación de código. Para generar un nuevo componente:
+
+```bash
+ng generate component nombre-componente
+```
+
+Para ver la lista completa de esquemas disponibles (componentes, directivas, pipes, etc.), ejecuta:
+
+```bash
+ng generate --help
+```
+
+## Ejecutar Pruebas Unitarias
+
+Para ejecutar las pruebas unitarias con [Vitest](https://vitest.dev/):
+
+```bash
+npm test
+```
+
+O con Angular CLI:
 
 ```bash
 ng test
 ```
 
-## Running end-to-end tests
+## Ramas del Proyecto
 
-For end-to-end (e2e) testing, run:
+- **main** - Rama principal de producción
+- **development** - Rama de desarrollo
 
-```bash
-ng e2e
-```
+## Recursos Adicionales
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Para más información sobre Angular CLI, visita:
+- [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli)
+- [Documentación Angular](https://angular.io/docs)
+- [Angular CLI GitHub](https://github.com/angular/angular-cli)
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**¿Problemas?** Asegúrate de que tienes Node.js instalado correctamente y que estás en la rama correcta (`development` para desarrollo, `main` para producción).

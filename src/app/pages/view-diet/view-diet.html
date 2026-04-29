@@ -1,0 +1,206 @@
+<app-navbar></app-navbar>
+<main class="mainIndex">
+  <div class="page-wrapper-index">
+    <!-- HEADER CON BREADCRUMB -->
+    <div class="detail-breadcrumb">
+      <a href="/diet" class="breadcrumb-link">← Volver a dietas</a>
+    </div>
+
+    <!-- DIETA DETALLADA -->
+    <section class="dieta-detalle-hero" *ngIf="dieta">
+      <div class="dieta-detalle-imagen">
+        <img src="/assets/img/comidas/plato-proteina.png" [alt]="dieta.nombre_dieta" class="dieta-hero-img">
+      </div>
+
+      <div class="dieta-detalle-info">
+        <h1 class="dieta-titulo">{{ dieta.nombre_dieta }}</h1>
+        
+        <p class="dieta-descripcion">{{ dieta.descripcion }}</p>
+
+        <!-- METAS -->
+        <div class="dieta-metas">
+          <h3 class="metas-titulo">Objetivos de esta dieta</h3>
+          <div class="metas-list">
+            <span *ngFor="let meta of dieta.metas" class="meta-badge">{{ meta }}</span>
+          </div>
+        </div>
+
+        <!-- BOTONES DE ACCIONES -->
+        <div class="dieta-acciones">
+          <button (click)="guardarDieta()" class="btn-naranja">
+            ❤ Guardar dieta
+          </button>
+          <button (click)="compartirDieta()" class="btn-ghost-index">
+            📤 Compartir
+          </button>
+          <button (click)="descargarPDF()" class="btn-ghost-index">
+            📥 Descargar PDF
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLAN SEMANAL -->
+    <section class="franja-card plan-semanal-section">
+      <div class="franja-header">
+        <div>
+          <h2 class="franja-titulo">Plan Semanal</h2>
+          <p class="franja-sub">Distribución de recetas por día y tipo de comida</p>
+        </div>
+      </div>
+      
+      <div class="plan-grid">
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Lunes</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Avena con frutas</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Agua de pollo</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Ensalada verde</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Martes</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Yogurt con granola</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Pechuga a la parrilla</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Sopa de verduras</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Miércoles</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Huevos revueltos</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Arroz integral</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Pescado blanco</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Jueves</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Pancakes saludables</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Tacos de pollo</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Brócoli al vapor</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Viernes</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Smoothie bowl</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Carne magra</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Champiñones a la mantequilla</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Sábado</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Frutos secos</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Pizza saludable</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Quinoa con verduras</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-dia">
+          <h3 class="dia-titulo">Domingo</h3>
+          <div class="comidas-dia">
+            <div class="comida-item">
+              <span class="comida-tipo">Desayuno</span>
+              <p class="comida-nombre">Tostadas integrales</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Almuerzo</span>
+              <p class="comida-nombre">Pollo relleno</p>
+            </div>
+            <div class="comida-item">
+              <span class="comida-tipo">Cena</span>
+              <p class="comida-nombre">Salmón a la salsa</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="franja-card sugerencias-section">
+      <div class="franja-header">
+        <div>
+          <h2 class="franja-titulo">Dietas Similares</h2>
+          <p class="franja-sub">Te recomendamos estas dietas basadas en tus objetivos</p>
+        </div>
+      </div>
+      <div class="cards-grid">
+        <div *ngFor="let dietaSugerida of dietasRelacionadas" class="item-card">
+          <img src="/assets/img/comidas/bowlRecetas.png" [alt]="dietaSugerida.nombre_dieta" class="item-card-img">
+          <div class="item-card-body">
+            <p class="item-card-name">{{ dietaSugerida.nombre_dieta }}</p>
+            <button class="btn-card-ver">Ver más</button>
+          </div>
+          <div class="item-card-detalle">
+            <div class="item-card-tiempo">🎯 {{ dietaSugerida.metas[0] }}</div>
+            <ul class="item-card-ingredientes">
+              <li *ngFor="let meta of dietaSugerida.metas">{{ meta }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<app-footer></app-footer>

@@ -1,10 +1,4 @@
-<!-- Mensajes fuera del form, flotando arriba -->
-<div class="mensaje-toast mensaje-toast--error" *ngIf="errorMensaje">
-    {{ errorMensaje }}
-</div>
-<div class="mensaje-toast mensaje-toast--exito" *ngIf="exitoMensaje">
-    {{ exitoMensaje }}
-</div>
+<app-alert></app-alert>
 
 <div class="container_registro">
     <div class="lado_imagen"></div>
@@ -31,7 +25,7 @@
                     [class.inputs--error]="lUsuario?.invalid && lUsuario?.touched" />
                 <span class="error-text" *ngIf="lUsuario?.invalid && lUsuario?.touched">
                     <span *ngIf="lUsuario?.errors?.['required']">El usuario es obligatorio</span>
-                    <span *ngIf="lUsuario?.errors?.['minlength']">Mínimo 3 caracteres</span>
+                 <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{ lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
                 </span>
             </div>
 
@@ -40,14 +34,12 @@
                     [class.inputs--error]="lPassword?.invalid && lPassword?.touched" />
                 <span class="error-text" *ngIf="lPassword?.invalid && lPassword?.touched">
                     <span *ngIf="lPassword?.errors?.['required']">La contraseña es obligatoria</span>
-                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
+                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{
+                        lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
                 </span>
             </div>
 
-            <div class="checkbox-row">
-                <input type="checkbox" class="checkbox" id="recordatorio" />
-                <label class="spanRegistro" for="recordatorio">Recordar Contraseña</label>
-            </div>
+
 
             <button type="submit" class="submit-btn" [disabled]="cargando">
                 {{ cargando ? 'Cargando...' : 'Acceder' }}
@@ -84,23 +76,15 @@
                 </span>
             </div>
 
-            <div class="checkbox-row">
-                <input type="checkbox" class="checkbox" id="terminos" formControlName="terminos" />
-                <label class="spanRegistro" for="terminos">Acepto los términos y condiciones</label>
-            </div>
-            <span class="error-text" *ngIf="rTerminos?.invalid && rTerminos?.touched">
-                Debes aceptar los términos
-            </span>
-
             <button type="submit" class="submit-btn" [disabled]="cargando">
                 {{ cargando ? 'Registrando...' : 'Registrarse' }}
             </button>
         </form>
     </div>
+</div>
 
-    <div class="volverPaginaPrincipal">
-        <button class="submit-btn btn_regresar_pagina_principal">
-            <a routerLink="/">Volver a la página principal</a>
-        </button>
-    </div>
+<div class="volverPaginaPrincipal">
+    <button class="submit-btn btn_regresar_pagina_principal">
+        <a routerLink="/">Volver a la página principal</a>
+    </button>
 </div>

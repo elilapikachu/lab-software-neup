@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {Navbar} from '../navbar/navbar';
-import {Footer} from '../footer/footer';
+import {Navbar} from '../../layout/navbar/navbar';
+import {Footer} from '../../layout/footer/footer';
 import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-home',

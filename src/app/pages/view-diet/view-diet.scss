@@ -1,0 +1,238 @@
+@use '../../../styles/fondos/predeterminado.scss' as *;
+@use '../../../styles/cards/general-cards.scss' as *;
+
+.detail-breadcrumb {
+  margin-bottom: 32px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.breadcrumb-link {
+  font-family: var(--letra);
+  font-size: 0.95rem;
+  color: var(--botonesSecciones);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity var(--transition-speed);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* HERO DETALLE DIETA */
+.dieta-detalle-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 48px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+  background: var(--transparenteDos);
+  border: 1px solid var(--bordeCards);
+  border-radius: 22px;
+  padding: 40px;
+  box-shadow: 0 10px 40px var(--sombra);
+}
+
+.dieta-detalle-imagen {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dieta-hero-img {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 30px var(--sombra));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.dieta-detalle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dieta-titulo {
+  font-family: var(--letra-titulo);
+  font-size: var(--tittle-size);
+  font-weight: 700;
+  color: var(--textoOscuro);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.dieta-descripcion {
+  font-family: var(--letra);
+  font-size: 1rem;
+  color: var(--textoSuave);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* METAS */
+.dieta-metas {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metas-titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0;
+}
+
+.metas-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, var(--bordeCards) 0%, rgba(242, 94, 7, 0.1) 100%);
+  color: var(--botonesSecciones);
+  border: 1px solid var(--bordeCards);
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-family: var(--letra);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* ACCIONES */
+.dieta-acciones {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* PLAN SEMANAL */
+.plan-semanal-section {
+  margin-bottom: 48px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+  animation-delay: 0.1s;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 16px;
+}
+
+.plan-dia {
+  background: var(--blanco);
+  border: 1px solid var(--bordeCards);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 16px var(--sombra);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px var(--sombra);
+  }
+}
+
+.dia-titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+  margin: 0 0 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--bordeCards);
+}
+
+.comidas-dia {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comida-item {
+  padding: 8px;
+  background: var(--transparente);
+  border-radius: 8px;
+  border-left: 3px solid var(--botonesSecciones);
+}
+
+.comida-tipo {
+  display: block;
+  font-family: var(--letra);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 2px;
+}
+
+.comida-nombre {
+  font-family: var(--letra);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--textoOscuro);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SUGERENCIAS */
+.sugerencias-section {
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
+  animation-delay: 0.2s;
+}
+
+@media (max-width: 1024px) {
+  .plan-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dieta-detalle-hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .plan-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dieta-titulo {
+    font-size: 2rem;
+  }
+
+  .dieta-acciones {
+    flex-direction: column;
+  }
+
+  .btn-naranja,
+  .btn-ghost-index {
+    width: 100%;
+    justify-content: center;
+  }
+}
