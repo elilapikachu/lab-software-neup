@@ -1,6 +1,8 @@
 <app-navbar></app-navbar>
 <main class="mainIndex mainPerfil">
     <div class="page-wrapper">
+
+        <!-- ── Hero ─────────────────────────────────────────────────────── -->
         <div class="profile-hero">
             <div class="avatar-wrap">
                 <div class="avatar-letter">{{ avatarLetra }}</div>
@@ -22,6 +24,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- ── Acciones rápidas ──────────────────────────────────────────── -->
         <div class="profile-hero">
             <div class="botones_funciones_usuario w-100 d-flex justify-content-around">
                 <a class="btn btn-orange" routerLink="/createrecipe">Crear Receta</a>
@@ -29,6 +33,8 @@
                 <a class="btn btn-orange" routerLink="/viewsaved">Ver guardados y creados</a>
             </div>
         </div>
+
+        <!-- ── Stats ─────────────────────────────────────────────────────── -->
         <div class="stats-row">
             <div class="stat-card">
                 <div class="stat-icon">⚖️</div>
@@ -52,122 +58,258 @@
             </div>
         </div>
 
+        <!-- ── Spinner de carga ──────────────────────────────────────────── -->
+        @if (cargando) {
+            <div class="loading-bar"></div>
+        }
+
+        <!-- ── Formulario ────────────────────────────────────────────────── -->
         <div class="form-section" id="formSection" [class.visible]="formVisible">
-            <h3 class="section-title">{{ formTitulo }}</h3>
+            <h3 class="section-title">{{ perfilGuardado ? 'Editar perfil' : 'Completa tu perfil' }}</h3>
             <p class="section-subtitle">Esta información nos ayuda a personalizar tu experiencia nutricional.</p>
 
-            <div class="neup-tabs">
-                <button class="neup-tab" [class.active]="tabActiva === 'sec1'" (click)="switchTab('sec1')">
-                    Datos físicos
-                </button>
-                <button class="neup-tab" [class.active]="tabActiva === 'sec2'" (click)="switchTab('sec2')">
-                    Preferencias alimenticias
-                </button>
-            </div>
+            <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()">
+                <div class="neup-tabs">
+                    <button type="button" class="neup-tab" [class.active]="tabActiva === 'sec1'" (click)="switchTab('sec1')">
+                        Datos físicos
+                    </button>
+                    <button type="button" class="neup-tab" [class.active]="tabActiva === 'sec2'" (click)="switchTab('sec2')">
+                        Preferencias alimenticias
+                    </button>
+                </div>
 
-            <!-- Tab 1 -->
-            <div class="tab-pane-neup" [class.active]="tabActiva === 'sec1'">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label class="field-label">Edad</label>
-                        <input type="number" class="neup-input inputs" placeholder="25" min="10" max="100"
-                            [(ngModel)]="perfil.edad" />
+                <!-- ── Tab 1: Datos físicos ────────────────────────────────── -->
+                <div class="tab-pane-neup" [class.active]="tabActiva === 'sec1'">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Primer nombre</label>
+                            <input 
+                                type="text" 
+                                class="neup-input inputs" 
+                                placeholder="Ana"
+                                formControlName="primerNombre"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('primerNombre', 'required')) {
+                                <small class="text-danger">{{ getErrorMessage('primerNombre') }}</small>
+                            }
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Segundo nombre</label>
+                            <input 
+                                type="text" 
+                                class="neup-input inputs" 
+                                placeholder="María"
+                                formControlName="segundoNombre"
+                                (blur)="updateCompletion()" />
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="field-label">Estatura (cm)</label>
-                        <input type="number" class="neup-input inputs" placeholder="170" min="100" max="250"
-                            [(ngModel)]="perfil.estatura" />
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Primer apellido</label>
+                            <input 
+                                type="text" 
+                                class="neup-input inputs" 
+                                placeholder="García"
+                                formControlName="primerApellido"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('primerApellido', 'required')) {
+                                <small class="text-danger">{{ getErrorMessage('primerApellido') }}</small>
+                            }
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Segundo apellido</label>
+                            <input 
+                                type="text" 
+                                class="neup-input inputs" 
+                                placeholder="López"
+                                formControlName="segundoApellido"
+                                (blur)="updateCompletion()" />
+                        </div>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label class="field-label">Peso actual (kg)</label>
-                        <input type="number" class="neup-input inputs" placeholder="70" min="30" max="300"
-                            [(ngModel)]="perfil.peso" />
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Teléfono</label>
+                            <input 
+                                type="number" 
+                                class="neup-input inputs" 
+                                placeholder="322 3423424"
+                                formControlName="telefono"
+                                min="1000000000"
+                                max="9999999999"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('telefono', 'min') || hasError('telefono', 'max')) {
+                                <small class="text-danger">{{ getErrorMessage('telefono') }}</small>
+                            }
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Otro email</label>
+                            <input 
+                                type="email" 
+                                class="neup-input inputs" 
+                                placeholder="otro@email.com"
+                                formControlName="otroEmail"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('otroEmail', 'email')) {
+                                <small class="text-danger">{{ getErrorMessage('otroEmail') }}</small>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Edad</label>
+                            <input 
+                                type="number" 
+                                class="neup-input inputs" 
+                                placeholder="25" 
+                                formControlName="edad"
+                                min="10" 
+                                max="120"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('edad', 'min') || hasError('edad', 'max')) {
+                                <small class="text-danger">{{ getErrorMessage('edad') }}</small>
+                            }
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Estatura (cm) *</label>
+                            <input 
+                                type="number" 
+                                class="neup-input inputs" 
+                                placeholder="170" 
+                                formControlName="altura"
+                                min="100" 
+                                max="250"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('altura', 'required')) {
+                                <small class="text-danger">Campo requerido</small>
+                            }
+                            @if (hasError('altura', 'min') || hasError('altura', 'max')) {
+                                <small class="text-danger">{{ getErrorMessage('altura') }}</small>
+                            }
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="field-label">Peso actual (kg) *</label>
+                            <input 
+                                type="number" 
+                                class="neup-input inputs" 
+                                placeholder="70" 
+                                formControlName="peso"
+                                min="20" 
+                                max="300"
+                                (blur)="updateCompletion()" />
+                            @if (hasError('peso', 'required')) {
+                                <small class="text-danger">Campo requerido</small>
+                            }
+                            @if (hasError('peso', 'min') || hasError('peso', 'max')) {
+                                <small class="text-danger">{{ getErrorMessage('peso') }}</small>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Objetivos -->
+                    <label class="field-label">Objetivo</label>
+                    <div class="tags-grid">
+                        @for (tag of tagsObjetivos; track tag.id) {
+                            <label class="tag-card" [class.tag-card--active]="tag.selected">
+                                <input type="checkbox" [checked]="tag.selected" (change)="toggleTag(tag); updateCompletion()">
+                                <span class="tag-card__label">{{ tag.label }}</span>
+                                @if (tag.selected) { <span class="tag-card__check">✓</span> }
+                            </label>
+                        }
+                    </div>
+
+                    <h5 class="subtitulo">Actividad física</h5>
+
+                    <label class="field-label">Frecuencia semanal</label>
+                    <select 
+                        class="neup-select inputs" 
+                        formControlName="frecuenciaSemanal"
+                        (change)="updateCompletion()">
+                        <option [value]="null">Selecciona frecuencia</option>
+                        <option [value]="0">No hago ejercicio</option>
+                        <option [value]="1">1–2 veces</option>
+                        <option [value]="3">3–4 veces</option>
+                        <option [value]="5">5 o más veces</option>
+                    </select>
+
+                    <!-- Tipo de actividad -->
+                    <label class="field-label">Tipo de actividad</label>
+                    <div class="tags-grid">
+                        @for (tag of tagsTipoActividad; track tag.id) {
+                            <label class="tag-card" [class.tag-card--active]="tag.selected">
+                                <input type="checkbox" [checked]="tag.selected" (change)="toggleTag(tag); updateCompletion()">
+                                <span class="tag-card__label">{{ tag.label }}</span>
+                                @if (tag.selected) { <span class="tag-card__check">✓</span> }
+                            </label>
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn-orange" style="width:auto;padding:10px 28px" (click)="switchTab('sec2')">
+                            Siguiente →
+                        </button>
                     </div>
                 </div>
 
-                <label class="field-label">Objetivo</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.objetivo">
-                    <option value="">Selecciona tu objetivo</option>
-                    <option>Bajar de peso</option>
-                    <option>Mantener peso</option>
-                    <option>Subir masa muscular</option>
-                    <option>Comer saludable</option>
-                </select>
+                <!-- ── Tab 2: Preferencias alimenticias ───────────────────── -->
+                <div class="tab-pane-neup" [class.active]="tabActiva === 'sec2'">
 
-                <h5 class="subtitulo">Actividad física</h5>
+                    <!-- Tipo de dieta -->
+                    <label class="field-label">Tipo de dieta</label>
+                    <div class="tags-grid">
+                        @for (tag of tagsDieta; track tag.id) {
+                            <label class="tag-card" [class.tag-card--active]="tag.selected">
+                                <input type="checkbox" [checked]="tag.selected" (change)="toggleTag(tag); updateCompletion()">
+                                <span class="tag-card__label">{{ tag.label }}</span>
+                                @if (tag.selected) { <span class="tag-card__check">✓</span> }
+                            </label>
+                        }
+                    </div>
 
-                <label class="field-label">Frecuencia semanal</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.frecuencia">
-                    <option value="">Selecciona frecuencia</option>
-                    <option>No hago ejercicio</option>
-                    <option>1–2 veces</option>
-                    <option>3–4 veces</option>
-                    <option>5 o más veces</option>
-                </select>
+                    <!-- Alergias -->
+                    <label class="field-label">Alergias</label>
+                    <div class="tags-grid">
+                        @for (tag of tagsAlergias; track tag.id) {
+                            <label class="tag-card" [class.tag-card--active]="tag.selected">
+                                <input type="checkbox" [checked]="tag.selected" (change)="toggleTag(tag); updateCompletion()">
+                                <span class="tag-card__label">{{ tag.label }}</span>
+                                @if (tag.selected) { <span class="tag-card__check">✓</span> }
+                            </label>
+                        }
+                    </div>
 
-                <label class="field-label">Tipo de actividad</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.tipoActividad">
-                    <option value="">Selecciona tipo</option>
-                    <option>Gimnasio</option>
-                    <option>Deporte</option>
-                    <option>Caminar / correr</option>
-                    <option>Yoga / pilates</option>
-                    <option>Mixto</option>
-                </select>
+                    <!-- Comidas al día -->
+                    <label class="field-label">Comidas al día</label>
+                    <select 
+                        class="neup-select inputs" 
+                        formControlName="comidasAlDia"
+                        (change)="updateCompletion()">
+                        <option [value]="null">Selecciona frecuencia</option>
+                        <option [value]="2">1–2</option>
+                        <option [value]="3">3</option>
+                        <option [value]="5">4–5</option>
+                    </select>
 
-                <div class="d-flex justify-content-end">
-                    <button class="btn-orange" style="width:auto;padding:10px 28px" (click)="switchTab('sec2')">
-                        Siguiente →
-                    </button>
+                    <div class="d-flex gap-3">
+                        <button type="button" class="btn-outline-green botonesDeGuardado" style="flex:1" (click)="switchTab('sec1')">
+                            ← Anterior
+                        </button>
+                        <button 
+                            type="submit" 
+                            class="btn-save botonesDeGuardado" 
+                            style="flex:2"
+                            [disabled]="cargando || perfilForm.invalid">
+                            {{ cargando ? 'Guardando…' : 'Guardar perfil' }}
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            <div class="tab-pane-neup" [class.active]="tabActiva === 'sec2'">
-                <label class="field-label">Tipo de dieta</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.dieta">
-                    <option value="">Selecciona dieta</option>
-                    <option>Ninguna</option>
-                    <option>Vegetariana</option>
-                    <option>Vegana</option>
-                    <option>Keto</option>
-                    <option>Mediterránea</option>
-                    <option>Sin gluten</option>
-                </select>
-
-                <label class="field-label">Alergias</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.alergias">
-                    <option value="">Selecciona alergia</option>
-                    <option>Ninguna</option>
-                    <option>Gluten</option>
-                    <option>Lactosa</option>
-                    <option>Frutos secos</option>
-                    <option>Mariscos</option>
-                    <option>Huevo</option>
-                    <option>Soya</option>
-                </select>
-
-                <label class="field-label">Comidas al día</label>
-                <select class="neup-select inputs" [(ngModel)]="perfil.comidas">
-                    <option value="">Selecciona frecuencia</option>
-                    <option>1–2</option>
-                    <option>3</option>
-                    <option>4–5</option>
-                </select>
-
-                <div class="d-flex gap-3">
-                    <button class="btn-outline-green botonesDeGuardado" style="flex:1" (click)="switchTab('sec1')">
-                        ← Anterior
-                    </button>
-                    <button class="btn-save botonesDeGuardado" style="flex:2" (click)="guardarPerfil()">
-                        Guardar perfil
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div class="toast-neup" [class.show]="toastVisible">
-        <span>{{ toastMensaje }}</span>
-    </div>
+    <!-- ── Alertas ──────────────────────────────────────────────────────────── -->
+    <app-alert></app-alert>
 </main>
 <app-footer></app-footer>
