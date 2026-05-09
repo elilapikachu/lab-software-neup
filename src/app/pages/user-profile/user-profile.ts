@@ -1,4 +1,3 @@
-// src/app/pages/user-profile/user-profile.ts
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -8,6 +7,7 @@ import { Footer } from '../../layout/footer/footer';
 import { AuthService } from '../../services/auth';
 import { PerfilService } from '../../services/profile-service';
 import { AlertService } from '../../services/alert';
+import { Storage } from '../../services/storage';
 import { PerfilData } from '../../models/perfil';
 import { Tag } from '../../models/secundary/tag';
 import { AlertComponent } from '../../layout/alert/alert';
@@ -24,6 +24,7 @@ export class UserProfile implements OnInit {
   private authService = inject(AuthService);
   private perfilService = inject(PerfilService);
   private alertService = inject(AlertService);
+  private storage = inject(Storage);
   private fb = inject(FormBuilder);
 
   // ── Info del usuario ──────────────────────────────────────────────────────
@@ -45,7 +46,7 @@ export class UserProfile implements OnInit {
   // ── Datos del perfil para mostrar en stats ────────────────────────────────
   perfil: PerfilData = {};
 
-  // ── Stats cards ────────────────────���──────────────────────────────────────
+  // ── Stats cards ────────────────────────────────────────────────────────────
   statPeso = '—';
   statEstatura = '—';
   statObjetivo = '—';
@@ -95,7 +96,7 @@ export class UserProfile implements OnInit {
   ngOnInit(): void {
     this.usuarioId = this.authService.getUsuarioId() || '';
     this.nombreUsuario = this.authService.getNombreUsuario() || 'Usuario';
-    this.email = localStorage.getItem('email') || 'usuario@email.com';
+    this.email = this.storage.getItem('email') || 'usuario@email.com';
     this.avatarLetra = this.nombreUsuario.charAt(0).toUpperCase();
 
     this.initForm();
@@ -249,7 +250,7 @@ export class UserProfile implements OnInit {
     });
   }
 
-  // ── Stats y completion ───────────────────────────────��────────────────────
+  // ── Stats y completion ────────────────────────────────────────────────────
   private updateStats(): void {
     const peso = this.perfilForm.get('peso')?.value;
     const altura = this.perfilForm.get('altura')?.value;

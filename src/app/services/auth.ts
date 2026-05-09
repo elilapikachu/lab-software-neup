@@ -2,44 +2,51 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/auth';
- 
+import { Storage } from './storage';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
- 
+
   private readonly API_URL = 'http://localhost:8080/api/auth';
- 
-  constructor(private http: HttpClient) {}
- 
+
+  constructor(
+    private http: HttpClient,
+    private storage: Storage
+  ) {}
+
   login(request: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, request);
   }
- 
+
   registro(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.API_URL}/registro`, request);
   }
- 
+
   guardarSesion(response: AuthResponse): void {
-    localStorage.setItem('usuarioId', response.usuarioId || '');
-    localStorage.setItem('personaId', response.personaId || '');
-    localStorage.setItem('nombreUsuario', response.nombreUsuario || '');
-    localStorage.setItem('email', response.email || '');
+    this.storage.setItem('usuarioId', response.usuarioId || '');
+    this.storage.setItem('personaId', response.personaId || '');
+    this.storage.setItem('nombreUsuario', response.nombreUsuario || '');
+    this.storage.setItem('email', response.email || '');
   }
- 
+
   cerrarSesion(): void {
-    localStorage.clear();
+    this.storage.removeItem('usuarioId');
+    this.storage.removeItem('personaId');
+    this.storage.removeItem('nombreUsuario');
+    this.storage.removeItem('email');
   }
- 
+
   estaAutenticado(): boolean {
-    return !!localStorage.getItem('usuarioId');
+    return !!this.storage.getItem('usuarioId');
   }
- 
+
   getUsuarioId(): string | null {
-    return localStorage.getItem('usuarioId');
+    return this.storage.getItem('usuarioId');
   }
- 
+
   getNombreUsuario(): string | null {
-    return localStorage.getItem('nombreUsuario');
+    return this.storage.getItem('nombreUsuario');
   }
 }
