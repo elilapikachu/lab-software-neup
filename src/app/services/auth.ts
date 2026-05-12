@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/auth';
 import { Storage } from './storage';
+import { AppConstants } from '../app.constantes'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_AUTH = AppConstants.API_URL + '/auth';
 
   constructor(
     private http: HttpClient,
@@ -17,11 +18,11 @@ export class AuthService {
   ) {}
 
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, request);
+    return this.http.post<AuthResponse>(`${this.API_AUTH}/login`, request);
   }
 
   registro(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/registro`, request);
+    return this.http.post<AuthResponse>(`${this.API_AUTH}/registro`, request);
   }
 
   guardarSesion(response: AuthResponse): void {
