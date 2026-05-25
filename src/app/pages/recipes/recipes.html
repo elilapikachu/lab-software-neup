@@ -1,6 +1,8 @@
 <app-navbar></app-navbar>
 <main class="mainIndex">
     <div class="page-wrapper-index">
+
+        <!-- ── HERO ── -->
         <section class="hero-card hero-recetas-card">
             <div class="hero-card-inner">
                 <div class="hero-tag">
@@ -23,6 +25,27 @@
             <img src="/assets/img/comidas/bowlRecetas.png" alt="Plato saludable" class="hero-card-img-plato">
         </section>
 
+        <!-- ── CARGANDO ── -->
+        @if (cargando) {
+        <div class="estado-carga">
+            <div class="spinner"></div>
+            <p>Cargando recetas...</p>
+        </div>
+        }
+
+        <!-- ── ERROR ── -->
+        @if (!cargando && error) {
+        <div class="estado-error">
+            <span>⚠️</span>
+            <p>{{ error }}</p>
+            <button class="btn-naranja" (click)="cargarRecetas()">Reintentar</button>
+        </div>
+        }
+
+        <!-- ── SECCIONES ── -->
+        @if (!cargando && !error) {
+
+        <!-- DESAYUNOS -->
         <section class="franja-card" id="desayunos">
             <div class="franja-header">
                 <div>
@@ -30,11 +53,21 @@
                     <h2 class="franja-titulo">Empieza el día con energía</h2>
                     <p class="franja-sub">Recetas rápidas y nutritivas para arrancar con todo</p>
                 </div>
-                <a href="#" class="btn-ver-todo">Ver todas →</a>
+                <a routerLink="/recipes" class="btn-ver-todo">Ver todas →</a>
             </div>
-            <div class="cards-grid" id="gridDesayunos"></div>
+
+            @if (desayunos.length === 0) {
+            <p class="franja-vacia">Aún no hay recetas de desayuno disponibles.</p>
+            } @else {
+            <div class="cards-grid">
+                @for (receta of desayunos; track receta.id) {
+                <ng-container *ngTemplateOutlet="cardReceta; context: { $implicit: receta }"></ng-container>
+                }
+            </div>
+            }
         </section>
 
+        <!-- ALMUERZOS -->
         <section class="franja-card franja-card--alt" id="almuerzos">
             <div class="franja-header">
                 <div>
@@ -42,11 +75,21 @@
                     <h2 class="franja-titulo">El plato fuerte del día</h2>
                     <p class="franja-sub">Comidas completas que te dan la energía que necesitas</p>
                 </div>
-                <a href="#" class="btn-ver-todo">Ver todas →</a>
+                <a routerLink="/recipes" class="btn-ver-todo">Ver todas →</a>
             </div>
-            <div class="cards-grid" id="gridAlmuerzos"></div>
+
+            @if (almuerzos.length === 0) {
+            <p class="franja-vacia">Aún no hay recetas de almuerzo disponibles.</p>
+            } @else {
+            <div class="cards-grid">
+                @for (receta of almuerzos; track receta.id) {
+                <ng-container *ngTemplateOutlet="cardReceta; context: { $implicit: receta }"></ng-container>
+                }
+            </div>
+            }
         </section>
 
+        <!-- CENAS -->
         <section class="franja-card" id="cenas">
             <div class="franja-header">
                 <div>
@@ -54,11 +97,54 @@
                     <h2 class="franja-titulo">Termina el día ligero</h2>
                     <p class="franja-sub">Recetas suaves y reconfortantes para cerrar la jornada</p>
                 </div>
-                <a href="#" class="btn-ver-todo">Ver todas →</a>
+                <a routerLink="/recipes" class="btn-ver-todo">Ver todas →</a>
             </div>
-            <div class="cards-grid" id="gridCenas"></div>
-        </section>
-    </div>
 
+            @if (cenas.length === 0) {
+            <p class="franja-vacia">Aún no hay recetas de cena disponibles.</p>
+            } @else {
+            <div class="cards-grid">
+                @for (receta of cenas; track receta.id) {
+                <ng-container *ngTemplateOutlet="cardReceta; context: { $implicit: receta }"></ng-container>
+                }
+            </div>
+            }
+        </section>
+
+        }
+        <!-- /fin secciones -->
+
+    </div>
 </main>
+
+<!-- ── TEMPLATE REUTILIZABLE DE CARD ── -->
+<ng-template #cardReceta let-receta>
+    <div class="item-card" [class.expandida]="estaExpandida(receta.id)">
+        <img [src]="imagenPrincipal(receta)" [alt]="receta.nombre_receta" class="item-card-img">
+        <div class="item-card-body">
+            <p class="item-card-titulo">{{ receta.nombre_receta }}</p>
+            <p class="item-card-sub">{{ resumenNutricion(receta) }}</p>
+            <div class="item-card-tags">
+                @for (tag of receta.tags?.slice(0, 3); track tag) {
+                <span class="item-tag">{{ tag }}</span>
+                }
+            </div>
+            <button class="btn-card-ver" (click)="toggleCard(receta.id)">
+                {{ estaExpandida(receta.id) ? 'Cerrar ↑' : 'Ver más ↓' }}
+            </button>
+        </div>
+        <div class="item-card-detalle">
+            <p class="item-card-tiempo">⏱️ {{ receta.tiempo_preparacion }} min</p>
+            <ul class="item-card-ingredientes">
+                @for (ing of receta.ingredientes?.slice(0, 5); track ing.nombre_ingrediente) {
+                <li>{{ ing.nombre_ingrediente }}</li>
+                }
+                @if ((receta.ingredientes?.length ?? 0) > 5) {
+                <li>+{{ receta.ingredientes.length - 5 }} más</li>
+                }
+            </ul>
+        </div>
+    </div>
+</ng-template>
+
 <app-footer></app-footer>
