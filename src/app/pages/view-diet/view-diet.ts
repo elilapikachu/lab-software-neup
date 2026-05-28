@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
 import { DietaResponse, PlanSemanalItem } from '../../models/dieta';
+import { RecetaResponse } from '../../models/receta';
 import { DietaService } from '../../services/dieta.service';
 import { GuardadosService } from '../../services/guardados.service';
 import { AuthService } from '../../services/auth';
@@ -44,6 +45,8 @@ export class ViewDiet implements OnInit, OnDestroy {
   error = '';
   guardada = false;
   guardandoEstado = false;
+
+  modalReceta: RecetaResponse | null = null;
 
   private alerts = inject(AlertService);
   private routeSub?: Subscription;
@@ -144,6 +147,20 @@ export class ViewDiet implements OnInit, OnDestroy {
     return ORDEN_DIAS
       .filter(d => mapa[d]?.length)
       .map(d => ({ dia: d, label: DIA_LABELS[d] ?? d, comidas: mapa[d] }));
+  }
+
+  abrirModalReceta(receta: RecetaResponse | undefined): void {
+    if (!receta) return;
+    this.modalReceta = receta;
+  }
+
+  cerrarModal(): void {
+    this.modalReceta = null;
+  }
+
+  getImagenReceta(receta: RecetaResponse): string {
+    if (receta.imagen?.length) return `${AppConstants.API_URL}/documentos/${receta.imagen[0]}/archivo`;
+    return '/assets/img/comidas/plato-proteina.png';
   }
 
   getPortadaDieta(dieta: DietaResponse): string {

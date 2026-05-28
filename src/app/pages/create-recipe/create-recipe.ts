@@ -75,6 +75,17 @@ export class CreateRecipe implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  // ── Modal de confirmación ──
+  modalConfirmVisible = false;
+
+  abrirModalConfirmar(): void { this.modalConfirmVisible = true; }
+  cerrarModalConfirmar(): void { this.modalConfirmVisible = false; }
+
+  confirmarCreacion(): void {
+    this.modalConfirmVisible = false;
+    this.guardarReceta();
+  }
+
   // ── Stepper ──
   pasoActual = 1;
   cargando = false;

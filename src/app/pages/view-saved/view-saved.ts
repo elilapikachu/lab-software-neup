@@ -32,6 +32,14 @@ export class ViewSaved implements OnInit {
 
   personaId: string | null = null;
 
+  modal = {
+    visible: false,
+    titulo: '',
+    mensaje: '',
+    icono: '',
+    accion: (() => {}) as () => void,
+  };
+
   constructor(
     private router: Router,
     private recetaService: RecetaService,
@@ -128,37 +136,80 @@ export class ViewSaved implements OnInit {
   crearDieta():  void { this.router.navigate(['/creatediet']);   }
   irAExplorar(): void { this.router.navigate(['/recipes']); }
 
+  // ── Modal de confirmación ──
+  private abrirModal(titulo: string, mensaje: string, icono: string, accion: () => void): void {
+    this.modal = { visible: true, titulo, mensaje, icono, accion };
+    this.cdr.detectChanges();
+  }
+
+  confirmarModal(): void {
+    this.modal.accion();
+    this.modal.visible = false;
+    this.cdr.detectChanges();
+  }
+
+  cancelarModal(): void {
+    this.modal.visible = false;
+    this.cdr.detectChanges();
+  }
+
   // ── Eliminar (solo para contenido propio) ──
   eliminarReceta(receta: RecetaResponse): void {
-    if (!confirm(`¿Eliminar la receta "${receta.nombre_receta}"? Esta acción no se puede deshacer.`)) return;
-    this.recetaService.eliminar(receta.id).subscribe({
-      next:  () => { this.misRecetas = this.misRecetas.filter(r => r.id !== receta.id); this.cdr.detectChanges(); },
-      error: () => { alert('No se pudo eliminar la receta. Intenta de nuevo.'); },
-    });
+    this.abrirModal(
+      'Eliminar receta',
+      `¿Estás seguro de que quieres eliminar la receta "${receta.nombre_receta}"? Esta acción no se puede deshacer.`,
+      '🗑️',
+      () => {
+        this.recetaService.eliminar(receta.id).subscribe({
+          next:  () => { this.misRecetas = this.misRecetas.filter(r => r.id !== receta.id); this.cdr.detectChanges(); },
+          error: () => { alert('No se pudo eliminar la receta. Intenta de nuevo.'); },
+        });
+      }
+    );
   }
 
   eliminarDieta(dieta: DietaResponse): void {
-    if (!confirm(`¿Eliminar la dieta "${dieta.nombre_dieta}"? Esta acción no se puede deshacer.`)) return;
-    this.dietaService.eliminar(dieta.id).subscribe({
-      next:  () => { this.misDietas = this.misDietas.filter(d => d.id !== dieta.id); this.cdr.detectChanges(); },
-      error: () => { alert('No se pudo eliminar la dieta. Intenta de nuevo.'); },
-    });
+    this.abrirModal(
+      'Eliminar dieta',
+      `¿Estás seguro de que quieres eliminar la dieta "${dieta.nombre_dieta}"? Esta acción no se puede deshacer.`,
+      '🗑️',
+      () => {
+        this.dietaService.eliminar(dieta.id).subscribe({
+          next:  () => { this.misDietas = this.misDietas.filter(d => d.id !== dieta.id); this.cdr.detectChanges(); },
+          error: () => { alert('No se pudo eliminar la dieta. Intenta de nuevo.'); },
+        });
+      }
+    );
   }
 
   // ── Desguardar (solo para contenido guardado de otros) ──
   desguardarReceta(receta: RecetaResponse): void {
     if (!this.personaId) return;
-    this.guardadosService.desguardarReceta(this.personaId, receta.id).subscribe({
-      next:  () => { this.misRecetas = this.misRecetas.filter(r => r.id !== receta.id); this.cdr.detectChanges(); },
-      error: () => { alert('No se pudo quitar la receta guardada.'); },
-    });
+    this.abrirModal(
+      'Quitar receta guardada',
+      `¿Quieres quitar la receta "${receta.nombre_receta}" de tus guardados?`,
+      '❤',
+      () => {
+        this.guardadosService.desguardarReceta(this.personaId!, receta.id).subscribe({
+          next:  () => { this.misRecetas = this.misRecetas.filter(r => r.id !== receta.id); this.cdr.detectChanges(); },
+          error: () => { alert('No se pudo quitar la receta guardada.'); },
+        });
+      }
+    );
   }
 
   desguardarDieta(dieta: DietaResponse): void {
     if (!this.personaId) return;
-    this.guardadosService.desguardarDieta(this.personaId, dieta.id).subscribe({
-      next:  () => { this.misDietas = this.misDietas.filter(d => d.id !== dieta.id); this.cdr.detectChanges(); },
-      error: () => { alert('No se pudo quitar la dieta guardada.'); },
-    });
+    this.abrirModal(
+      'Quitar dieta guardada',
+      `¿Quieres quitar la dieta "${dieta.nombre_dieta}" de tus guardados?`,
+      '❤',
+      () => {
+        this.guardadosService.desguardarDieta(this.personaId!, dieta.id).subscribe({
+          next:  () => { this.misDietas = this.misDietas.filter(d => d.id !== dieta.id); this.cdr.detectChanges(); },
+          error: () => { alert('No se pudo quitar la dieta guardada.'); },
+        });
+      }
+    );
   }
 }

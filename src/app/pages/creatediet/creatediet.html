@@ -312,7 +312,7 @@
                 </div>
                 } @else {
                 <div *ngIf="errorMensaje" class="error-msg">{{ errorMensaje }}</div>
-                <button class="nav-btn nav-btn--submit" (click)="guardarDieta()" [disabled]="cargando">
+                <button class="nav-btn nav-btn--submit" (click)="abrirModalConfirmar()" [disabled]="cargando">
                     {{ cargando ? (modoEdicion ? 'Guardando…' : 'Creando…') : (modoEdicion ? 'Guardar cambios ✓' : 'Crear Dieta ✓') }}
                 </button>
                 }
@@ -320,5 +320,28 @@
 
         </section>
     </div>
+    <!-- Modal confirmar creación -->
+    <div class="confirm-overlay" *ngIf="modalConfirmVisible" (click)="cerrarModalConfirmar()">
+        <div class="confirm-card" (click)="$event.stopPropagation()">
+            <div class="confirm-card__icono">{{ modoEdicion ? '💾' : '🥗' }}</div>
+            <h3 class="confirm-card__titulo">
+                {{ modoEdicion ? '¿Guardar los cambios?' : '¿Crear tu dieta?' }}
+            </h3>
+            <p class="confirm-card__msg">
+                {{ modoEdicion
+                    ? 'Se actualizarán los datos de tu dieta con los cambios que hiciste.'
+                    : 'Tu dieta será publicada según la visibilidad que elegiste. ¿Todo listo?' }}
+            </p>
+            <div class="confirm-card__acciones">
+                <button class="confirm-btn confirm-btn--cancel" (click)="cerrarModalConfirmar()">
+                    Seguir editando
+                </button>
+                <button class="confirm-btn confirm-btn--confirm" (click)="confirmarCreacion()">
+                    {{ modoEdicion ? 'Sí, guardar' : 'Sí, crear' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
 </main>
 <app-footer></app-footer>

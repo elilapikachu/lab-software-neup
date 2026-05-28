@@ -1,5 +1,8 @@
+import { RecetaResponse } from './receta';
+
 export interface PlanSemanalItem {
   receta_id: string;
+  receta?: RecetaResponse;
   tipo_comida: string; // desayuno | almuerzo | cena | merienda
   dia: string;         // lunes | martes | miercoles | jueves | viernes | sabado | domingo
 }

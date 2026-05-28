@@ -145,4 +145,18 @@
 
     </div>
 </main>
+
+<!-- Modal de confirmación -->
+<div class="modal-overlay" *ngIf="modal.visible" (click)="cancelarModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-icono">{{ modal.icono }}</div>
+    <h3 class="modal-titulo">{{ modal.titulo }}</h3>
+    <p class="modal-mensaje">{{ modal.mensaje }}</p>
+    <div class="modal-acciones">
+      <button class="btn-modal btn-modal-cancelar" (click)="cancelarModal()">Cancelar</button>
+      <button class="btn-modal btn-modal-confirmar" (click)="confirmarModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <app-footer></app-footer>

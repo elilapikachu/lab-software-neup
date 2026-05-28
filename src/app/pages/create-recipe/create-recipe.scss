@@ -3,6 +3,84 @@
 @use '../../../styles/formularios/formulario.scss' as *;     // stepper, campos, nav, modal
 @use '../../../styles/tags/tags.scss' as *;     // tag-card, tag-chip, tags-grid
 
+// ─── MODAL DE CONFIRMACIÓN ────────────────────────────────────────────────────
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: overlayIn .2s ease both;
+}
+
+.confirm-card {
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  animation: cardIn .25s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.confirm-card__icono  { font-size: 3rem; margin-bottom: 12px; }
+.confirm-card__titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0 0 10px;
+}
+.confirm-card__msg {
+  font-family: var(--letra);
+  font-size: .95rem;
+  color: var(--textoSuave);
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+.confirm-card__acciones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.confirm-btn {
+  flex: 1;
+  max-width: 180px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--letra);
+  font-size: .9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+
+  &--cancel {
+    background: var(--transparenteDos);
+    color: var(--textoOscuro);
+    border: 1px solid var(--bordeCards);
+    &:hover { background: var(--bordeCards); }
+  }
+  &--confirm {
+    background: var(--botonesSecciones);
+    color: var(--blanco);
+    &:hover { background: var(--botonesHover); }
+  }
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cardIn {
+  from { transform: scale(.85); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
 // ─── ANIMATIONS (locales) ─────────────────────────────────────────────────────
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }

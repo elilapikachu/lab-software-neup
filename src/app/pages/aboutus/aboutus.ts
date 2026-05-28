@@ -21,6 +21,7 @@ export class Aboutus {
   private fb = inject(FormBuilder);
 
   cargando = false;
+  showConfirmModal = false;
 
   contactForm: FormGroup = this.fb.group({
     email:   ['', [Validators.required, Validators.email]],
@@ -39,7 +40,15 @@ export class Aboutus {
       this.contactForm.markAllAsTouched();
       return;
     }
+    this.showConfirmModal = true;
+  }
 
+  onCancelarEnvio(): void {
+    this.showConfirmModal = false;
+  }
+
+  onConfirmarEnvio(): void {
+    this.showConfirmModal = false;
     this.cargando = true;
 
     this.correoService.enviarContacto(this.contactForm.value).subscribe({

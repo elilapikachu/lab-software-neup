@@ -409,6 +409,223 @@
   }
 }
 
+// ─── COMIDA CLICKEABLE ────────────────────────────────────────────────────────
+.comida-item--clickable {
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+
+  &:hover {
+    background: rgba(242, 94, 7, 0.08);
+    transform: translateX(3px);
+
+    .comida-nombre { color: var(--botonesSecciones); }
+  }
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn .2s ease both;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-panel {
+  background: var(--blanco);
+  border-radius: 22px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: slideUp .25s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--bordeCards);
+  background: var(--blanco);
+  color: var(--textoSuave);
+  font-size: .9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, color .2s;
+  z-index: 1;
+
+  &:hover {
+    background: var(--botonesSecciones);
+    color: #fff;
+    border-color: var(--botonesSecciones);
+  }
+}
+
+.modal-img-wrap {
+  border-radius: 22px 22px 0 0;
+  overflow: hidden;
+  height: 200px;
+}
+
+.modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-body {
+  padding: 22px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0;
+}
+
+.modal-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--letra);
+  font-size: .87rem;
+}
+
+.modal-meta-label {
+  font-weight: 700;
+  color: var(--botonesSecciones);
+}
+
+.modal-meta-valor {
+  color: var(--textoSuave);
+}
+
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modal-tag {
+  background: var(--bordeCards);
+  color: var(--botonesSecciones);
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-family: var(--letra);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.modal-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-seccion-titulo {
+  font-family: var(--letra-titulo);
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--bordeCards);
+}
+
+.modal-nutricion-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.modal-nutricion-item {
+  background: var(--transparente);
+  border: 1px solid var(--bordeCards);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.modal-nutricion-val {
+  font-family: var(--letra-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+}
+
+.modal-nutricion-lbl {
+  font-family: var(--letra);
+  font-size: .68rem;
+  color: var(--textoSuave);
+}
+
+.modal-vitaminas {
+  display: flex;
+  gap: 6px;
+  font-family: var(--letra);
+  font-size: .84rem;
+  flex-wrap: wrap;
+}
+
+.modal-ingredientes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-ingrediente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--transparente);
+  border-radius: 10px;
+  border-left: 3px solid var(--botonesSecciones);
+}
+
+.ing-nombre {
+  font-family: var(--letra);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--textoOscuro);
+}
+
+.ing-cantidad {
+  font-family: var(--letra);
+  font-size: .8rem;
+  color: var(--textoSuave);
+}
+
 // ─── RESPONSIVE ───────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
   .dieta-detalle-hero {
@@ -430,5 +647,13 @@
 
   .plan-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .modal-nutricion-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .modal-panel {
+    max-height: 95vh;
   }
 }

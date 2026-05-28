@@ -74,9 +74,11 @@
           </div>
           <div class="comidas-dia">
             <div *ngFor="let comida of diaInfo.comidas" class="comida-item"
-                 [class]="'comida-item--' + comida.tipo_comida?.toLowerCase()">
+                 [class]="'comida-item--' + comida.tipo_comida?.toLowerCase()"
+                 [class.comida-item--clickable]="!!comida.receta"
+                 (click)="abrirModalReceta(comida.receta)">
               <span class="comida-tipo">{{ comida.tipo_comida | titlecase }}</span>
-              <p class="comida-nombre">Receta asignada</p>
+              <p class="comida-nombre">{{ comida.receta?.nombre_receta ?? 'Receta asignada' }}</p>
             </div>
           </div>
         </div>
@@ -116,4 +118,71 @@
 
   </div>
 </main>
+
+<!-- MODAL RECETA -->
+<div class="modal-overlay" *ngIf="modalReceta" (click)="cerrarModal()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModal()">✕</button>
+
+    <div class="modal-img-wrap">
+      <img [src]="getImagenReceta(modalReceta)" [alt]="modalReceta.nombre_receta" class="modal-img">
+    </div>
+
+    <div class="modal-body">
+      <h2 class="modal-titulo">{{ modalReceta.nombre_receta }}</h2>
+
+      <div class="modal-meta-row" *ngIf="modalReceta.tiempo_preparacion">
+        <span class="modal-meta-label">Tiempo</span>
+        <span class="modal-meta-valor">{{ modalReceta.tiempo_preparacion }}</span>
+      </div>
+
+      <div class="modal-tags" *ngIf="modalReceta.tags?.length">
+        <span *ngFor="let tag of modalReceta.tags" class="modal-tag">{{ tag }}</span>
+      </div>
+
+      <!-- NUTRICIÓN -->
+      <div class="modal-seccion" *ngIf="modalReceta.nutricion">
+        <h3 class="modal-seccion-titulo">Información nutricional</h3>
+        <div class="modal-nutricion-grid">
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.kcal }}</span>
+            <span class="modal-nutricion-lbl">kcal</span>
+          </div>
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.proteinas }}g</span>
+            <span class="modal-nutricion-lbl">Proteínas</span>
+          </div>
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.carbohidratos }}g</span>
+            <span class="modal-nutricion-lbl">Carbohidratos</span>
+          </div>
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.fibra }}g</span>
+            <span class="modal-nutricion-lbl">Fibra</span>
+          </div>
+        </div>
+        <div class="modal-vitaminas" *ngIf="modalReceta.nutricion.vitaminas?.length">
+          <span class="modal-meta-label">Vitaminas:</span>
+          <span class="modal-meta-valor">{{ modalReceta.nutricion.vitaminas.join(', ') }}</span>
+        </div>
+        <div class="modal-vitaminas" *ngIf="modalReceta.nutricion.minerales?.length">
+          <span class="modal-meta-label">Minerales:</span>
+          <span class="modal-meta-valor">{{ modalReceta.nutricion.minerales.join(', ') }}</span>
+        </div>
+      </div>
+
+      <!-- INGREDIENTES -->
+      <div class="modal-seccion" *ngIf="modalReceta.ingredientes?.length">
+        <h3 class="modal-seccion-titulo">Ingredientes</h3>
+        <ul class="modal-ingredientes">
+          <li *ngFor="let ing of modalReceta.ingredientes" class="modal-ingrediente">
+            <span class="ing-nombre">{{ ing.nombre_ingrediente }}</span>
+            <span class="ing-cantidad">{{ ing.cantidad }} {{ ing.tipo_cantidad }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 <app-footer></app-footer>
