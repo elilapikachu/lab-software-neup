@@ -34,6 +34,10 @@ interface Categoria {
 })
 export class Creatediet implements OnInit {
 
+  truncar(valor: string, max: number): string {
+    return valor.length > max ? valor.substring(0, max) : valor;
+  }
+
   // ── Modo edición ──
   dietaId: string | null = null;
   modoEdicion = false;
@@ -56,9 +60,36 @@ export class Creatediet implements OnInit {
   pasoActual = 1;
   cargando = false;
   errorMensaje = '';
+  errorPaso = '';
 
-  pasoSiguiente(): void { if (this.pasoActual < 3) this.pasoActual++; }
-  pasoAnterior(): void { if (this.pasoActual > 1) this.pasoActual--; }
+  pasoSiguiente(): void {
+    this.errorPaso = '';
+    if (this.pasoActual === 1) {
+      if (!this.nombreDieta.trim()) {
+        this.errorPaso = 'El nombre de la dieta es obligatorio.';
+        return;
+      }
+      if (this.nombreDieta.trim().length < 3) {
+        this.errorPaso = 'El nombre debe tener al menos 3 caracteres.';
+        return;
+      }
+    }
+    if (this.pasoActual < 3) this.pasoActual++;
+  }
+
+  pasoAnterior(): void {
+    this.errorPaso = '';
+    if (this.pasoActual > 1) this.pasoActual--;
+  }
+
+  irAPaso(p: number): void {
+    if (p < this.pasoActual) {
+      this.errorPaso = '';
+      this.pasoActual = p;
+    } else if (p > this.pasoActual) {
+      this.pasoSiguiente();
+    }
+  }
 
   // ── Paso 1: Info básica ──
   nombreDieta = '';

@@ -51,7 +51,8 @@
                         </label>
                         <div class="field-input-wrap">
                             <input type="text" class="field-input" [(ngModel)]="nombreDieta"
-                                placeholder="Ej: Plan verde de verano…" maxlength="60">
+                                placeholder="Ej: Plan verde de verano…"
+                                (input)="nombreDieta = truncar(nombreDieta, 60)">
                             <span class="field-counter">{{ nombreDieta.length }}/60</span>
                         </div>
                     </div>
@@ -64,7 +65,7 @@
                         <div class="field-input-wrap">
                             <textarea class="field-input field-textarea" [(ngModel)]="descripcion"
                                 placeholder="¿De qué trata tu dieta? ¿A quién está dirigida?" rows="3"
-                                maxlength="200"></textarea>
+                                (input)="descripcion = truncar(descripcion, 200)"></textarea>
                             <span class="field-counter">{{ descripcion.length }}/200</span>
                         </div>
                     </div>
@@ -299,18 +300,22 @@
                 </button>
                 <div class="nav-pasos">
                     @for (p of [1,2,3]; track p) {
-                    <span class="nav-dot" [class.nav-dot--active]="pasoActual === p" (click)="pasoActual = p"></span>
+                    <span class="nav-dot" [class.nav-dot--active]="pasoActual === p" (click)="irAPaso(p)"></span>
                     }
                 </div>
-                @if (pasoActual < 3) { <button class="nav-btn nav-btn--next" (click)="pasoSiguiente()">
-                    Siguiente →
+                @if (pasoActual < 3) {
+                <div class="nav-right">
+                    @if (errorPaso) { <span class="error-paso">{{ errorPaso }}</span> }
+                    <button class="nav-btn nav-btn--next" (click)="pasoSiguiente()">
+                        Siguiente →
                     </button>
-                    } @else {
-                    <div *ngIf="errorMensaje" class="error-msg">{{ errorMensaje }}</div>
-                    <button class="nav-btn nav-btn--submit" (click)="guardarDieta()" [disabled]="cargando">
-                        {{ cargando ? (modoEdicion ? 'Guardando…' : 'Creando…') : (modoEdicion ? 'Guardar cambios ✓' : 'Crear Dieta ✓') }}
-                    </button>
-                    }
+                </div>
+                } @else {
+                <div *ngIf="errorMensaje" class="error-msg">{{ errorMensaje }}</div>
+                <button class="nav-btn nav-btn--submit" (click)="guardarDieta()" [disabled]="cargando">
+                    {{ cargando ? (modoEdicion ? 'Guardando…' : 'Creando…') : (modoEdicion ? 'Guardar cambios ✓' : 'Crear Dieta ✓') }}
+                </button>
+                }
             </div>
 
         </section>

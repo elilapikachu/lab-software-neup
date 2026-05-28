@@ -1,7 +1,9 @@
 export interface Ingrediente {
+  ingrediente_id?: string;
   nombre_ingrediente: string;
   cantidad: number;
   tipo_ingrediente: string;
+  tipo_cantidad?: string;
 }
  
 export interface Nutricion {

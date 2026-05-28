@@ -28,20 +28,33 @@
         </div>
         <a routerLink="/diet" class="btn-ver-todo">Ver todas →</a>
       </div>
-      <div class="cards-grid" id="gridDietas">
-        @if (dietas.length === 0) {
-          <p class="franja-vacia">Cargando dietas...</p>
-        }
-        @for (dieta of dietas; track dieta.id) {
-          <div class="item-card">
-            <img [src]="getPortadaDieta(dieta)" [alt]="dieta.nombre_dieta" class="item-card-img">
-            <div class="item-card-body">
-              <p class="item-card-name">{{ dieta.nombre_dieta }}</p>
-              <button (click)="verDieta(dieta.id)" class="btn-card-ver">Ver más</button>
+
+      @if (cargandoDietas) {
+        <div class="home-estado-carga">
+          <div class="home-spinner"></div>
+          <p>Cargando dietas...</p>
+        </div>
+      } @else if (errorDietas) {
+        <div class="home-estado-error">
+          <span>⚠️</span>
+          <p>No se pudieron cargar las dietas.</p>
+          <button class="btn-naranja" (click)="reintentarDietas()">Reintentar</button>
+        </div>
+      } @else if (dietas.length === 0) {
+        <p class="franja-vacia">Aún no hay dietas disponibles.</p>
+      } @else {
+        <div class="cards-grid" id="gridDietas">
+          @for (dieta of dietas; track dieta.id) {
+            <div class="item-card">
+              <img [src]="getPortadaDieta(dieta)" [alt]="dieta.nombre_dieta" class="item-card-img">
+              <div class="item-card-body">
+                <p class="item-card-name">{{ dieta.nombre_dieta }}</p>
+                <button (click)="verDieta(dieta.id)" class="btn-card-ver">Ver más</button>
+              </div>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     </section>
 
     <!-- RECETAS -->
@@ -53,20 +66,33 @@
         </div>
         <a routerLink="/recipes" class="btn-ver-todo">Ver todas →</a>
       </div>
-      <div class="cards-grid" id="gridRecetas">
-        @if (recetas.length === 0) {
-          <p class="franja-vacia">Cargando recetas...</p>
-        }
-        @for (receta of recetas; track receta.id) {
-          <div class="item-card">
-            <img [src]="getImagenReceta(receta)" [alt]="receta.nombre_receta" class="item-card-img">
-            <div class="item-card-body">
-              <p class="item-card-name">{{ receta.nombre_receta }}</p>
-              <button (click)="verReceta(receta.id)" class="btn-card-ver">Ver más</button>
+
+      @if (cargandoRecetas) {
+        <div class="home-estado-carga">
+          <div class="home-spinner"></div>
+          <p>Cargando recetas...</p>
+        </div>
+      } @else if (errorRecetas) {
+        <div class="home-estado-error">
+          <span>⚠️</span>
+          <p>No se pudieron cargar las recetas.</p>
+          <button class="btn-naranja" (click)="reintentarRecetas()">Reintentar</button>
+        </div>
+      } @else if (recetas.length === 0) {
+        <p class="franja-vacia">Aún no hay recetas disponibles.</p>
+      } @else {
+        <div class="cards-grid" id="gridRecetas">
+          @for (receta of recetas; track receta.id) {
+            <div class="item-card">
+              <img [src]="getImagenReceta(receta)" [alt]="receta.nombre_receta" class="item-card-img">
+              <div class="item-card-body">
+                <p class="item-card-name">{{ receta.nombre_receta }}</p>
+                <button (click)="verReceta(receta.id)" class="btn-card-ver">Ver más</button>
+              </div>
             </div>
-          </div>
-        }
-      </div>
+          }
+        </div>
+      }
     </section>
 
     <!-- ABOUT -->

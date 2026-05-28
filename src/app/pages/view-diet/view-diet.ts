@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Navbar } from '../../layout/navbar/navbar';
 import { Footer } from '../../layout/footer/footer';
@@ -9,6 +9,7 @@ import { DietaResponse, PlanSemanalItem } from '../../models/dieta';
 import { DietaService } from '../../services/dieta.service';
 import { GuardadosService } from '../../services/guardados.service';
 import { AuthService } from '../../services/auth';
+import { AlertService } from '../../services/alert';
 import { AppConstants } from '../../app.constantes';
 
 interface DiaConComidas {
@@ -44,6 +45,7 @@ export class ViewDiet implements OnInit, OnDestroy {
   guardada = false;
   guardandoEstado = false;
 
+  private alerts = inject(AlertService);
   private routeSub?: Subscription;
 
   constructor(
@@ -108,6 +110,11 @@ export class ViewDiet implements OnInit, OnDestroy {
   }
 
   toggleGuardar(): void {
+    if (!this.authService.estaAutenticado()) {
+      this.alerts.danger('Debes iniciar sesión o registrarte para guardar dietas.', { autoDismiss: 3500 });
+      return;
+    }
+
     const personaId = this.authService.getPersonaId();
     const dietaId   = this.dieta?.id;
     if (!personaId || !dietaId || this.guardandoEstado) return;
@@ -146,5 +153,11 @@ export class ViewDiet implements OnInit, OnDestroy {
 
   verDieta(id: string): void { this.router.navigate(['/viewdiet', id]); }
 
-  descargarPDF(): void { window.print(); }
+  descargarPDF(): void {
+    if (!this.authService.estaAutenticado()) {
+      this.alerts.danger('Debes iniciar sesión o registrarte para descargar esta dieta.', { autoDismiss: 3500 });
+      return;
+    }
+    window.print();
+  }
 }

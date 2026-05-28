@@ -3,3 +3,10 @@ export interface Correo {
     subject?: string;
     body?: string;
 }
+
+export interface ContactoForm {
+    nombre: string;
+    email: string;
+    asunto: string;
+    mensaje: string;
+}
