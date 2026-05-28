@@ -1,19 +1,20 @@
 <app-navbar></app-navbar>
 <main class="diet mainIndex">
     <div class="page-wrapper-index">
+
+        <!-- HERO -->
         <section class="hero-card hero-recetas-card">
             <div class="hero-card-inner">
                 <div class="hero-tag">
                     <span class="hero-tag-dot"></span>
-                    Se creativo
+                    Sé creativo
                 </div>
                 <h1 class="hero-title">
-                    ¿Por que no <br> crear <span>tus propias dietas?</span>
+                    ¿Por qué no <br> crear <span>tus propias dietas?</span>
                 </h1>
                 <p class="hero-subtitle">
                     ¡Crea tus dietas personalizadas! Comparte tus deliciosas dietas totalmente hechas
-                    <strong>Por ti mismo</strong> — porque cuidarte
-                    también puede llevarte a la creatividad
+                    <strong>por ti mismo</strong> — porque cuidarte también puede llevarte a la creatividad.
                 </p>
                 <div class="hero-btns">
                     <button (click)="onValidarAutenticado()" class="btn-naranja">Crear dieta</button>
@@ -21,208 +22,129 @@
             </div>
             <img src="/assets/img/comidas/plato-proteina.png" alt="Plato saludable" class="hero-card-img-plato">
         </section>
-        <section class="franja-card" id="dietas-divertidas">
-            <div class="franja-header">
-                <div>
-                    <div class="franja-badge">Dietas divertidas</div>
-                    <h2 class="franja-titulo">¿Porque las dietas deben de ser aburridas?</h2>
-                    <p class="franja-sub">Encuentra muchas dietas coloridas y curiosas para tu nutrición.</p>
-                </div>
-                <a href="#" class="btn-ver-todo">Ver todas →</a>
-            </div>
-            <div class="cards-grid">
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <a routerLink="/viewdiet" class="btn btn-card-ver">Ver más</a>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <section class="franja-card" id="dietas-divertidas">
+        <!-- CARGANDO -->
+        @if (cargando) {
+        <div class="estado-carga">
+            <div class="spinner"></div>
+            <p>Cargando dietas...</p>
+        </div>
+        }
+
+        <!-- ERROR -->
+        @if (!cargando && error) {
+        <div class="estado-error">
+            <span>⚠️</span>
+            <p>{{ error }}</p>
+        </div>
+        }
+
+        <!-- SECCIÓN CON BÚSQUEDA Y PAGINACIÓN -->
+        @if (!cargando && !error) {
+        <section class="franja-card" id="dietas-publicas">
             <div class="franja-header">
                 <div>
-                    <div class="franja-badge">Dietas AntiProblemas</div>
-                    <h2 class="franja-titulo">Conoce algunas de nuestras diet</h2>
-                    <p class="franja-sub">Encuentra muchas dietas coloridas y curiosas para tu nutrición.</p>
+                    <div class="franja-badge">Dietas de la comunidad</div>
+                    <h2 class="franja-titulo">¿Por qué las dietas deben ser aburridas?</h2>
+                    <p class="franja-sub">Encuentra dietas coloridas y curiosas para tu nutrición.</p>
                 </div>
-                <a href="#" class="btn-ver-todo">Ver todas →</a>
             </div>
+
+            <!-- BUSCADOR -->
+            <div class="buscador-wrap">
+                <div class="buscador-input-wrap">
+                    <span class="buscador-icon">🔍</span>
+                    <input
+                        type="text"
+                        class="buscador-input"
+                        placeholder="Buscar dieta por nombre, descripción o objetivo..."
+                        [(ngModel)]="searchTerm"
+                        (ngModelChange)="onBuscar()"
+                    />
+                    @if (searchTerm) {
+                    <button class="buscador-clear" (click)="limpiarBusqueda()" title="Limpiar búsqueda">✕</button>
+                    }
+                </div>
+                <p class="buscador-resultado">
+                    @if (searchTerm) {
+                        {{ dietasFiltradas.length }} resultado{{ dietasFiltradas.length !== 1 ? 's' : '' }} para <strong>"{{ searchTerm }}"</strong>
+                    } @else {
+                        {{ dietas.length }} dieta{{ dietas.length !== 1 ? 's' : '' }} disponible{{ dietas.length !== 1 ? 's' : '' }}
+                    }
+                </p>
+            </div>
+
+            <!-- SIN RESULTADOS DE BÚSQUEDA -->
+            @if (dietasFiltradas.length === 0 && searchTerm) {
+            <div class="estado-vacio">
+                <span class="vacio-icon">🥗</span>
+                <p class="vacio-titulo">No se encontraron dietas</p>
+                <p class="vacio-sub">No hay resultados para "<strong>{{ searchTerm }}</strong>". Intenta con otro término.</p>
+                <button class="btn-naranja" (click)="limpiarBusqueda()">Ver todas las dietas</button>
+            </div>
+            }
+
+            <!-- SIN DIETAS EN LA PLATAFORMA -->
+            @else if (dietas.length === 0) {
+            <p class="franja-vacia">Aún no hay dietas públicas disponibles.</p>
+            }
+
+            <!-- GRID DE DIETAS -->
+            @else {
             <div class="cards-grid">
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
+                @for (dieta of dietasPaginadas; track dieta.id) {
+                <div class="item-card item-card--dieta">
+                    <div class="item-card-img-wrap">
+                        <img [src]="getPortadaDieta(dieta)" [alt]="dieta.nombre_dieta" class="item-card-img">
+                        @if (dieta.metas?.length) {
+                        <div class="item-card-badges">
+                            <span class="item-badge-top">{{ dieta.metas[0] }}</span>
+                        </div>
+                        }
                     </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
+                    <div class="item-card-content">
+                        <h3 class="item-card-titulo">{{ dieta.nombre_dieta }}</h3>
+                        <p class="item-card-desc">{{ dieta.descripcion }}</p>
+                        <div class="item-card-metas">
+                            @for (meta of dieta.metas?.slice(0, 3); track meta) {
+                            <span class="item-tag">{{ meta }}</span>
+                            }
+                        </div>
                     </div>
-                </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
+                    <div class="item-card-footer">
+                        <button (click)="verDieta(dieta.id)" class="btn-card-full">Ver dieta →</button>
                     </div>
                 </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                  <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                  <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                  <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                  <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                  <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
+                }
             </div>
+
+            <!-- PAGINACIÓN -->
+            @if (totalPaginas > 1) {
+            <div class="paginacion">
+                <button class="pag-btn pag-btn--nav"
+                    [disabled]="paginaActual === 1"
+                    (click)="cambiarPagina(paginaActual - 1)">
+                    ← Anterior
+                </button>
+                @for (p of paginas; track p) {
+                <button class="pag-btn"
+                    [class.pag-btn--activa]="p === paginaActual"
+                    (click)="cambiarPagina(p)">
+                    {{ p }}
+                </button>
+                }
+                <button class="pag-btn pag-btn--nav"
+                    [disabled]="paginaActual === totalPaginas"
+                    (click)="cambiarPagina(paginaActual + 1)">
+                    Siguiente →
+                </button>
+            </div>
+            <p class="paginacion-info">Página {{ paginaActual }} de {{ totalPaginas }}</p>
+            }
+
+            }
         </section>
-        <section class="franja-card" id="dietas-divertidas">
-            <div class="franja-header">
-                <div>
-                    <div class="franja-badge">¡Conoce las dietas de la comidad!</div>
-                    <h2 class="franja-titulo">Nuestros usuarios comparten sus dietas con nosotros</h2>
-                    <p class="franja-sub">Encuentra dietas creativas e innovadoras creadas por los usuarios</p>
-                </div>
-                <a href="#" class="btn-ver-todo">Ver todas →</a>
-            </div>
-            <div class="cards-grid">
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-                <div class="item-card" id="card-${index}">
-                    <img src="/assets/img/comidas/bowlRecetas.png" alt="${item.nombre}" class="item-card-img">
-                    <div class="item-card-body">
-                        <p class="item-card-name">Dieta random</p>
-                        <button class="btn-card-ver">Ver más</button>
-                    </div>
-                    <div class="item-card-detalle">
-                        <div class="item-card-tiempo">⏱ 20 minutos</div>
-                        <ul class="item-card-ingredientes">Información detalles</ul>
-                    </div>
-                </div>
-            </div>
-        </section>
+        }
 
     </div>
 </main>

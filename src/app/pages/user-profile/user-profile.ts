@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -26,6 +26,7 @@ export class UserProfile implements OnInit {
   private alertService = inject(AlertService);
   private storage = inject(Storage);
   private fb = inject(FormBuilder);
+  private cdr = inject(ChangeDetectorRef);
 
   // ── Info del usuario ──────────────────────────────────────────────────────
   nombreUsuario = '';
@@ -163,6 +164,7 @@ export class UserProfile implements OnInit {
         }
 
         this.cargando = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar perfil:', err);
@@ -170,6 +172,7 @@ export class UserProfile implements OnInit {
           autoDismiss: 5000
         });
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -221,6 +224,7 @@ export class UserProfile implements OnInit {
 
         this.cargando = false;
         this.formVisible = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al guardar perfil:', err);
@@ -234,6 +238,7 @@ export class UserProfile implements OnInit {
         }
 
         this.cargando = false;
+        this.cdr.detectChanges();
       }
     });
   }

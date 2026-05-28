@@ -6,7 +6,6 @@ import { Recipes } from './pages/recipes/recipes';
 import { Diet } from './pages/diet/diet';
 import { UserProfile } from './pages/user-profile/user-profile';
 import { Creatediet } from './pages/creatediet/creatediet';
-import path from 'path';
 import { CreateRecipe } from './pages/create-recipe/create-recipe';
 import { ViewSaved } from './pages/view-saved/view-saved';
 import { ViewDiet } from './pages/view-diet/view-diet';
@@ -22,7 +21,9 @@ export const routes: Routes = [
     { path: 'creatediet', component: Creatediet },
     { path: 'createrecipe', component: CreateRecipe },
     { path: 'viewsaved', component: ViewSaved },
-    { path: 'viewdiet', component: ViewDiet },
-    { path: 'viewrecipe', component: ViewRecipe },
-    { path: '**', redirectTo: '' } //ruta no encontrada 
+    { path: 'viewdiet/:id', component: ViewDiet },
+    { path: 'viewrecipe/:id', component: ViewRecipe },
+    { path: 'editrecipe/:id', component: CreateRecipe },
+    { path: 'editdiet/:id', component: Creatediet },
+    { path: '**', redirectTo: '' } //ruta no encontrada
 ];

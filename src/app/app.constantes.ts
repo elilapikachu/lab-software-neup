@@ -1,3 +1,3 @@
 export class AppConstants {
-  public static API_URL: string = 'https://lab-neup-back.onrender.com/api';
+  public static API_URL: string = 'http://localhost:8080/api';
 }

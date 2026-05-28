@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest, RegisterRequest, AuthResponse } from '../models/auth';
+import { recuperarPassword } from '../models/recuperarPassword';
 import { Storage } from './storage';
 import { AppConstants } from '../app.constantes'
 
@@ -25,6 +26,21 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.API_AUTH}/registro`, request);
   }
 
+  /** POST /api/auth/recuperar-password — envía contraseña temporal al email del usuario */
+  recuperarPassword(dto: recuperarPassword): Observable<string> {
+    return this.http.post(`${this.API_AUTH}/recuperar-password`, dto, { responseType: 'text' });
+  }
+
+  /** PUT /api/auth/cambiar-password — cambia la contraseña, desmarca el flag temporal */
+  cambiarPassword(usuarioId: string, passwordActual: string, nuevaPassword: string): Observable<AuthResponse> {
+    return this.http.put<AuthResponse>(`${this.API_AUTH}/cambiar-password`, { usuarioId, passwordActual, nuevaPassword });
+  }
+
+  /** GET /api/auth/verificar-email — comprueba que el dominio tenga registros MX */
+  verificarEmail(email: string): Observable<{ valido: boolean }> {
+    return this.http.get<{ valido: boolean }>(`${this.API_AUTH}/verificar-email`, { params: { email } });
+  }
+
   guardarSesion(response: AuthResponse): void {
     this.storage.setItem('usuarioId', response.usuarioId || '');
     this.storage.setItem('personaId', response.personaId || '');
@@ -45,6 +61,10 @@ export class AuthService {
 
   getUsuarioId(): string | null {
     return this.storage.getItem('usuarioId');
+  }
+
+  getPersonaId(): string | null {
+    return this.storage.getItem('personaId');
   }
 
   getNombreUsuario(): string | null {

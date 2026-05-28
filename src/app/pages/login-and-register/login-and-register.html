@@ -4,10 +4,13 @@
     <div class="lado_imagen"></div>
 
     <div class="from__box">
-        <div class="button__box">
+
+        <!-- Tabs: ocultar en modo recuperar y cambiar -->
+        <div class="button__box" *ngIf="!isRecuperar() && !isCambiar()">
             <div class="slider-pill" [class.slider-pill--registro]="isRegister()"></div>
 
-            <button type="button" class="toggle-btn" [class.toggle-btn--active]="isLogin()" (click)="setMode('login')">
+            <button type="button" class="toggle-btn" [class.toggle-btn--active]="isLogin()"
+                (click)="setMode('login')">
                 Iniciar Sesión
             </button>
 
@@ -17,7 +20,8 @@
             </button>
         </div>
 
-        <form class="grupos" [class.grupos--visible]="isLogin()" [class.grupos--oculto]="isRegister()"
+        <!-- ── FORM LOGIN ─────────────────────────────────────────── -->
+        <form class="grupos" [class.grupos--visible]="isLogin()" [class.grupos--oculto]="!isLogin()"
             [formGroup]="loginForm" (ngSubmit)="onLoginSubmit()">
 
             <div class="field-wrap">
@@ -25,7 +29,7 @@
                     [class.inputs--error]="lUsuario?.invalid && lUsuario?.touched" />
                 <span class="error-text" *ngIf="lUsuario?.invalid && lUsuario?.touched">
                     <span *ngIf="lUsuario?.errors?.['required']">El usuario es obligatorio</span>
-                 <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{ lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
+                    <span *ngIf="lUsuario?.errors?.['minlength']">Mínimo {{ lUsuario?.errors?.['minlength'].requiredLength }} caracteres</span>
                 </span>
             </div>
 
@@ -34,19 +38,21 @@
                     [class.inputs--error]="lPassword?.invalid && lPassword?.touched" />
                 <span class="error-text" *ngIf="lPassword?.invalid && lPassword?.touched">
                     <span *ngIf="lPassword?.errors?.['required']">La contraseña es obligatoria</span>
-                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{
-                        lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
+                    <span *ngIf="lPassword?.errors?.['minlength']">Mínimo {{ lPassword?.errors?.['minlength'].requiredLength }} caracteres</span>
                 </span>
             </div>
 
-
+            <button type="button" class="forgot-link" (click)="setMode('recuperar')">
+                ¿Olvidaste tu contraseña?
+            </button>
 
             <button type="submit" class="submit-btn" [disabled]="cargando">
                 {{ cargando ? 'Cargando...' : 'Acceder' }}
             </button>
         </form>
 
-        <form class="grupos" [class.grupos--visible]="isRegister()" [class.grupos--oculto]="isLogin()"
+        <!-- ── FORM REGISTRO ──────────────────────────────────────── -->
+        <form class="grupos" [class.grupos--visible]="isRegister()" [class.grupos--oculto]="!isRegister()"
             [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
 
             <div class="field-wrap">
@@ -60,10 +66,13 @@
 
             <div class="field-wrap">
                 <input type="email" class="inputs" placeholder="Email" formControlName="email"
-                    [class.inputs--error]="rEmail?.invalid && rEmail?.touched" />
-                <span class="error-text" *ngIf="rEmail?.invalid && rEmail?.touched">
+                    [class.inputs--error]="rEmail?.invalid && rEmail?.touched"
+                    [class.inputs--validating]="rEmail?.pending" />
+                <span class="validating-text" *ngIf="rEmail?.pending">Verificando dirección...</span>
+                <span class="error-text" *ngIf="rEmail?.invalid && rEmail?.touched && !rEmail?.pending">
                     <span *ngIf="rEmail?.errors?.['required']">El email es obligatorio</span>
                     <span *ngIf="rEmail?.errors?.['email']">Ingresa un email válido</span>
+                    <span *ngIf="rEmail?.errors?.['emailNoExiste']">Esta dirección de correo no existe</span>
                 </span>
             </div>
 
@@ -72,7 +81,7 @@
                     [class.inputs--error]="rPassword?.invalid && rPassword?.touched" />
                 <span class="error-text" *ngIf="rPassword?.invalid && rPassword?.touched">
                     <span *ngIf="rPassword?.errors?.['required']">La contraseña es obligatoria</span>
-                    <span *ngIf="rPassword?.errors?.['minlength']">Mínimo 6 caracteres</span>
+                    <span *ngIf="rPassword?.errors?.['minlength']">Mínimo 8 caracteres</span>
                 </span>
             </div>
 
@@ -80,6 +89,88 @@
                 {{ cargando ? 'Registrando...' : 'Registrarse' }}
             </button>
         </form>
+
+        <!-- ── PANEL RECUPERAR CONTRASEÑA ─────────────────────────── -->
+        <div class="grupos grupos--visible grupos--recuperar" *ngIf="isRecuperar()">
+            <div class="recuperar-header">
+                <button type="button" class="back-link" (click)="setMode('login')">← Volver</button>
+                <h3 class="recuperar-titulo">Recuperar contraseña</h3>
+                <p class="recuperar-sub">
+                    Ingresa tu <strong>usuario</strong> o tu <strong>email</strong>. Solo uno de los dos.
+                </p>
+            </div>
+
+            <form [formGroup]="recuperarForm" (ngSubmit)="onRecuperarSubmit()">
+                <div class="field-wrap">
+                    <input type="text" class="inputs" placeholder="Usuario"
+                        formControlName="usuario"
+                        (input)="onRecuperarInput('usuario')" />
+                </div>
+
+                <div class="recuperar-separador">
+                    <span>o</span>
+                </div>
+
+                <div class="field-wrap">
+                    <input type="email" class="inputs" placeholder="Email"
+                        formControlName="email"
+                        (input)="onRecuperarInput('email')"
+                        [class.inputs--error]="recEmail?.invalid && recEmail?.touched" />
+                    <span class="error-text" *ngIf="recEmail?.invalid && recEmail?.touched">
+                        <span *ngIf="recEmail?.errors?.['email']">Ingresa un email válido</span>
+                    </span>
+                </div>
+
+                <button type="submit" class="submit-btn" [disabled]="cargando">
+                    {{ cargando ? 'Enviando...' : 'Enviar contraseña temporal' }}
+                </button>
+            </form>
+        </div>
+
+        <!-- ── PANEL CAMBIAR CONTRASEÑA ───────────────────────────── -->
+        <div class="grupos grupos--visible grupos--recuperar" *ngIf="isCambiar()">
+            <div class="recuperar-header">
+                <h3 class="recuperar-titulo">Cambia tu contraseña</h3>
+                <p class="recuperar-sub">
+                    Ingresaste con una <strong>contraseña temporal</strong>. Debes establecer una nueva para continuar.
+                </p>
+            </div>
+
+            <form [formGroup]="cambiarForm" (ngSubmit)="onCambiarSubmit()">
+                <div class="field-wrap">
+                    <input type="password" class="inputs" placeholder="Contraseña temporal"
+                        formControlName="passwordActual"
+                        [class.inputs--error]="cPasswordActual?.invalid && cPasswordActual?.touched" />
+                    <span class="error-text" *ngIf="cPasswordActual?.invalid && cPasswordActual?.touched">
+                        <span *ngIf="cPasswordActual?.errors?.['required']">Ingresa tu contraseña temporal</span>
+                    </span>
+                </div>
+
+                <div class="field-wrap">
+                    <input type="password" class="inputs" placeholder="Nueva contraseña"
+                        formControlName="nuevaPassword"
+                        [class.inputs--error]="cNuevaPassword?.invalid && cNuevaPassword?.touched" />
+                    <span class="error-text" *ngIf="cNuevaPassword?.invalid && cNuevaPassword?.touched">
+                        <span *ngIf="cNuevaPassword?.errors?.['required']">Ingresa una nueva contraseña</span>
+                        <span *ngIf="cNuevaPassword?.errors?.['minlength']">Mínimo 8 caracteres</span>
+                    </span>
+                </div>
+
+                <div class="field-wrap">
+                    <input type="password" class="inputs" placeholder="Confirmar nueva contraseña"
+                        formControlName="confirmarPassword"
+                        [class.inputs--error]="(cConfirmarPassword?.touched && cambiarForm.errors?.['noCoinciden'])" />
+                    <span class="error-text" *ngIf="cConfirmarPassword?.touched && cambiarForm.errors?.['noCoinciden']">
+                        <span>Las contraseñas no coinciden</span>
+                    </span>
+                </div>
+
+                <button type="submit" class="submit-btn" [disabled]="cargando">
+                    {{ cargando ? 'Guardando...' : 'Guardar nueva contraseña' }}
+                </button>
+            </form>
+        </div>
+
     </div>
 </div>
 

@@ -7,9 +7,11 @@
             <div class="formulario__header">
                 <div class="hero-tag">
                     <span class="hero-tag-dot"></span>
-                    Creador de recetas
+                    {{ modoEdicion ? 'Editar receta' : 'Creador de recetas' }}
                 </div>
-                <h1 class="hero-title">Crea tu <span>receta</span> perfecta 🍳</h1>
+                <h1 class="hero-title">
+                    {{ modoEdicion ? 'Edita tu' : 'Crea tu' }} <span>receta</span> perfecta 🍳
+                </h1>
                 <p class="hero-subtitle">Añade ingredientes, datos nutricionales y compártela con la comunidad.</p>
 
                 <!-- Stepper -->
@@ -97,6 +99,25 @@
                                 </div>
                             </label>
                         </div>
+                    </div>
+
+                    <!-- Imagen -->
+                    <div class="field-group">
+                        <label class="field-label">📷 Imagen de la receta <span class="field-opcional">(opcional)</span></label>
+                        <div class="img-upload" (click)="fileInputReceta.click()">
+                            @if (imagenPreview) {
+                            <img [src]="imagenPreview" alt="Preview" class="img-upload__preview">
+                            <div class="img-upload__overlay">Cambiar imagen</div>
+                            } @else {
+                            <div class="img-upload__placeholder">
+                                <span class="img-upload__icon">📷</span>
+                                <p>Haz clic para subir una imagen</p>
+                                <small>JPG, PNG, WEBP</small>
+                            </div>
+                            }
+                        </div>
+                        <input #fileInputReceta type="file" accept="image/*" class="img-upload__input"
+                            (change)="onImagenSeleccionada($event)">
                     </div>
 
                 </div>
@@ -282,6 +303,38 @@
                     }
                 </div>
 
+                <!-- Vitaminas y Minerales -->
+                <div class="vit-min-section">
+                    <div class="vit-min-group">
+                        <p class="vit-min-titulo">💊 Vitaminas <span class="field-opcional">(opcional)</span></p>
+                        <div class="chip-input-row">
+                            <input type="text" class="field-input chip-input" [(ngModel)]="nuevaVitamina"
+                                placeholder="Ej: Vitamina C"
+                                (keydown.enter)="agregarVitamina(); $event.preventDefault()">
+                            <button class="chip-add-btn" (click)="agregarVitamina()" type="button">+</button>
+                        </div>
+                        <div class="chip-list">
+                            @for (v of receta.nutricion.vitaminas; track v) {
+                            <span class="chip">{{ v }}<button (click)="eliminarVitamina(v)" type="button">✕</button></span>
+                            }
+                        </div>
+                    </div>
+                    <div class="vit-min-group">
+                        <p class="vit-min-titulo">🧂 Minerales <span class="field-opcional">(opcional)</span></p>
+                        <div class="chip-input-row">
+                            <input type="text" class="field-input chip-input" [(ngModel)]="nuevoMineral"
+                                placeholder="Ej: Hierro"
+                                (keydown.enter)="agregarMineral(); $event.preventDefault()">
+                            <button class="chip-add-btn" (click)="agregarMineral()" type="button">+</button>
+                        </div>
+                        <div class="chip-list">
+                            @for (m of receta.nutricion.minerales; track m) {
+                            <span class="chip">{{ m }}<button (click)="eliminarMineral(m)" type="button">✕</button></span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tags -->
                 <div class="tags-section">
                     <p class="tags-section__titulo">🏷️ Tags de la receta</p>
@@ -363,8 +416,9 @@
                     Siguiente →
                     </button>
                     } @else {
-                    <button class="nav-btn nav-btn--submit" (click)="crearReceta()">
-                        Crear Receta ✓
+                    <div *ngIf="errorMensaje" class="error-msg">{{ errorMensaje }}</div>
+                    <button class="nav-btn nav-btn--submit" (click)="guardarReceta()" [disabled]="cargando">
+                        {{ cargando ? (modoEdicion ? 'Guardando…' : 'Creando…') : (modoEdicion ? 'Guardar cambios ✓' : 'Crear Receta ✓') }}
                     </button>
                     }
             </div>

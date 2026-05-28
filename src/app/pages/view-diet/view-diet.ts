@@ -1,24 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Navbar } from '../../layout/navbar/navbar';
 import { Footer } from '../../layout/footer/footer';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
-interface PlanSemanal {
-  receta_id: { $oid: string };
-  tipo_comida: string;
+import { DietaResponse, PlanSemanalItem } from '../../models/dieta';
+import { DietaService } from '../../services/dieta.service';
+import { GuardadosService } from '../../services/guardados.service';
+import { AuthService } from '../../services/auth';
+import { AppConstants } from '../../app.constantes';
+
+interface DiaConComidas {
+  dia: string;
+  label: string;
+  comidas: PlanSemanalItem[];
 }
 
-interface Dieta {
-  _id: { $oid: string };
-  nombre_dieta: string;
-  descripcion: string;
-  metas: string[];
-  plan_semanal: PlanSemanal[];
-  es_personalizada: boolean;
-  visibilidad: string;
-}
+const DIA_LABELS: Record<string, string> = {
+  lunes:     'Lunes',
+  martes:    'Martes',
+  miercoles: 'Miércoles',
+  jueves:    'Jueves',
+  viernes:   'Viernes',
+  sabado:    'Sábado',
+  domingo:   'Domingo',
+};
+
+const ORDEN_DIAS = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
 
 @Component({
   selector: 'app-view-diet',
@@ -26,74 +35,116 @@ interface Dieta {
   templateUrl: './view-diet.html',
   styleUrl: './view-diet.scss',
 })
-export class ViewDiet implements OnInit {
-  dieta: Dieta | null = null;
-  dietasRelacionadas: Dieta[] = [];
+export class ViewDiet implements OnInit, OnDestroy {
+  dieta: DietaResponse | null = null;
+  dietasRelacionadas: DietaResponse[] = [];
+  planPorDia: DiaConComidas[] = [];
+  cargando = true;
+  error = '';
+  guardada = false;
+  guardandoEstado = false;
 
-  constructor(private route: ActivatedRoute) {}
+  private routeSub?: Subscription;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private dietaService: DietaService,
+    private guardadosService: GuardadosService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    // Simulación - reemplazar con servicio real
-    this.dieta = {
-      _id: { $oid: '69c5fbf01ba5db5ec8d79090' },
-      nombre_dieta: 'Bajemos de peso ¡Ahora!',
-      descripcion: 'Una dieta única para que puedas bajar de peso de manera efectiva y saludable',
-      metas: ['Bajar de peso', 'Estabilizar peso'],
-      plan_semanal: [
-        { receta_id: { $oid: '69c5e7be1ba5db5ec8d7908a' }, tipo_comida: 'almuerzo' }
-      ],
-      es_personalizada: false,
-      visibilidad: 'publica'
-    };
-
-    this.cargarDietasRelacionadas();
+    this.routeSub = this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (!id) { this.router.navigate(['/diet']); return; }
+      this.dieta    = null;
+      this.guardada = false;
+      this.cargando = true;
+      this.error    = '';
+      this.cargarDieta(id);
+      this.cargarRelacionadas();
+    });
   }
 
-  cargarDietasRelacionadas(): void {
-    // Simulación - reemplazar con servicio real
-    this.dietasRelacionadas = [
-      {
-        _id: { $oid: '69c5fbf01ba5db5ec8d79091' },
-        nombre_dieta: 'Fit y Saludable',
-        descripcion: 'Dieta para mantener tu peso ideal',
-        metas: ['Mantener peso', 'Aumentar musculatura'],
-        plan_semanal: [],
-        es_personalizada: false,
-        visibilidad: 'publica'
+  ngOnDestroy(): void { this.routeSub?.unsubscribe(); }
+
+  private cargarDieta(id: string): void {
+    this.dietaService.obtenerPorId(id).subscribe({
+      next: (dieta) => {
+        this.dieta      = dieta;
+        this.planPorDia = this.agruparPlanPorDia(dieta.plan_semanal);
+        this.cargando   = false;
+        this.verificarGuardada(id);
+        this.cdr.detectChanges();
       },
-      {
-        _id: { $oid: '69c5fbf01ba5db5ec8d79092' },
-        nombre_dieta: 'Proteína Power',
-        descripcion: 'Enfocada en ganar masa muscular',
-        metas: ['Aumentar musculatura', 'Ganar fuerza'],
-        plan_semanal: [],
-        es_personalizada: false,
-        visibilidad: 'publica'
+      error: () => {
+        this.error    = 'No se pudo cargar la dieta.';
+        this.cargando = false;
+        this.cdr.detectChanges();
       },
-      {
-        _id: { $oid: '69c5fbf01ba5db5ec8d79093' },
-        nombre_dieta: 'Detox Natural',
-        descripcion: 'Limpia tu cuerpo de toxinas',
-        metas: ['Desintoxicar', 'Mejorar digestión'],
-        plan_semanal: [],
-        es_personalizada: false,
-        visibilidad: 'publica'
-      }
-    ];
+    });
   }
 
-  guardarDieta(): void {
-    // Lógica para guardar dieta
-    console.log('Dieta guardada');
+  private cargarRelacionadas(): void {
+    this.dietaService.obtenerPublicas().subscribe({
+      next: (dietas) => {
+        const actual = this.route.snapshot.paramMap.get('id');
+        this.dietasRelacionadas = dietas.filter(d => d.id !== actual).slice(0, 3);
+        this.cdr.detectChanges();
+      },
+      error: () => {},
+    });
   }
 
-  compartirDieta(): void {
-    // Lógica para compartir dieta
-    console.log('Dieta compartida');
+  private verificarGuardada(dietaId: string): void {
+    const personaId = this.authService.getPersonaId();
+    if (!personaId) return;
+    this.guardadosService.isDietaGuardada(personaId, dietaId).subscribe({
+      next: (res) => { this.guardada = res.guardada; this.cdr.detectChanges(); },
+      error: () => {},
+    });
   }
 
-  descargarPDF(): void {
-    // Lógica para descargar PDF
-    console.log('PDF descargado');
+  toggleGuardar(): void {
+    const personaId = this.authService.getPersonaId();
+    const dietaId   = this.dieta?.id;
+    if (!personaId || !dietaId || this.guardandoEstado) return;
+
+    this.guardandoEstado = true;
+    const accion$ = this.guardada
+      ? this.guardadosService.desguardarDieta(personaId, dietaId)
+      : this.guardadosService.guardarDieta(personaId, dietaId);
+
+    accion$.subscribe({
+      next: () => {
+        this.guardada        = !this.guardada;
+        this.guardandoEstado = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.guardandoEstado = false; },
+    });
   }
+
+  private agruparPlanPorDia(plan: PlanSemanalItem[]): DiaConComidas[] {
+    const mapa: Record<string, PlanSemanalItem[]> = {};
+    for (const item of plan) {
+      const dia = item.dia ?? 'sin_dia';
+      if (!mapa[dia]) mapa[dia] = [];
+      mapa[dia].push(item);
+    }
+    return ORDEN_DIAS
+      .filter(d => mapa[d]?.length)
+      .map(d => ({ dia: d, label: DIA_LABELS[d] ?? d, comidas: mapa[d] }));
+  }
+
+  getPortadaDieta(dieta: DietaResponse): string {
+    if (dieta.portada) return `${AppConstants.API_URL}/documentos/${dieta.portada}/archivo`;
+    return '/assets/img/comidas/plato-proteina.png';
+  }
+
+  verDieta(id: string): void { this.router.navigate(['/viewdiet', id]); }
+
+  descargarPDF(): void { window.print(); }
 }

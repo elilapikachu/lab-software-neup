@@ -246,8 +246,8 @@
 
 /* ACCIONES */
 .contenido-card-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 12px;
   border-top: 1px solid var(--bordeCards);
@@ -255,6 +255,8 @@
 }
 
 .btn-accion {
+  flex: 1;
+  min-width: 70px;
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
@@ -352,12 +354,9 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 
-  .contenido-card-actions {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .btn-accion {
     font-size: 0.7rem;
+    min-width: 60px;
   }
 
   .tabs-container {
