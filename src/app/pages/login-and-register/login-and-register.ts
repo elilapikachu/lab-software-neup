@@ -7,14 +7,12 @@ import { switchMap, map, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from '../../services/auth';
 import { AlertService } from '../../services/alert';
-import { AlertComponent } from '../../layout/alert/alert';
-
 type AuthMode = 'login' | 'register' | 'recuperar' | 'cambiar';
 
 @Component({
   selector: 'app-login-and-register',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule, CommonModule, AlertComponent],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './login-and-register.html',
   styleUrl: './login-and-register.scss',
 })

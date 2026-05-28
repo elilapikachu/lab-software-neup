@@ -10,12 +10,10 @@ import { AlertService } from '../../services/alert';
 import { Storage } from '../../services/storage';
 import { PerfilData } from '../../models/perfil';
 import { Tag } from '../../models/secundary/tag';
-import { AlertComponent } from '../../layout/alert/alert';
-
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [RouterLink, CommonModule, ReactiveFormsModule, Navbar, Footer, AlertComponent],
+  imports: [RouterLink, CommonModule, ReactiveFormsModule, Navbar, Footer],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss',
 })

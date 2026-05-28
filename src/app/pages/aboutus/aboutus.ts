@@ -4,14 +4,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../layout/navbar/navbar';
 import { Footer } from '../../layout/footer/footer';
-import { AlertComponent } from '../../layout/alert/alert';
 import { AlertService } from '../../services/alert';
 import { CorreoService } from '../../services/correo.service';
 
 @Component({
   selector: 'app-aboutus',
   standalone: true,
-  imports: [RouterLink, Navbar, Footer, ReactiveFormsModule, CommonModule, AlertComponent],
+  imports: [RouterLink, Navbar, Footer, ReactiveFormsModule, CommonModule],
   templateUrl: './aboutus.html',
   styleUrl: './aboutus.scss',
 })

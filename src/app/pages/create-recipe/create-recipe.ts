@@ -11,6 +11,7 @@ import { RecetaService } from '../../services/receta.service';
 import { AuthService } from '../../services/auth';
 import { IngredienteService } from '../../services/ingrediente.service';
 import { IngredienteResponse } from '../../models/ingrediente';
+import { AppConstants } from '../../app.constantes';
 
 interface IngredienteForm {
   ingrediente_id: string;
@@ -64,6 +65,7 @@ export class CreateRecipe implements OnInit {
   // ── Imagen ──
   imagenFile: File | null = null;
   imagenPreview: string | null = null;
+  imagenIdsExistentes: string[] = [];
 
   onImagenSeleccionada(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -374,14 +376,33 @@ export class CreateRecipe implements OnInit {
   }
 
   private subirImagenYNavegar(id: string): void {
-    if (this.imagenFile) {
-      this.recetaService.agregarImagen(id, this.imagenFile, this.imagenFile.name).subscribe({
+    if (!this.imagenFile) {
+      this.cargando = false;
+      this.router.navigate(['/viewrecipe', id]);
+      return;
+    }
+
+    const archivo = this.imagenFile;
+    const idsAEliminar = this.modoEdicion ? [...this.imagenIdsExistentes] : [];
+
+    const subir = () => {
+      this.recetaService.agregarImagen(id, archivo, archivo.name).subscribe({
         next:  () => { this.cargando = false; this.router.navigate(['/viewrecipe', id]); },
         error: () => { this.cargando = false; this.router.navigate(['/viewrecipe', id]); },
       });
-    } else {
-      this.cargando = false;
-      this.router.navigate(['/viewrecipe', id]);
+    };
+
+    if (idsAEliminar.length === 0) {
+      subir();
+      return;
+    }
+
+    let pendientes = idsAEliminar.length;
+    for (const imagenId of idsAEliminar) {
+      this.recetaService.eliminarImagen(id, imagenId).subscribe({
+        next:  () => { if (--pendientes === 0) subir(); },
+        error: () => { if (--pendientes === 0) subir(); },
+      });
     }
   }
 
@@ -425,6 +446,10 @@ export class CreateRecipe implements OnInit {
           tiempo_preparacion: r.tiempo_preparacion,
           visibilidad: r.visibilidad,
         };
+        this.imagenIdsExistentes = r.imagen ?? [];
+        if (this.imagenIdsExistentes.length) {
+          this.imagenPreview = `${AppConstants.API_URL}/documentos/${this.imagenIdsExistentes[0]}/archivo`;
+        }
         this.initTags(r.tags);
         this.cdr.detectChanges();
       },
