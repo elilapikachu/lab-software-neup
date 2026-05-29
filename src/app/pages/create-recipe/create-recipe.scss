@@ -108,6 +108,8 @@
 
 // ─── FORMULARIO DE INGREDIENTE ────────────────────────────────────────────────
 .ing-form {
+  position: relative;
+  z-index: 2;
   border: 1.5px solid var(--bordeCards);
   border-radius: 16px;
   padding: 20px 22px;
