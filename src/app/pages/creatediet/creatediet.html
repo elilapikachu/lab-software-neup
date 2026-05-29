@@ -5,9 +5,11 @@
             <div class="formulario__header ">
                 <div class="hero-tag">
                     <span class="hero-tag-dot"></span>
-                    Creador de dietas
+                    {{ modoEdicion ? 'Editar dieta' : 'Creador de dietas' }}
                 </div>
-                <h1 class="hero-title">Crea tu <span>dieta personalizada</span> 🥗</h1>
+                <h1 class="hero-title">
+                    {{ modoEdicion ? 'Edita tu' : 'Crea tu' }} <span>dieta personalizada</span> 🥗
+                </h1>
                 <p class="hero-subtitle">Diseña un plan único que se ajuste a tus metas, gustos y estilo de vida.</p>
 
                 <div class="stepper d-flex w-100 justify-content-center">
@@ -49,7 +51,8 @@
                         </label>
                         <div class="field-input-wrap">
                             <input type="text" class="field-input" [(ngModel)]="nombreDieta"
-                                placeholder="Ej: Plan verde de verano…" maxlength="60">
+                                placeholder="Ej: Plan verde de verano…"
+                                (input)="nombreDieta = truncar(nombreDieta, 60)">
                             <span class="field-counter">{{ nombreDieta.length }}/60</span>
                         </div>
                     </div>
@@ -62,7 +65,7 @@
                         <div class="field-input-wrap">
                             <textarea class="field-input field-textarea" [(ngModel)]="descripcion"
                                 placeholder="¿De qué trata tu dieta? ¿A quién está dirigida?" rows="3"
-                                maxlength="200"></textarea>
+                                (input)="descripcion = truncar(descripcion, 200)"></textarea>
                             <span class="field-counter">{{ descripcion.length }}/200</span>
                         </div>
                     </div>
@@ -88,6 +91,25 @@
                                 </div>
                             </label>
                         </div>
+                    </div>
+
+                    <!-- Portada -->
+                    <div class="field-group">
+                        <label class="field-label">🖼️ Imagen de portada <span class="field-opcional">(opcional)</span></label>
+                        <div class="img-upload" (click)="fileInputPortada.click()">
+                            @if (portadaPreview) {
+                            <img [src]="portadaPreview" alt="Preview" class="img-upload__preview">
+                            <div class="img-upload__overlay">Cambiar imagen</div>
+                            } @else {
+                            <div class="img-upload__placeholder">
+                                <span class="img-upload__icon">🖼️</span>
+                                <p>Haz clic para subir una portada</p>
+                                <small>JPG, PNG, WEBP</small>
+                            </div>
+                            }
+                        </div>
+                        <input #fileInputPortada type="file" accept="image/*" class="img-upload__input"
+                            (change)="onPortadaSeleccionada($event)">
                     </div>
 
                 </div>
@@ -185,18 +207,18 @@
                                 <div class="carrusel-card"
                                     [class.carrusel-card--agregada]="isRecetaEnDia(diaSeleccionado, receta.id)">
                                     <div class="carrusel-card__img-wrap">
-                                        <img [src]="receta.img" [alt]="receta.nombre" class="carrusel-card__img"
-                                            loading="lazy">
-                                        <span class="carrusel-card__cat">{{ receta.categoriaEmoji }} {{
-                                            receta.categoriaLabel }}</span>
-                                        <span class="carrusel-card__kcal">{{ receta.kcal }} kcal</span>
+                                        <img [src]="getImagenReceta(receta)" [alt]="receta.nombre_receta"
+                                            class="carrusel-card__img" loading="lazy">
+                                        <span class="carrusel-card__cat">{{ getCategoriaEmoji(receta) }} {{
+                                            getCategoriaLabel(receta) }}</span>
+                                        <span class="carrusel-card__kcal">{{ receta.nutricion?.kcal ?? 0 }} kcal</span>
                                     </div>
                                     <div class="carrusel-card__body">
-                                        <h4 class="carrusel-card__nombre">{{ receta.nombre }}</h4>
+                                        <h4 class="carrusel-card__nombre">{{ receta.nombre_receta }}</h4>
                                         <div class="carrusel-card__macros">
-                                            <span class="cmacro cmacro--p">{{ receta.proteina }}g P</span>
-                                            <span class="cmacro cmacro--c">{{ receta.carbs }}g C</span>
-                                            <span class="cmacro cmacro--g">{{ receta.grasas }}g G</span>
+                                            <span class="cmacro cmacro--p">{{ receta.nutricion?.proteinas ?? 0 }}g P</span>
+                                            <span class="cmacro cmacro--c">{{ receta.nutricion?.carbohidratos ?? 0 }}g C</span>
+                                            <span class="cmacro cmacro--g">{{ receta.nutricion?.fibra ?? 0 }}g F</span>
                                         </div>
                                         <button class="carrusel-card__btn"
                                             [class.carrusel-card__btn--remove]="isRecetaEnDia(diaSeleccionado, receta.id)"
@@ -229,9 +251,9 @@
                         <div class="dia-recetas-sel__lista">
                             @for (rec of getRecetasDia(diaSeleccionado); track rec.id) {
                             <div class="sel-chip">
-                                <span class="sel-chip__emoji">{{ rec.categoriaEmoji }}</span>
-                                <span class="sel-chip__nombre">{{ rec.nombre }}</span>
-                                <span class="sel-chip__kcal">{{ rec.kcal }} kcal</span>
+                                <span class="sel-chip__emoji">{{ getCategoriaEmoji(rec) }}</span>
+                                <span class="sel-chip__nombre">{{ rec.nombre_receta }}</span>
+                                <span class="sel-chip__kcal">{{ rec.nutricion?.kcal ?? 0 }} kcal</span>
                                 <button class="sel-chip__remove"
                                     (click)="toggleRecetaEnDia(diaSeleccionado, rec)">✕</button>
                             </div>
@@ -278,20 +300,48 @@
                 </button>
                 <div class="nav-pasos">
                     @for (p of [1,2,3]; track p) {
-                    <span class="nav-dot" [class.nav-dot--active]="pasoActual === p" (click)="pasoActual = p"></span>
+                    <span class="nav-dot" [class.nav-dot--active]="pasoActual === p" (click)="irAPaso(p)"></span>
                     }
                 </div>
-                @if (pasoActual < 3) { <button class="nav-btn nav-btn--next" (click)="pasoSiguiente()">
-                    Siguiente →
+                @if (pasoActual < 3) {
+                <div class="nav-right">
+                    @if (errorPaso) { <span class="error-paso">{{ errorPaso }}</span> }
+                    <button class="nav-btn nav-btn--next" (click)="pasoSiguiente()">
+                        Siguiente →
                     </button>
-                    } @else {
-                    <button class="nav-btn nav-btn--submit" (click)="crearDieta()">
-                        Crear Dieta
-                    </button>
-                    }
+                </div>
+                } @else {
+                <div *ngIf="errorMensaje" class="error-msg">{{ errorMensaje }}</div>
+                <button class="nav-btn nav-btn--submit" (click)="abrirModalConfirmar()" [disabled]="cargando">
+                    {{ cargando ? (modoEdicion ? 'Guardando…' : 'Creando…') : (modoEdicion ? 'Guardar cambios ✓' : 'Crear Dieta ✓') }}
+                </button>
+                }
             </div>
 
         </section>
     </div>
+    <!-- Modal confirmar creación -->
+    <div class="confirm-overlay" *ngIf="modalConfirmVisible" (click)="cerrarModalConfirmar()">
+        <div class="confirm-card" (click)="$event.stopPropagation()">
+            <div class="confirm-card__icono">{{ modoEdicion ? '💾' : '🥗' }}</div>
+            <h3 class="confirm-card__titulo">
+                {{ modoEdicion ? '¿Guardar los cambios?' : '¿Crear tu dieta?' }}
+            </h3>
+            <p class="confirm-card__msg">
+                {{ modoEdicion
+                    ? 'Se actualizarán los datos de tu dieta con los cambios que hiciste.'
+                    : 'Tu dieta será publicada según la visibilidad que elegiste. ¿Todo listo?' }}
+            </p>
+            <div class="confirm-card__acciones">
+                <button class="confirm-btn confirm-btn--cancel" (click)="cerrarModalConfirmar()">
+                    Seguir editando
+                </button>
+                <button class="confirm-btn confirm-btn--confirm" (click)="confirmarCreacion()">
+                    {{ modoEdicion ? 'Sí, guardar' : 'Sí, crear' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
 </main>
 <app-footer></app-footer>

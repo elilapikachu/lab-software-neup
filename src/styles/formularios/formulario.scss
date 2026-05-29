@@ -342,6 +342,26 @@
   }
 }
 
+// ─── ERROR DE PASO (validación al avanzar) ───────────────────────────────────
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-paso {
+  font-family: var(--letra);
+  font-size: .82rem;
+  font-weight: 600;
+  color: #e53e3e;
+  background: rgba(229, 62, 62, .08);
+  border: 1px solid rgba(229, 62, 62, .25);
+  border-radius: 8px;
+  padding: 6px 12px;
+  max-width: 260px;
+  text-align: right;
+}
+
 // ─── MODAL ────────────────────────────────────────────────────────────────────
 .modal-custom {
   border-radius: 20px !important;

@@ -135,23 +135,51 @@
               <span>Contác</span>tenos
             </h1>
           </div>
-          <div class="col">
+          <div class="col" [formGroup]="contactForm">
             <div class="mb-4">
               <label for="email-contactenos" class="contactenos__form-label form-label">Correo electrónico</label>
-              <input type="email" class="contactenos__form-input form-control" id="email-contactenos"
-                placeholder="ejemplo@gmail.com">
+              <input type="email" class="contactenos__form-input form-control"
+                [class.is-invalid]="fEmail?.invalid && fEmail?.touched"
+                id="email-contactenos" formControlName="email" placeholder="ejemplo@gmail.com">
+              <div class="invalid-feedback">
+                @if (fEmail?.hasError('required')) { El correo es obligatorio. }
+                @else if (fEmail?.hasError('email')) { Ingresa un correo válido. }
+              </div>
             </div>
             <div class="mb-4">
               <label for="nombre" class="contactenos__form-label form-label">Nombre y Apellido</label>
-              <input type="text" class="contactenos__form-input form-control" id="nombre" placeholder="Juan Pérez">
+              <input type="text" class="contactenos__form-input form-control"
+                [class.is-invalid]="fNombre?.invalid && fNombre?.touched"
+                id="nombre" formControlName="nombre" placeholder="Juan Pérez">
+              <div class="invalid-feedback">
+                @if (fNombre?.hasError('required')) { El nombre es obligatorio. }
+                @else if (fNombre?.hasError('minlength')) { Debe tener al menos 2 caracteres. }
+              </div>
+            </div>
+            <div class="mb-4">
+              <label for="asunto" class="contactenos__form-label form-label">Asunto</label>
+              <input type="text" class="contactenos__form-input form-control"
+                [class.is-invalid]="fAsunto?.invalid && fAsunto?.touched"
+                id="asunto" formControlName="asunto" placeholder="Consulta sobre recetas...">
+              <div class="invalid-feedback">
+                @if (fAsunto?.hasError('required')) { El asunto es obligatorio. }
+                @else if (fAsunto?.hasError('minlength')) { Debe tener al menos 3 caracteres. }
+              </div>
             </div>
             <div class="mb-4">
               <label for="mensaje" class="contactenos__form-label form-label">Deja aquí tu mensaje</label>
-              <textarea class="contactenos__form-txr form-control" id="mensaje" rows="7"></textarea>
+              <textarea class="contactenos__form-txr form-control"
+                [class.is-invalid]="fMensaje?.invalid && fMensaje?.touched"
+                id="mensaje" formControlName="mensaje" rows="7"></textarea>
+              <div class="invalid-feedback">
+                @if (fMensaje?.hasError('required')) { El mensaje es obligatorio. }
+                @else if (fMensaje?.hasError('minlength')) { El mensaje debe tener al menos 10 caracteres. }
+              </div>
             </div>
             <div class="mb-3">
-              <button type="button" class="contactenos__form-btn btn btn-success">
-                Enviar mensaje
+              <button type="button" class="contactenos__form-btn btn btn-success"
+                [disabled]="cargando" (click)="onEnviarMensaje()">
+                @if (cargando) { Enviando... } @else { Enviar mensaje }
               </button>
             </div>
           </div>
@@ -164,4 +192,43 @@
 
   </div>
 </main>
+
+<!-- Modal de confirmación de envío -->
+@if (showConfirmModal) {
+  <div class="confirm-modal-backdrop" (click)="onCancelarEnvio()">
+    <div class="confirm-modal-dialog" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+      <div class="confirm-modal-header">
+        <div class="confirm-modal-icon">✉️</div>
+        <h5 class="confirm-modal-title" id="confirmModalTitle">Confirmar envío</h5>
+        <button type="button" class="confirm-modal-close btn-close" aria-label="Cerrar" (click)="onCancelarEnvio()"></button>
+      </div>
+      <div class="confirm-modal-body">
+        <p>¿Estás seguro que deseas enviar el mensaje de contacto?</p>
+        <div class="confirm-modal-summary">
+          <div class="confirm-modal-row">
+            <span class="confirm-modal-label">Para:</span>
+            <span class="confirm-modal-value">Equipo NEUP</span>
+          </div>
+          <div class="confirm-modal-row">
+            <span class="confirm-modal-label">Nombre:</span>
+            <span class="confirm-modal-value">{{ fNombre?.value }}</span>
+          </div>
+          <div class="confirm-modal-row">
+            <span class="confirm-modal-label">Asunto:</span>
+            <span class="confirm-modal-value">{{ fAsunto?.value }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="confirm-modal-footer">
+        <button type="button" class="btn confirm-modal-btn-cancel" (click)="onCancelarEnvio()">
+          Cancelar
+        </button>
+        <button type="button" class="btn confirm-modal-btn-confirm" (click)="onConfirmarEnvio()">
+          Sí, enviar mensaje
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
 <app-footer></app-footer>

@@ -23,4 +23,5 @@ export interface AuthResponse {
   personaId?: string;
   nombreUsuario?: string;
   email?: string;
+  passwordTemporal?: boolean;
 }
