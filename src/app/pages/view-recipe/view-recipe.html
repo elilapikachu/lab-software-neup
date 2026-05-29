@@ -1,23 +1,36 @@
 <app-navbar></app-navbar>
 <main class="mainIndex">
   <div class="page-wrapper-index">
-    <!-- HEADER CON BREADCRUMB -->
+
+    <!-- BREADCRUMB -->
     <div class="detail-breadcrumb">
       <a href="/recipes" class="breadcrumb-link">← Volver a recetas</a>
     </div>
 
-    <!-- RECETA DETALLADA -->
-    <section class="receta-detalle-hero" *ngIf="receta">
+    <!-- CARGANDO -->
+    <div *ngIf="cargando" class="estado-carga">
+      <div class="spinner"></div>
+      <p>Cargando receta...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div *ngIf="!cargando && error" class="estado-error">
+      <span>⚠️</span>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- HERO RECETA -->
+    <section class="receta-detalle-hero" *ngIf="receta && !cargando">
       <div class="receta-detalle-imagen">
-        <img src="/assets/img/comidas/bowlRecetas.png" [alt]="receta.nombre_receta" class="receta-hero-img">
-        <div class="receta-badge-hero">
-          <span *ngFor="let tag of receta.tags" class="badge-tag">{{ tag }}</span>
+        <img [src]="getImagenReceta(receta)" [alt]="receta.nombre_receta" class="receta-hero-img">
+        <div class="receta-badge-hero" *ngIf="receta.tags?.length">
+          <span *ngFor="let tag of receta.tags?.slice(0, 4)" class="badge-tag">{{ tag }}</span>
         </div>
       </div>
 
       <div class="receta-detalle-info">
         <h1 class="receta-titulo">{{ receta.nombre_receta }}</h1>
-        
+
         <!-- STATS PRINCIPALES -->
         <div class="receta-stats">
           <div class="stat-item">
@@ -27,106 +40,144 @@
               <p class="stat-valor">{{ receta.tiempo_preparacion }} min</p>
             </div>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" *ngIf="receta.nutricion?.kcal">
             <span class="stat-icon">🔥</span>
             <div class="stat-content">
               <p class="stat-label">Calorías</p>
               <p class="stat-valor">{{ receta.nutricion.kcal }} kcal</p>
             </div>
           </div>
-          <div class="stat-item">
+          <div class="stat-item" *ngIf="receta.nutricion?.proteinas">
             <span class="stat-icon">💪</span>
             <div class="stat-content">
               <p class="stat-label">Proteínas</p>
               <p class="stat-valor">{{ receta.nutricion.proteinas }}g</p>
             </div>
           </div>
+          <div class="stat-item" *ngIf="receta.ingredientes?.length">
+            <span class="stat-icon">🧂</span>
+            <div class="stat-content">
+              <p class="stat-label">Ingredientes</p>
+              <p class="stat-valor">{{ receta.ingredientes.length }}</p>
+            </div>
+          </div>
         </div>
 
-        <!-- BOTONES DE ACCIONES -->
+        <!-- ACCIÓN: solo guardar -->
         <div class="receta-acciones">
-          <button (click)="guardarReceta()" class="btn-naranja">
-            ❤ Guardar receta
-          </button>
-          <button (click)="compartirReceta()" class="btn-ghost-index">
-            📤 Compartir
+          <button (click)="toggleGuardar()" class="btn-naranja" [disabled]="guardandoEstado">
+            {{ guardada ? '❤ Guardada' : '🤍 Guardar receta' }}
           </button>
         </div>
       </div>
     </section>
 
     <!-- CONTENIDO DETALLADO -->
-    <section class="receta-contenido" *ngIf="receta">
+    <section class="receta-contenido" *ngIf="receta && !cargando">
       <div class="contenido-grid">
+
         <!-- INGREDIENTES -->
         <div class="receta-seccion">
           <h2 class="seccion-titulo">Ingredientes</h2>
           <div class="ingredientes-lista">
             <div *ngFor="let ing of receta.ingredientes" class="ingrediente-item">
-              <div class="ingrediente-tipo-badge" [class]="'tipo-' + ing.tipo_ingrediente">
+              <div class="ingrediente-tipo-badge" [ngClass]="'tipo-' + ing.tipo_ingrediente?.toLowerCase()">
                 {{ ing.tipo_ingrediente }}
               </div>
               <div class="ingrediente-detalle">
                 <p class="ingrediente-nombre">{{ ing.nombre_ingrediente }}</p>
-                <p class="ingrediente-cantidad">{{ ing.cantidad }} unidades</p>
+                <p class="ingrediente-cantidad">{{ ing.cantidad }}</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- INFORMACIÓN NUTRICIONAL -->
-        <div class="receta-seccion">
+        <div class="receta-seccion" *ngIf="receta.nutricion">
           <h2 class="seccion-titulo">Información Nutricional</h2>
           <div class="nutricion-grid">
-            <div class="nutricion-card">
+            <div class="nutricion-card nutricion-card--kcal">
+              <span class="nutricion-icono">🔥</span>
               <p class="nutricion-label">Calorías</p>
               <p class="nutricion-valor">{{ receta.nutricion.kcal }}</p>
               <p class="nutricion-unidad">kcal</p>
             </div>
-            <div class="nutricion-card">
+            <div class="nutricion-card nutricion-card--prot">
+              <span class="nutricion-icono">💪</span>
               <p class="nutricion-label">Proteínas</p>
               <p class="nutricion-valor">{{ receta.nutricion.proteinas }}</p>
               <p class="nutricion-unidad">g</p>
             </div>
-            <div class="nutricion-card">
+            <div class="nutricion-card nutricion-card--carb">
+              <span class="nutricion-icono">🌾</span>
               <p class="nutricion-label">Carbohidratos</p>
               <p class="nutricion-valor">{{ receta.nutricion.carbohidratos }}</p>
               <p class="nutricion-unidad">g</p>
             </div>
-            <div class="nutricion-card">
+            <div class="nutricion-card nutricion-card--fibra">
+              <span class="nutricion-icono">🥦</span>
               <p class="nutricion-label">Fibra</p>
               <p class="nutricion-valor">{{ receta.nutricion.fibra }}</p>
               <p class="nutricion-unidad">g</p>
             </div>
           </div>
+
+          <!-- VITAMINAS -->
+          <div class="extra-chips" *ngIf="receta.nutricion.vitaminas?.length">
+            <h3 class="chips-titulo">Vitaminas</h3>
+            <div class="chips-list">
+              <span *ngFor="let v of receta.nutricion.vitaminas" class="chip chip--vitamina">{{ v }}</span>
+            </div>
+          </div>
+
+          <!-- MINERALES -->
+          <div class="extra-chips" *ngIf="receta.nutricion.minerales?.length">
+            <h3 class="chips-titulo">Minerales</h3>
+            <div class="chips-list">
+              <span *ngFor="let m of receta.nutricion.minerales" class="chip chip--mineral">{{ m }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RECETAS RELACIONADAS -->
+    <section class="franja-card sugerencias-section" *ngIf="recetasRelacionadas.length > 0">
+      <div class="franja-header">
+        <div>
+          <div class="franja-badge">Más recetas</div>
+          <h2 class="franja-titulo">Recetas relacionadas</h2>
+          <p class="franja-sub">Otras recetas que podrían gustarte.</p>
+        </div>
+      </div>
+      <div class="cards-grid">
+        <div *ngFor="let recetaSugerida of recetasRelacionadas" class="item-card item-card--receta">
+          <div class="item-card-img-wrap">
+            <img [src]="getImagenReceta(recetaSugerida)" [alt]="recetaSugerida.nombre_receta" class="item-card-img">
+            <div class="item-card-overlay">
+              <span>⏱ {{ recetaSugerida.tiempo_preparacion }} min</span>
+            </div>
+            <div class="item-card-badges" *ngIf="recetaSugerida.tags?.length">
+              <span class="item-badge-top">{{ recetaSugerida.tags[0] }}</span>
+            </div>
+          </div>
+          <div class="item-card-content">
+            <h3 class="item-card-titulo">{{ recetaSugerida.nombre_receta }}</h3>
+            <div class="item-card-stats" *ngIf="recetaSugerida.nutricion">
+              <span class="stat-chip" *ngIf="recetaSugerida.nutricion.kcal">🔥 {{ recetaSugerida.nutricion.kcal }} kcal</span>
+            </div>
+            <div class="item-card-metas">
+              <span *ngFor="let tag of recetaSugerida.tags?.slice(0, 3)" class="item-tag">{{ tag }}</span>
+            </div>
+          </div>
+          <div class="item-card-footer">
+            <button class="btn-card-full" (click)="verReceta(recetaSugerida.id)">Ver receta →</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SUGERENCIAS RELACIONADAS -->
-    <section class="franja-card sugerencias-section">
-      <div class="franja-header">
-        <div>
-          <h2 class="franja-titulo">Recetas Relacionadas</h2>
-          <p class="franja-sub">Te recomendamos estas deliciosas alternativas</p>
-        </div>
-      </div>
-      <div class="cards-grid">
-        <div *ngFor="let recetaSugerida of recetasRelacionadas" class="item-card">
-          <img src="/assets/img/comidas/bowlRecetas.png" [alt]="recetaSugerida.nombre_receta" class="item-card-img">
-          <div class="item-card-body">
-            <p class="item-card-name">{{ recetaSugerida.nombre_receta }}</p>
-            <button class="btn-card-ver">Ver más</button>
-          </div>
-          <div class="item-card-detalle">
-            <div class="item-card-tiempo">⏱ {{ recetaSugerida.tiempo_preparacion }} min</div>
-            <ul class="item-card-ingredientes">
-              <li *ngFor="let tag of recetaSugerida.tags">{{ tag }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </main>
 <app-footer></app-footer>

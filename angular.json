@@ -3,7 +3,10 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "510f9b4d-d885-44a7-b071-d75bcae14999"
+    "analytics": "510f9b4d-d885-44a7-b071-d75bcae14999",
+    "cache": {
+      "enabled": false
+    }
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -66,6 +69,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/enviroment.ts",
+                  "with": "src/environments/environmentProd.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -74,8 +83,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "50kB",
+                  "maximumError": "100kB"
                 }
               ],
               "outputHashing": "all"

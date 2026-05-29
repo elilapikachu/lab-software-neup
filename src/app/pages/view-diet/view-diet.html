@@ -1,37 +1,48 @@
 <app-navbar></app-navbar>
 <main class="mainIndex">
   <div class="page-wrapper-index">
-    <!-- HEADER CON BREADCRUMB -->
+
+    <!-- BREADCRUMB -->
     <div class="detail-breadcrumb">
       <a href="/diet" class="breadcrumb-link">← Volver a dietas</a>
     </div>
 
-    <!-- DIETA DETALLADA -->
-    <section class="dieta-detalle-hero" *ngIf="dieta">
+    <!-- CARGANDO -->
+    <div *ngIf="cargando" class="estado-carga">
+      <div class="spinner"></div>
+      <p>Cargando dieta...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div *ngIf="!cargando && error" class="estado-error">
+      <span>⚠️</span>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- HERO DIETA -->
+    <section class="dieta-detalle-hero" *ngIf="dieta && !cargando">
       <div class="dieta-detalle-imagen">
-        <img src="/assets/img/comidas/plato-proteina.png" [alt]="dieta.nombre_dieta" class="dieta-hero-img">
+        <img [src]="getPortadaDieta(dieta)" [alt]="dieta.nombre_dieta" class="dieta-hero-img">
       </div>
 
       <div class="dieta-detalle-info">
         <h1 class="dieta-titulo">{{ dieta.nombre_dieta }}</h1>
-        
         <p class="dieta-descripcion">{{ dieta.descripcion }}</p>
 
         <!-- METAS -->
-        <div class="dieta-metas">
+        <div class="dieta-metas" *ngIf="dieta.metas?.length">
           <h3 class="metas-titulo">Objetivos de esta dieta</h3>
           <div class="metas-list">
-            <span *ngFor="let meta of dieta.metas" class="meta-badge">{{ meta }}</span>
+            <span *ngFor="let meta of dieta.metas" class="meta-badge">
+              <span class="meta-dot"></span>{{ meta }}
+            </span>
           </div>
         </div>
 
-        <!-- BOTONES DE ACCIONES -->
+        <!-- ACCIONES -->
         <div class="dieta-acciones">
-          <button (click)="guardarDieta()" class="btn-naranja">
-            ❤ Guardar dieta
-          </button>
-          <button (click)="compartirDieta()" class="btn-ghost-index">
-            📤 Compartir
+          <button (click)="toggleGuardar()" class="btn-naranja" [disabled]="guardandoEstado">
+            {{ guardada ? '❤ Guardada' : '🤍 Guardar dieta' }}
           </button>
           <button (click)="descargarPDF()" class="btn-ghost-index">
             📥 Descargar PDF
@@ -41,166 +52,137 @@
     </section>
 
     <!-- PLAN SEMANAL -->
-    <section class="franja-card plan-semanal-section">
+    <section class="franja-card plan-semanal-section" *ngIf="dieta && !cargando">
       <div class="franja-header">
         <div>
-          <h2 class="franja-titulo">Plan Semanal</h2>
-          <p class="franja-sub">Distribución de recetas por día y tipo de comida</p>
+          <div class="franja-badge">Plan semanal</div>
+          <h2 class="franja-titulo">Distribución de la semana</h2>
+          <p class="franja-sub">Recetas organizadas por día y tipo de comida.</p>
         </div>
       </div>
-      
-      <div class="plan-grid">
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Lunes</h3>
-          <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Avena con frutas</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Agua de pollo</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Ensalada verde</p>
-            </div>
-          </div>
-        </div>
 
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Martes</h3>
-          <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Yogurt con granola</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Pechuga a la parrilla</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Sopa de verduras</p>
-            </div>
-          </div>
-        </div>
+      <div *ngIf="planPorDia.length === 0" class="plan-vacio">
+        <span class="vacio-icon">📅</span>
+        <p class="vacio-texto">Esta dieta aún no tiene un plan semanal asignado.</p>
+      </div>
 
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Miércoles</h3>
-          <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Huevos revueltos</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Arroz integral</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Pescado blanco</p>
-            </div>
+      <div class="plan-grid" *ngIf="planPorDia.length > 0">
+        <div *ngFor="let diaInfo of planPorDia" class="plan-dia">
+          <div class="dia-header">
+            <h3 class="dia-titulo">{{ diaInfo.label }}</h3>
+            <span class="dia-count">{{ diaInfo.comidas.length }} comida{{ diaInfo.comidas.length !== 1 ? 's' : '' }}</span>
           </div>
-        </div>
-
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Jueves</h3>
           <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Pancakes saludables</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Tacos de pollo</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Brócoli al vapor</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Viernes</h3>
-          <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Smoothie bowl</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Carne magra</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Champiñones a la mantequilla</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Sábado</h3>
-          <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Frutos secos</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Pizza saludable</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Quinoa con verduras</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="plan-dia">
-          <h3 class="dia-titulo">Domingo</h3>
-          <div class="comidas-dia">
-            <div class="comida-item">
-              <span class="comida-tipo">Desayuno</span>
-              <p class="comida-nombre">Tostadas integrales</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Almuerzo</span>
-              <p class="comida-nombre">Pollo relleno</p>
-            </div>
-            <div class="comida-item">
-              <span class="comida-tipo">Cena</span>
-              <p class="comida-nombre">Salmón a la salsa</p>
+            <div *ngFor="let comida of diaInfo.comidas" class="comida-item"
+                 [class]="'comida-item--' + comida.tipo_comida?.toLowerCase()"
+                 [class.comida-item--clickable]="!!comida.receta"
+                 (click)="abrirModalReceta(comida.receta)">
+              <span class="comida-tipo">{{ comida.tipo_comida | titlecase }}</span>
+              <p class="comida-nombre">{{ comida.receta?.nombre_receta ?? 'Receta asignada' }}</p>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="franja-card sugerencias-section">
+    <!-- DIETAS SIMILARES -->
+    <section class="franja-card sugerencias-section" *ngIf="dietasRelacionadas.length > 0">
       <div class="franja-header">
         <div>
-          <h2 class="franja-titulo">Dietas Similares</h2>
-          <p class="franja-sub">Te recomendamos estas dietas basadas en tus objetivos</p>
+          <div class="franja-badge">Más dietas</div>
+          <h2 class="franja-titulo">Dietas similares</h2>
+          <p class="franja-sub">Otras dietas que podrían interesarte.</p>
         </div>
       </div>
       <div class="cards-grid">
-        <div *ngFor="let dietaSugerida of dietasRelacionadas" class="item-card">
-          <img src="/assets/img/comidas/bowlRecetas.png" [alt]="dietaSugerida.nombre_dieta" class="item-card-img">
-          <div class="item-card-body">
-            <p class="item-card-name">{{ dietaSugerida.nombre_dieta }}</p>
-            <button class="btn-card-ver">Ver más</button>
+        <div *ngFor="let dietaSugerida of dietasRelacionadas" class="item-card item-card--dieta">
+          <div class="item-card-img-wrap">
+            <img [src]="getPortadaDieta(dietaSugerida)" [alt]="dietaSugerida.nombre_dieta" class="item-card-img">
+            <div class="item-card-badges" *ngIf="dietaSugerida.metas?.length">
+              <span class="item-badge-top">{{ dietaSugerida.metas[0] }}</span>
+            </div>
           </div>
-          <div class="item-card-detalle">
-            <div class="item-card-tiempo">🎯 {{ dietaSugerida.metas[0] }}</div>
-            <ul class="item-card-ingredientes">
-              <li *ngFor="let meta of dietaSugerida.metas">{{ meta }}</li>
-            </ul>
+          <div class="item-card-content">
+            <h3 class="item-card-titulo">{{ dietaSugerida.nombre_dieta }}</h3>
+            <p class="item-card-desc">{{ dietaSugerida.descripcion }}</p>
+            <div class="item-card-metas">
+              <span *ngFor="let meta of dietaSugerida.metas?.slice(0, 2)" class="item-tag">{{ meta }}</span>
+            </div>
+          </div>
+          <div class="item-card-footer">
+            <button class="btn-card-full" (click)="verDieta(dietaSugerida.id)">Ver dieta →</button>
           </div>
         </div>
       </div>
     </section>
+
   </div>
 </main>
+
+<!-- MODAL RECETA -->
+<div class="modal-overlay" *ngIf="modalReceta" (click)="cerrarModal()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <button class="modal-close" (click)="cerrarModal()">✕</button>
+
+    <div class="modal-img-wrap">
+      <img [src]="getImagenReceta(modalReceta)" [alt]="modalReceta.nombre_receta" class="modal-img">
+    </div>
+
+    <div class="modal-body">
+      <h2 class="modal-titulo">{{ modalReceta.nombre_receta }}</h2>
+
+      <div class="modal-meta-row" *ngIf="modalReceta.tiempo_preparacion">
+        <span class="modal-meta-label">Tiempo</span>
+        <span class="modal-meta-valor">{{ modalReceta.tiempo_preparacion }}</span>
+      </div>
+
+      <div class="modal-tags" *ngIf="modalReceta.tags?.length">
+        <span *ngFor="let tag of modalReceta.tags" class="modal-tag">{{ tag }}</span>
+      </div>
+
+      <!-- NUTRICIÓN -->
+      <div class="modal-seccion" *ngIf="modalReceta.nutricion">
+        <h3 class="modal-seccion-titulo">Información nutricional</h3>
+        <div class="modal-nutricion-grid">
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.kcal }}</span>
+            <span class="modal-nutricion-lbl">kcal</span>
+          </div>
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.proteinas }}g</span>
+            <span class="modal-nutricion-lbl">Proteínas</span>
+          </div>
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.carbohidratos }}g</span>
+            <span class="modal-nutricion-lbl">Carbohidratos</span>
+          </div>
+          <div class="modal-nutricion-item">
+            <span class="modal-nutricion-val">{{ modalReceta.nutricion.fibra }}g</span>
+            <span class="modal-nutricion-lbl">Fibra</span>
+          </div>
+        </div>
+        <div class="modal-vitaminas" *ngIf="modalReceta.nutricion.vitaminas?.length">
+          <span class="modal-meta-label">Vitaminas:</span>
+          <span class="modal-meta-valor">{{ modalReceta.nutricion.vitaminas.join(', ') }}</span>
+        </div>
+        <div class="modal-vitaminas" *ngIf="modalReceta.nutricion.minerales?.length">
+          <span class="modal-meta-label">Minerales:</span>
+          <span class="modal-meta-valor">{{ modalReceta.nutricion.minerales.join(', ') }}</span>
+        </div>
+      </div>
+
+      <!-- INGREDIENTES -->
+      <div class="modal-seccion" *ngIf="modalReceta.ingredientes?.length">
+        <h3 class="modal-seccion-titulo">Ingredientes</h3>
+        <ul class="modal-ingredientes">
+          <li *ngFor="let ing of modalReceta.ingredientes" class="modal-ingrediente">
+            <span class="ing-nombre">{{ ing.nombre_ingrediente }}</span>
+            <span class="ing-cantidad">{{ ing.cantidad }} {{ ing.tipo_cantidad }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
 <app-footer></app-footer>

@@ -126,6 +126,10 @@
   pointer-events: none;
 }
 
+.grupos--recuperar {
+  top: 1.5rem;
+}
+
 /* ─── Campos ─── */
 .field-wrap {
   display: flex;
@@ -169,6 +173,32 @@
   &:focus {
     border-bottom-color: #ff8e8e !important;
   }
+}
+
+.inputs:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  border-bottom-color: rgba(8, 8, 8, 0.15);
+}
+
+/* ─── Estado verificando ─── */
+.inputs--validating {
+  border-bottom-color: var(--botonesSecciones);
+  animation: pulso-borde 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulso-borde {
+  from { border-bottom-color: var(--botonesSecciones); }
+  to   { border-bottom-color: rgba(242, 94, 7, 0.3);  }
+}
+
+.validating-text {
+  color: rgba(8, 8, 8, 0.45);
+  font-size: 0.7rem;
+  font-family: var(--letra);
+  font-weight: 400;
+  margin-top: 0.2rem;
+  font-style: italic;
 }
 
 /* ─── Errores ─── */
@@ -247,6 +277,84 @@
     opacity: 0.55;
     cursor: not-allowed;
     transform: none;
+  }
+}
+
+/* ─── Recuperar contraseña ─── */
+.forgot-link {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0.2rem 0;
+  margin: 0.5rem 0 0;
+  color: rgba(8, 8, 8, 0.45);
+  font-family: var(--letra);
+  font-size: 0.78rem;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: left;
+  transition: color var(--transition-speed) ease;
+
+  &:hover {
+    color: var(--botonesSecciones);
+  }
+}
+
+.recuperar-header {
+  margin-bottom: 1.25rem;
+}
+
+.back-link {
+  display: inline-block;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: 0.75rem;
+  color: rgba(8, 8, 8, 0.45);
+  font-family: var(--letra);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: color var(--transition-speed) ease;
+
+  &:hover {
+    color: var(--botonesSecciones);
+  }
+}
+
+.recuperar-titulo {
+  margin: 0 0 0.4rem;
+  color: var(--negro);
+  font-family: var(--letra);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.recuperar-sub {
+  margin: 0;
+  color: rgba(8, 8, 8, 0.55);
+  font-family: var(--letra);
+  font-size: 0.8rem;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.recuperar-separador {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0;
+  color: rgba(8, 8, 8, 0.35);
+  font-family: var(--letra);
+  font-size: 0.75rem;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(8, 8, 8, 0.15);
   }
 }
 

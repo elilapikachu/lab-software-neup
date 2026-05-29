@@ -1,119 +1,123 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Navbar } from '../../layout/navbar/navbar';
 import { Footer } from '../../layout/footer/footer';
 import { CommonModule, NgClass } from '@angular/common';
+import { Subscription } from 'rxjs';
 
-interface Ingrediente {
-  nombre_ingrediente: string;
-  cantidad: number;
-  tipo_ingrediente: string;
-}
+import { RecetaResponse } from '../../models/receta';
+import { RecetaService } from '../../services/receta.service';
+import { GuardadosService } from '../../services/guardados.service';
+import { AuthService } from '../../services/auth';
+import { AlertService } from '../../services/alert';
+import { AppConstants } from '../../app.constantes';
 
-interface Nutricion {
-  kcal: number;
-  proteinas: number;
-  carbohidratos: number;
-  fibra: number;
-  vitaminas: string[];
-  minerales: string[];
-}
-
-interface Receta {
-  _id: { $oid: string };
-  nombre_receta: string;
-  ingredientes: Ingrediente[];
-  nutricion: Nutricion;
-  tags: string[];
-  tiempo_preparacion: string;
-  creada_por: string | null;
-  es_personalizada: boolean;
-  visibilidad: string;
-}
 @Component({
   selector: 'app-view-recipe',
-  imports: [RouterLink, Navbar, Footer, CommonModule],
+  imports: [RouterLink, Navbar, Footer, CommonModule, NgClass],
   templateUrl: './view-recipe.html',
   styleUrl: './view-recipe.scss',
 })
-export class ViewRecipe implements OnInit {
-   receta: Receta | null = null;
-  recetasRelacionadas: Receta[] = [];
-  
-  constructor(private route: ActivatedRoute) {}
+export class ViewRecipe implements OnInit, OnDestroy {
+  receta: RecetaResponse | null = null;
+  recetasRelacionadas: RecetaResponse[] = [];
+  cargando = true;
+  error = '';
+  guardada = false;
+  guardandoEstado = false;
+
+  private alerts = inject(AlertService);
+  private routeSub?: Subscription;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private recetaService: RecetaService,
+    private guardadosService: GuardadosService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
   ngOnInit(): void {
-    // Simulación - reemplazar con servicio real
-    this.receta = {
-      _id: { $oid: '69c5e7be1ba5db5ec8d7908a' },
-      nombre_receta: 'Agua de pollo',
-      ingredientes: [
-        { nombre_ingrediente: 'Tomate', cantidad: 2, tipo_ingrediente: 'fruta' },
-        { nombre_ingrediente: 'Pollo', cantidad: 0.5, tipo_ingrediente: 'proteina' },
-        { nombre_ingrediente: 'agua', cantidad: 1, tipo_ingrediente: 'liquido' }
-      ],
-      nutricion: {
-        kcal: 0,
-        proteinas: 23,
-        carbohidratos: 209,
-        fibra: 0,
-        vitaminas: [],
-        minerales: []
+    this.routeSub = this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (!id) { this.router.navigate(['/recipes']); return; }
+      this.receta   = null;
+      this.guardada = false;
+      this.cargando = true;
+      this.error    = '';
+      this.cargarReceta(id);
+      this.cargarRelacionadas();
+    });
+  }
+
+  ngOnDestroy(): void { this.routeSub?.unsubscribe(); }
+
+  private cargarReceta(id: string): void {
+    this.recetaService.obtenerPorId(id).subscribe({
+      next: (receta) => {
+        this.receta   = receta;
+        this.cargando = false;
+        this.verificarGuardada(id);
+        this.cdr.detectChanges();
       },
-      tags: ['bajo calorias'],
-      tiempo_preparacion: '20',
-      creada_por: null,
-      es_personalizada: false,
-      visibilidad: 'publica'
-    };
-
-    this.cargarRecetasRelacionadas();
-  }
-
-  cargarRecetasRelacionadas(): void {
-    // Simulación - reemplazar con servicio real
-    this.recetasRelacionadas = [
-      {
-        _id: { $oid: '69c5e7be1ba5db5ec8d7908b' },
-        nombre_receta: 'Pechuga a la parilla',
-        ingredientes: [],
-        nutricion: { kcal: 165, proteinas: 31, carbohidratos: 0, fibra: 0, vitaminas: [], minerales: [] },
-        tags: ['alto proteina'],
-        tiempo_preparacion: '15',
-        creada_por: null,
-        es_personalizada: false,
-        visibilidad: 'publica'
+      error: () => {
+        this.error    = 'No se pudo cargar la receta.';
+        this.cargando = false;
+        this.cdr.detectChanges();
       },
-      {
-        _id: { $oid: '69c5e7be1ba5db5ec8d7908c' },
-        nombre_receta: 'Ensalada fresca',
-        ingredientes: [],
-        nutricion: { kcal: 85, proteinas: 3, carbohidratos: 15, fibra: 4, vitaminas: [], minerales: [] },
-        tags: ['bajo calorias', 'vegetariano'],
-        tiempo_preparacion: '10',
-        creada_por: null,
-        es_personalizada: false,
-        visibilidad: 'publica'
+    });
+  }
+
+  private cargarRelacionadas(): void {
+    this.recetaService.obtenerPublicas().subscribe({
+      next: (recetas) => {
+        const actual = this.route.snapshot.paramMap.get('id');
+        this.recetasRelacionadas = recetas.filter(r => r.id !== actual).slice(0, 3);
+        this.cdr.detectChanges();
       },
-      {
-        _id: { $oid: '69c5e7be1ba5db5ec8d7908d' },
-        nombre_receta: 'Sopa de verduras',
-        ingredientes: [],
-        nutricion: { kcal: 95, proteinas: 5, carbohidratos: 18, fibra: 3, vitaminas: [], minerales: [] },
-        tags: ['bajo calorias'],
-        tiempo_preparacion: '25',
-        creada_por: null,
-        es_personalizada: false,
-        visibilidad: 'publica'
-      }
-    ];
+      error: () => {},
+    });
   }
 
-  guardarReceta(): void {
-    console.log('Receta guardada');
+  private verificarGuardada(recetaId: string): void {
+    const personaId = this.authService.getPersonaId();
+    if (!personaId) return;
+    this.guardadosService.isRecetaGuardada(personaId, recetaId).subscribe({
+      next: (res) => { this.guardada = res.guardada; this.cdr.detectChanges(); },
+      error: () => {},
+    });
   }
 
-  compartirReceta(): void {
-    console.log('Receta compartida');
+  toggleGuardar(): void {
+    if (!this.authService.estaAutenticado()) {
+      this.alerts.danger('Debes iniciar sesión o registrarte para guardar recetas.', { autoDismiss: 3500 });
+      return;
+    }
+
+    const personaId = this.authService.getPersonaId();
+    const recetaId  = this.receta?.id;
+    if (!personaId || !recetaId || this.guardandoEstado) return;
+
+    this.guardandoEstado = true;
+    const accion$ = this.guardada
+      ? this.guardadosService.desguardarReceta(personaId, recetaId)
+      : this.guardadosService.guardarReceta(personaId, recetaId);
+
+    accion$.subscribe({
+      next: () => {
+        this.guardada        = !this.guardada;
+        this.guardandoEstado = false;
+        this.cdr.detectChanges();
+      },
+      error: () => { this.guardandoEstado = false; },
+    });
   }
+
+  getImagenReceta(receta: RecetaResponse): string {
+    if (receta.imagen?.length) return `${AppConstants.API_URL}/documentos/${receta.imagen[0]}/archivo`;
+    return '/assets/img/comidas/bowlRecetas.png';
+  }
+
+  verReceta(id: string): void { this.router.navigate(['/viewrecipe', id]); }
 }

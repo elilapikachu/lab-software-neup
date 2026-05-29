@@ -1,6 +1,7 @@
 @use '../../../styles/fondos/predeterminado.scss' as *;
 @use '../../../styles/cards/general-cards.scss' as *;
 
+// ─── BREADCRUMB ───────────────────────────────────────────────────────────────
 .detail-breadcrumb {
   margin-bottom: 32px;
   animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
@@ -14,20 +15,53 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: opacity var(--transition-speed);
+  transition: opacity .2s;
 
-  &:hover {
-    opacity: 0.8;
-  }
+  &:hover { opacity: 0.75; }
 }
 
-/* HERO DETALLE DIETA */
+// ─── CARGA / ERROR ────────────────────────────────────────────────────────────
+.estado-carga {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 60px 20px;
+  font-family: var(--letra);
+  color: var(--textoSuave);
+}
+
+.estado-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 60px 20px;
+  font-family: var(--letra);
+  color: var(--textoSuave);
+  text-align: center;
+
+  span { font-size: 2rem; }
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--bordeCards);
+  border-top-color: var(--botonesSecciones);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+// ─── HERO DIETA ───────────────────────────────────────────────────────────────
 .dieta-detalle-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
   align-items: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
   background: var(--transparenteDos);
   border: 1px solid var(--bordeCards);
@@ -45,7 +79,7 @@
 
 .dieta-hero-img {
   width: 100%;
-  max-width: 380px;
+  max-width: 360px;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 12px 30px var(--sombra));
@@ -53,18 +87,14 @@
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
 }
 
 .dieta-detalle-info {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
 }
 
 .dieta-titulo {
@@ -84,16 +114,16 @@
   margin: 0;
 }
 
-/* METAS */
+// ─── METAS ────────────────────────────────────────────────────────────────────
 .dieta-metas {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .metas-titulo {
   font-family: var(--letra-titulo);
-  font-size: 1rem;
+  font-size: .95rem;
   font-weight: 700;
   color: var(--textoOscuro);
   margin: 0;
@@ -108,35 +138,76 @@
 .meta-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, var(--bordeCards) 0%, rgba(242, 94, 7, 0.1) 100%);
+  gap: 7px;
+  background: linear-gradient(135deg, var(--bordeCards) 0%, rgba(242, 94, 7, 0.08) 100%);
   color: var(--botonesSecciones);
   border: 1px solid var(--bordeCards);
   border-radius: 50px;
-  padding: 8px 16px;
+  padding: 7px 14px;
   font-family: var(--letra);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
-/* ACCIONES */
+.meta-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--botonesSecciones);
+  flex-shrink: 0;
+}
+
+// ─── ACCIONES ─────────────────────────────────────────────────────────────────
 .dieta-acciones {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
 }
 
-/* PLAN SEMANAL */
+// ─── PLAN SEMANAL ─────────────────────────────────────────────────────────────
+.franja-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bordeCards);
+  color: var(--botonesSecciones);
+  border: 1px solid var(--bordeCards);
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-family: var(--letra);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+  width: fit-content;
+}
+
 .plan-semanal-section {
-  margin-bottom: 48px;
-  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
-  animation-delay: 0.1s;
+  margin-bottom: 32px;
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) .1s both;
+}
+
+.plan-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.vacio-icon { font-size: 2.5rem; }
+
+.vacio-texto {
+  font-family: var(--letra);
+  font-size: .9rem;
+  color: var(--textoSuave);
+  margin: 0;
 }
 
 .plan-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 16px;
 }
 
@@ -146,22 +217,38 @@
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 4px 16px var(--sombra);
-  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  transition: transform .2s, box-shadow .2s;
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-3px);
     box-shadow: 0 8px 28px var(--sombra);
   }
 }
 
+.dia-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--bordeCards);
+}
+
 .dia-titulo {
   font-family: var(--letra-titulo);
-  font-size: 1rem;
+  font-size: .95rem;
   font-weight: 700;
   color: var(--botonesSecciones);
-  margin: 0 0 12px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid var(--bordeCards);
+  margin: 0;
+}
+
+.dia-count {
+  font-family: var(--letra);
+  font-size: .7rem;
+  color: var(--textoSuave);
+  background: var(--bordeCards);
+  border-radius: 50px;
+  padding: 2px 8px;
 }
 
 .comidas-dia {
@@ -171,46 +258,375 @@
 }
 
 .comida-item {
-  padding: 8px;
+  padding: 8px 10px;
   background: var(--transparente);
-  border-radius: 8px;
-  border-left: 3px solid var(--botonesSecciones);
+  border-radius: 10px;
+  border-left: 3px solid var(--bordeCards);
+
+  &--desayuno { border-left-color: #f59e0b; }
+  &--almuerzo  { border-left-color: #10b981; }
+  &--cena      { border-left-color: #6366f1; }
+  &--merienda  { border-left-color: #ec4899; }
 }
 
 .comida-tipo {
   display: block;
   font-family: var(--letra);
-  font-size: 0.72rem;
+  font-size: .68rem;
   font-weight: 700;
   color: var(--botonesSecciones);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: .04em;
   margin-bottom: 2px;
 }
 
 .comida-nombre {
   font-family: var(--letra);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--textoOscuro);
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--textoSuave);
   margin: 0;
+}
+
+// ─── SUGERENCIAS ──────────────────────────────────────────────────────────────
+.sugerencias-section {
+  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) .2s both;
+}
+
+// ─── CARDS DIETA (reutilizadas de diet.scss) ──────────────────────────────────
+.item-card--dieta {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+}
+
+.item-card--dieta .item-card-img {
+  height: 160px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .35s ease;
+}
+
+.item-card--dieta:hover .item-card-img { transform: scale(1.05); }
+
+.item-card-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.item-badge-top {
+  background: rgba(242, 94, 7, 0.88);
+  color: #fff;
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-family: var(--letra);
+  font-size: .72rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
   white-space: nowrap;
+  max-width: 140px;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
 }
 
-/* SUGERENCIAS */
-.sugerencias-section {
-  animation: fadeUp .7s cubic-bezier(.22, 1, .36, 1) both;
-  animation-delay: 0.2s;
+.item-card-content {
+  padding: 14px 14px 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
 }
 
-@media (max-width: 1024px) {
-  .plan-grid {
-    grid-template-columns: repeat(4, 1fr);
+.item-card-titulo {
+  font-family: var(--letra-titulo);
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-card-desc {
+  font-family: var(--letra);
+  font-size: .8rem;
+  color: var(--textoSuave);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.item-card-metas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: auto;
+}
+
+.item-tag {
+  background: var(--bordeCards);
+  color: var(--botonesSecciones);
+  border-radius: 50px;
+  padding: 3px 10px;
+  font-family: var(--letra);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.item-card-footer {
+  padding: 0 14px 14px;
+}
+
+.btn-card-full {
+  width: 100%;
+  padding: 10px 0;
+  background: var(--botonesSecciones);
+  color: var(--blanco);
+  border: none;
+  border-radius: 50px;
+  font-family: var(--letra);
+  font-size: .83rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .2s, transform .2s;
+  text-align: center;
+
+  &:hover {
+    opacity: .88;
+    transform: translateY(-1px);
   }
 }
 
+// ─── COMIDA CLICKEABLE ────────────────────────────────────────────────────────
+.comida-item--clickable {
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+
+  &:hover {
+    background: rgba(242, 94, 7, 0.08);
+    transform: translateX(3px);
+
+    .comida-nombre { color: var(--botonesSecciones); }
+  }
+}
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn .2s ease both;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-panel {
+  background: var(--blanco);
+  border-radius: 22px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: slideUp .25s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--bordeCards);
+  background: var(--blanco);
+  color: var(--textoSuave);
+  font-size: .9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, color .2s;
+  z-index: 1;
+
+  &:hover {
+    background: var(--botonesSecciones);
+    color: #fff;
+    border-color: var(--botonesSecciones);
+  }
+}
+
+.modal-img-wrap {
+  border-radius: 22px 22px 0 0;
+  overflow: hidden;
+  height: 200px;
+}
+
+.modal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-body {
+  padding: 22px 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0;
+}
+
+.modal-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--letra);
+  font-size: .87rem;
+}
+
+.modal-meta-label {
+  font-weight: 700;
+  color: var(--botonesSecciones);
+}
+
+.modal-meta-valor {
+  color: var(--textoSuave);
+}
+
+.modal-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.modal-tag {
+  background: var(--bordeCards);
+  color: var(--botonesSecciones);
+  border-radius: 50px;
+  padding: 4px 12px;
+  font-family: var(--letra);
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+.modal-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-seccion-titulo {
+  font-family: var(--letra-titulo);
+  font-size: .92rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--bordeCards);
+}
+
+.modal-nutricion-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.modal-nutricion-item {
+  background: var(--transparente);
+  border: 1px solid var(--bordeCards);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.modal-nutricion-val {
+  font-family: var(--letra-titulo);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--botonesSecciones);
+}
+
+.modal-nutricion-lbl {
+  font-family: var(--letra);
+  font-size: .68rem;
+  color: var(--textoSuave);
+}
+
+.modal-vitaminas {
+  display: flex;
+  gap: 6px;
+  font-family: var(--letra);
+  font-size: .84rem;
+  flex-wrap: wrap;
+}
+
+.modal-ingredientes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-ingrediente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--transparente);
+  border-radius: 10px;
+  border-left: 3px solid var(--botonesSecciones);
+}
+
+.ing-nombre {
+  font-family: var(--letra);
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--textoOscuro);
+}
+
+.ing-cantidad {
+  font-family: var(--letra);
+  font-size: .8rem;
+  color: var(--textoSuave);
+}
+
+// ─── RESPONSIVE ───────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
   .dieta-detalle-hero {
     grid-template-columns: 1fr;
@@ -218,21 +634,26 @@
     padding: 24px;
   }
 
+  .dieta-titulo { font-size: 2rem; }
+
+  .dieta-acciones {
+    flex-direction: column;
+
+    .btn-naranja, .btn-ghost-index {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
   .plan-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .dieta-titulo {
-    font-size: 2rem;
+  .modal-nutricion-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .dieta-acciones {
-    flex-direction: column;
-  }
-
-  .btn-naranja,
-  .btn-ghost-index {
-    width: 100%;
-    justify-content: center;
+  .modal-panel {
+    max-height: 95vh;
   }
 }

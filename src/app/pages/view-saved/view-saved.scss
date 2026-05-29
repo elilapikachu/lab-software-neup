@@ -246,8 +246,8 @@
 
 /* ACCIONES */
 .contenido-card-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   padding: 12px;
   border-top: 1px solid var(--bordeCards);
@@ -255,6 +255,8 @@
 }
 
 .btn-accion {
+  flex: 1;
+  min-width: 70px;
   padding: 8px 12px;
   border: none;
   border-radius: 8px;
@@ -333,6 +335,99 @@
   margin: 0 0 24px;
 }
 
+/* MODAL DE CONFIRMACIÓN */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn .2s ease both;
+}
+
+.modal-card {
+  background: var(--blanco);
+  border-radius: 20px;
+  padding: 40px 36px 32px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  animation: scaleIn .25s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.modal-icono {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.modal-titulo {
+  font-family: var(--letra-titulo);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--textoOscuro);
+  margin: 0 0 12px;
+}
+
+.modal-mensaje {
+  font-family: var(--letra);
+  font-size: 0.95rem;
+  color: var(--textoSuave);
+  line-height: 1.6;
+  margin: 0 0 28px;
+}
+
+.modal-acciones {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-modal {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--letra);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  max-width: 160px;
+
+  &.btn-modal-cancelar {
+    background: var(--transparenteDos);
+    color: var(--textoOscuro);
+    border: 1px solid var(--bordeCards);
+
+    &:hover {
+      background: var(--bordeCards);
+    }
+  }
+
+  &.btn-modal-confirmar {
+    background: #d02121;
+    color: var(--blanco);
+
+    &:hover {
+      background: #a81818;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(.85); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
 @media (max-width: 768px) {
   .header-titulo {
     font-size: 2rem;
@@ -352,12 +447,9 @@
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
 
-  .contenido-card-actions {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .btn-accion {
     font-size: 0.7rem;
+    min-width: 60px;
   }
 
   .tabs-container {
