@@ -1,6 +1,84 @@
 @use '../../../styles/fondos/predeterminado.scss' as *;
 @use '../../../styles/cards/general-cards.scss' as *;
 
+// ─── RECOMENDADOS ─────────────────────────────────────────────────────────────
+.recomendados-card {
+    background: linear-gradient(135deg, #fff8f3 0%, #fff3eb 100%);
+    border: 1.5px solid rgba(242, 94, 7, 0.18);
+    border-radius: 24px;
+    padding: 32px 36px;
+    margin-bottom: 36px;
+}
+
+.recomendados-header {
+    margin-bottom: 24px;
+}
+
+.recomendados-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(242, 94, 7, 0.12);
+    color: var(--botonesSecciones);
+    border: 1px solid rgba(242, 94, 7, 0.25);
+    border-radius: 50px;
+    padding: 4px 14px;
+    font-family: var(--letra);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.recomendados-titulo {
+    font-family: var(--letra-titulo);
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: var(--textoOscuro);
+    margin: 0 0 6px;
+}
+
+.recomendados-sub {
+    font-family: var(--letra);
+    font-size: .9rem;
+    color: var(--textoSuave);
+    margin: 0;
+}
+
+.recomendados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.recomendados-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.recomendados-vacio-icon { font-size: 2.8rem; }
+
+.recomendados-vacio-titulo {
+    font-family: var(--letra-titulo);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--textoOscuro);
+    margin: 0;
+}
+
+.recomendados-vacio-sub {
+    font-family: var(--letra);
+    font-size: .88rem;
+    color: var(--textoSuave);
+    margin: 0;
+    max-width: 400px;
+}
+
 // ─── SPINNER ──────────────────────────────────────────────────────────────────
 .estado-carga {
     display: flex;

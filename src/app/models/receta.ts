@@ -46,3 +46,8 @@ export interface RecetaIdResponse {
   id: string;
   mensaje: string;
 }
+
+export interface RecomendadasRecetasResponse {
+  tiene_preferencias: boolean;
+  recetas: RecetaResponse[];
+}

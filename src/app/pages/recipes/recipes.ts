@@ -6,6 +6,7 @@ import { Navbar } from '../../layout/navbar/navbar';
 import { Footer } from '../../layout/footer/footer';
 import { RecetaResponse } from '../../models/receta';
 import { RecetaService } from '../../services/receta.service';
+import { AuthService } from '../../services/auth';
 import { AppConstants } from '../../app.constantes';
 
 type FiltroMeal = 'Todos' | 'Desayuno' | 'Almuerzo' | 'Cena';
@@ -26,15 +27,43 @@ export class Recipes implements OnInit {
   paginaActual = 1;
   readonly itemsPorPagina = 6;
 
+  recomendadas: RecetaResponse[] = [];
+  cargandoRecomendadas = false;
+  tienePreferencias = true;
+
   readonly filtros: FiltroMeal[] = ['Todos', 'Desayuno', 'Almuerzo', 'Cena'];
 
   constructor(
     private recetaService: RecetaService,
+    private auth: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {}
 
-  ngOnInit(): void { this.cargarRecetas(); }
+  get estaAutenticado(): boolean { return this.auth.estaAutenticado(); }
+
+  ngOnInit(): void {
+    this.cargarRecetas();
+    if (this.estaAutenticado) this.cargarRecomendadas();
+  }
+
+  cargarRecomendadas(): void {
+    const personaId = this.auth.getPersonaId();
+    if (!personaId) return;
+    this.cargandoRecomendadas = true;
+    this.recetaService.obtenerRecomendadas(personaId).subscribe({
+      next: (res) => {
+        this.tienePreferencias = res.tiene_preferencias;
+        this.recomendadas      = res.recetas ?? [];
+        this.cargandoRecomendadas = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cargandoRecomendadas = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   cargarRecetas(): void {
     this.cargando = true;

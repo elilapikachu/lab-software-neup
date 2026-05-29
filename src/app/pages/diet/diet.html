@@ -23,6 +23,66 @@
             <img src="/assets/img/comidas/plato-proteina.png" alt="Plato saludable" class="hero-card-img-plato">
         </section>
 
+        <!-- RECOMENDADOS (solo logueados) -->
+        @if (estaAutenticado) {
+        <section class="recomendados-card">
+            <div class="recomendados-header">
+                <div class="recomendados-badge">✨ Solo para ti</div>
+                <h2 class="recomendados-titulo">Dietas recomendadas</h2>
+                <p class="recomendados-sub">Basadas en tus objetivos y tipo de alimentación preferida.</p>
+            </div>
+
+            @if (cargandoRecomendadas) {
+            <div class="estado-carga">
+                <div class="spinner"></div>
+                <p>Cargando recomendaciones...</p>
+            </div>
+            } @else if (!tienePreferencias) {
+            <div class="recomendados-vacio">
+                <span class="recomendados-vacio-icon">🧩</span>
+                <p class="recomendados-vacio-titulo">Completa tu perfil para ver recomendados</p>
+                <p class="recomendados-vacio-sub">
+                    Cuéntanos tus objetivos y tipo de dieta para que podamos sugerirte planes a tu medida.
+                </p>
+                <a routerLink="/userprofile" class="btn-naranja">Completar perfil</a>
+            </div>
+            } @else if (recomendadas.length === 0) {
+            <div class="recomendados-vacio">
+                <span class="recomendados-vacio-icon">🥗</span>
+                <p class="recomendados-vacio-titulo">Sin recomendaciones por ahora</p>
+                <p class="recomendados-vacio-sub">Aún no hay dietas públicas que coincidan con tus preferencias.</p>
+            </div>
+            } @else {
+            <div class="recomendados-grid">
+                @for (dieta of recomendadas; track dieta.id) {
+                <div class="item-card item-card--dieta">
+                    <div class="item-card-img-wrap">
+                        <img [src]="getPortadaDieta(dieta)" [alt]="dieta.nombre_dieta" class="item-card-img">
+                        @if (dieta.metas?.length) {
+                        <div class="item-card-badges">
+                            <span class="item-badge-top">{{ dieta.metas[0] }}</span>
+                        </div>
+                        }
+                    </div>
+                    <div class="item-card-content">
+                        <h3 class="item-card-titulo">{{ dieta.nombre_dieta }}</h3>
+                        <p class="item-card-desc">{{ dieta.descripcion }}</p>
+                        <div class="item-card-metas">
+                            @for (meta of dieta.metas?.slice(0, 3); track meta) {
+                            <span class="item-tag">{{ meta }}</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="item-card-footer">
+                        <button (click)="verDieta(dieta.id)" class="btn-card-full">Ver dieta →</button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </section>
+        }
+
         <!-- CARGANDO -->
         @if (cargando) {
         <div class="estado-carga">

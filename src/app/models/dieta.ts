@@ -39,3 +39,8 @@ export interface DietaIdResponse {
   id: string;
   mensaje: string;
 }
+
+export interface RecomendadasDietasResponse {
+  tiene_preferencias: boolean;
+  dietas: DietaResponse[];
+}

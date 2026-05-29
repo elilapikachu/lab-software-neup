@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { DietaRequest, DietaResponse, DietaIdResponse, AgregarRecetaPlanRequest } from '../models/dieta';
+import { DietaRequest, DietaResponse, DietaIdResponse, AgregarRecetaPlanRequest, RecomendadasDietasResponse } from '../models/dieta';
 import { AppConstants } from '../app.constantes';
 
 @Injectable({ providedIn: 'root' })
@@ -62,5 +62,10 @@ export class DietaService {
     form.append('archivo', archivo);
     if (nombre) form.append('nombre', nombre);
     return this.http.post<DietaIdResponse>(`${this.API}/${id}/portada`, form);
+  }
+
+  /** GET /api/dietas/recomendadas/{personaId} */
+  obtenerRecomendadas(personaId: string): Observable<RecomendadasDietasResponse> {
+    return this.http.get<RecomendadasDietasResponse>(`${this.API}/recomendadas/${personaId}`);
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RecetaRequest, RecetaResponse, RecetaIdResponse } from '../models/receta';
+import { RecetaRequest, RecetaResponse, RecetaIdResponse, RecomendadasRecetasResponse } from '../models/receta';
 import { AppConstants } from '../app.constantes';
 
 @Injectable({ providedIn: 'root' })
@@ -57,5 +57,10 @@ export class RecetaService {
   /** DELETE /api/recetas/{id}/imagenes/{imagenId} */
   eliminarImagen(id: string, imagenId: string): Observable<void> {
     return this.http.delete<void>(`${this.API}/${id}/imagenes/${imagenId}`);
+  }
+
+  /** GET /api/recetas/recomendadas/{personaId} */
+  obtenerRecomendadas(personaId: string): Observable<RecomendadasRecetasResponse> {
+    return this.http.get<RecomendadasRecetasResponse>(`${this.API}/recomendadas/${personaId}`);
   }
 }

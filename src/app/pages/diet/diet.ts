@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Navbar } from '../../layout/navbar/navbar';
@@ -12,7 +12,7 @@ import { AppConstants } from '../../app.constantes';
 
 @Component({
   selector: 'app-diet',
-  imports: [Navbar, Footer, CommonModule, FormsModule],
+  imports: [RouterLink, Navbar, Footer, CommonModule, FormsModule],
   templateUrl: './diet.html',
   styleUrl: './diet.scss',
 })
@@ -25,6 +25,10 @@ export class Diet implements OnInit {
   paginaActual = 1;
   readonly itemsPorPagina = 6;
 
+  recomendadas: DietaResponse[] = [];
+  cargandoRecomendadas = false;
+  tienePreferencias = true;
+
   private alerts = inject(AlertService);
 
   constructor(
@@ -34,11 +38,32 @@ export class Diet implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {}
 
+  get estaAutenticado(): boolean { return this.auth.estaAutenticado(); }
+
   ngOnInit(): void {
     this.cargando = true;
     this.dietaService.obtenerPublicas().subscribe({
       next:  (data) => { this.dietas = data; this.cargando = false; this.cdr.detectChanges(); },
       error: ()     => { this.error = 'No se pudieron cargar las dietas.'; this.cargando = false; this.cdr.detectChanges(); },
+    });
+    if (this.estaAutenticado) this.cargarRecomendadas();
+  }
+
+  cargarRecomendadas(): void {
+    const personaId = this.auth.getPersonaId();
+    if (!personaId) return;
+    this.cargandoRecomendadas = true;
+    this.dietaService.obtenerRecomendadas(personaId).subscribe({
+      next: (res) => {
+        this.tienePreferencias    = res.tiene_preferencias;
+        this.recomendadas         = res.dietas ?? [];
+        this.cargandoRecomendadas = false;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cargandoRecomendadas = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 

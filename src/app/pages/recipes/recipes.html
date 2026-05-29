@@ -25,6 +25,76 @@
             <img src="/assets/img/comidas/bowlRecetas.png" alt="Plato saludable" class="hero-card-img-plato">
         </section>
 
+        <!-- ── RECOMENDADOS (solo logueados) ── -->
+        @if (estaAutenticado) {
+        <section class="recomendados-card">
+            <div class="recomendados-header">
+                <div class="recomendados-badge">✨ Solo para ti</div>
+                <h2 class="recomendados-titulo">Recetas recomendadas</h2>
+                <p class="recomendados-sub">Basadas en tus gustos, objetivos y preferencias alimenticias.</p>
+            </div>
+
+            @if (cargandoRecomendadas) {
+            <div class="estado-carga">
+                <div class="spinner"></div>
+                <p>Cargando recomendaciones...</p>
+            </div>
+            } @else if (!tienePreferencias) {
+            <div class="recomendados-vacio">
+                <span class="recomendados-vacio-icon">🧩</span>
+                <p class="recomendados-vacio-titulo">Completa tu perfil para ver recomendados</p>
+                <p class="recomendados-vacio-sub">
+                    Cuéntanos tus gustos, objetivos y tipo de dieta para que podamos sugerirte recetas a tu medida.
+                </p>
+                <a routerLink="/userprofile" class="btn-naranja">Completar perfil</a>
+            </div>
+            } @else if (recomendadas.length === 0) {
+            <div class="recomendados-vacio">
+                <span class="recomendados-vacio-icon">🍽️</span>
+                <p class="recomendados-vacio-titulo">Sin recomendaciones por ahora</p>
+                <p class="recomendados-vacio-sub">Aún no hay recetas públicas que coincidan con tus preferencias.</p>
+            </div>
+            } @else {
+            <div class="recomendados-grid">
+                @for (receta of recomendadas; track receta.id) {
+                <div class="item-card item-card--receta">
+                    <div class="item-card-img-wrap">
+                        <img [src]="imagenPrincipal(receta)" [alt]="receta.nombre_receta" class="item-card-img">
+                        <div class="item-card-overlay">
+                            <span class="overlay-tiempo">⏱ {{ receta.tiempo_preparacion }} min</span>
+                        </div>
+                        @if (receta.tags?.length) {
+                        <div class="item-card-badges">
+                            <span class="item-badge-top">{{ receta.tags[0] }}</span>
+                        </div>
+                        }
+                    </div>
+                    <div class="item-card-content">
+                        <h3 class="item-card-titulo">{{ receta.nombre_receta }}</h3>
+                        <div class="item-card-stats">
+                            @if (receta.nutricion?.kcal) {
+                            <span class="stat-chip">🔥 {{ receta.nutricion.kcal }} kcal</span>
+                            }
+                            @if (receta.nutricion?.proteinas) {
+                            <span class="stat-chip">💪 {{ receta.nutricion.proteinas }}g prot</span>
+                            }
+                        </div>
+                        <div class="item-card-metas">
+                            @for (tag of receta.tags?.slice(0, 3); track tag) {
+                            <span class="item-tag">{{ tag }}</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="item-card-footer">
+                        <button (click)="verReceta(receta.id)" class="btn-card-full">Ver receta →</button>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+        </section>
+        }
+
         <!-- ── CARGANDO ── -->
         @if (cargando) {
         <div class="estado-carga">

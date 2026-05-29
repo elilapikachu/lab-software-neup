@@ -1,5 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://lab-neup-back.onrender.com/api', // ← reemplaza con tu URL de despliegue
+  apiUrl: 'https://lab-neup-back.onrender.com/api',
 };
- 
